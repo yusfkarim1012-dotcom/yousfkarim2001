@@ -43,9 +43,14 @@ call %~dp0yousf.bat
 * Keystore Alias: `yousf`
 * If the user asks for a release build, run the build command natively. Do not regenerate the keystore unless explicitly requested, as losing the original keystore breaks future Google Play updates.
 
-## 4. Build Instructions & Troubleshooting
-* **Dependency Issues:** Always run `flutter pub get` after modifying `pubspec.yaml` or if cache is invalidated.
-* **Disk Space Problems:** The host machine occasionally gets low on `C:` drive space. If a build fails with `There is not enough space on the disk`, immediately run `flutter clean` and reset the Gradle daemon (`.\gradlew --stop`).
+## 4. Build Instructions & Maintenance
+* **Environment Readiness:** AI should run `flutter doctor` after setting the paths to confirm the environment is healthy.
+* **Dependency Issues:** Always run `flutter pub get` after modifying `pubspec.yaml`.
+* **Disk Space Problems:** If a build fails with `There is not enough space on the disk`, the AI should:
+    1. Run `flutter clean`.
+    2. Run `.\gradlew --stop` in the `android` folder.
+    3. If still low, clear `.gradle/caches` in the user's home directory.
+* **Build Debugging:** Use `flutter build appbundle --release --verbose` if errors are cryptic.
 * **Command to Build AAB:** `flutter build appbundle --release`
 * **Command to Build APK:** `flutter build apk --release`
 

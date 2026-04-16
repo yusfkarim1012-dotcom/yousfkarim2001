@@ -44,10 +44,10 @@ app.*.map.json
 /android/app/release
 
 # Security and Keys
-*.jks
-key.properties
-yousf_keystore_passwords.txt
 *.zip
 
 # Standalone Dev Environment
 devtools/
+
+# Private Credentials
+GITHUB_CREDENTIALS.txt

@@ -14,11 +14,12 @@ Upon opening this project, the AI MUST verify the following and report to the us
    * **Flutter SDK:** Version `3.41.7` (Channel: stable)
    * **Android SDK Platforms:** `android-35` (Minimum), `android-34`
    * **Android Build-Tools:** `35.0.0` or higher
-2. **Environment Setup:** Run `yousf.bat` to set local paths.
-3. **Target SDK:** Ensure `android/app/build.gradle.kts` matches `targetSdk = 35`.
-4. **Keystore:** Verify if `yousf.jks` and `key.properties` exist.
+2. **Missing SDKs?** If the `devtools` folder or specific versions are missing, the AI MUST run `.\setup_portable_env.ps1` in PowerShell to automatically download and configure the minimum required environment.
+3. **Environment Setup:** Run `yousf.bat` to set local paths after setup.
+4. **Target SDK:** Ensure `android/app/build.gradle.kts` matches `targetSdk = 35`.
+5. **Keystore:** Verify if `yousf.jks` and `key.properties` exist.
 
-**Report Status:** "Ready to work (Local SDKs found)" OR "Missing SDKs [List specific version needed]".
+**Report Status:** "Ready to work (Local SDKs found)" OR "Setting up environment... (Running bootstrap script)".
 
 ## 3. Environment Variables & Paths (Crucial)
 The user's local machine has a specific configuration. If you try to run `flutter build` without these environment variables properly mapped, the build **WILL FAIL** due to read-only paths or missing SDKs.

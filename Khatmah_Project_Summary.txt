@@ -1,0 +1,40 @@
+========================================================
+   PROJECT SUMMARY: KHATMAH (SKOON) - PORTABLE SETUP
+========================================================
+Created specially for: Yousf
+Date: 2026-04-17
+
+1. PROJECT REPOSITORY (GitHub)
+--------------------------------------------------------
+Remote URL: https://github.com/yusfkarim1012-dotcom/yousfkarim2001.git
+Branch: main
+
+2. PORTABLE ENVIRONMENT SETUP
+--------------------------------------------------------
+The project is designed to be portable. It uses two main scripts:
+- yousf.bat: Sets up the local environment paths (Flutter, Android SDK, JDK).
+- setup_portable_env.ps1: Automatically downloads the required SDKs if they are missing.
+
+3. HOW TO START ON A NEW COMPUTER
+--------------------------------------------------------
+1. Clone the project from GitHub.
+2. Open the folder.
+3. If the 'devtools' folder is missing, run 'setup_portable_env.ps1' in PowerShell.
+4. Run 'yousf.bat' to start working.
+5. For AI Agents: "Tell Antigravity to read ANTIGRAVITY_GUIDE.md and prepare the environment."
+
+4. IMPORTANT SECURITY REMINDERS
+--------------------------------------------------------
+- KEYSTORE: The file 'yousf.jks' and its passwords are NOT on GitHub for security. KEEP A BACKUP OF THEM PRIVATELY!
+- SDKs: The full 12GB 'devtools' folder is NOT on GitHub. It can be re-downloaded via the bootstrap script or transferred manually.
+- GITHUB TOKEN: Never share your Personal Access Token (Classic Key) or commit it to code.
+
+5. ANDROID BUILD INFO
+--------------------------------------------------------
+- minSdk: 24
+- targetSdk: 35
+- Package Name: com.khatmah.quran.islamic.app
+
+========================================================
+             STAY SAFE AND HAPPY CODING!
+========================================================

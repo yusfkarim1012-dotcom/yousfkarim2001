@@ -48,3 +48,6 @@ app.*.map.json
 key.properties
 yousf_keystore_passwords.txt
 *.zip
+
+# Standalone Dev Environment
+devtools/

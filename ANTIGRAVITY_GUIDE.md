@@ -12,13 +12,13 @@
 The user's local machine has a specific configuration. If you try to run `flutter build` without these environment variables properly mapped, the build **WILL FAIL** due to read-only paths or missing SDKs.
 Before running any `flutter` command, make sure to set up the terminal session with:
 
-* **Flutter Path:** `C:\flutter\bin`
-* **Android SDK:** `C:\Users\yusf2000.runnervm2p0d8\android-sdk`
+* **Flutter Path:** `devtools\flutter\bin` (Inside the project itself)
+* **Android SDK:** `devtools\android-sdk` (Inside the project itself)
 * **Java:** JDK 17 
 
 **PowerShell Command Prefix Example:**
 ```powershell
-$env:Path = "C:\flutter\bin;" + $env:Path; $env:ANDROID_HOME = "C:\Users\yusf2000.runnervm2p0d8\android-sdk"; $env:ANDROID_SDK_ROOT = $env:ANDROID_HOME;
+call %~dp0yousf.bat
 ```
 
 ## 3. App Signing & Keystore (Security)

@@ -17,7 +17,7 @@ Upon opening this project, the AI MUST verify the following and report to the us
 2. **Missing SDKs?** If the `devtools` folder or specific versions are missing, the AI MUST run `.\setup_portable_env.ps1` in PowerShell to automatically download and configure the minimum required environment.
 3. **Environment Setup:** Run `yousf.bat` to set local paths after setup.
 4. **Target SDK:** Ensure `android/app/build.gradle.kts` matches `targetSdk = 35`.
-5. **Keystore:** Verify if `yousf.jks` and `key.properties` exist.
+5. **Keystore & Passwords:** Verify if `yousf.jks`, `key.properties`, and `yousf_keystore_passwords.txt` exist. The AI should read the passwords from the text file when building the app.
 
 **Report Status:** "Ready to work (Local SDKs found)" OR "Setting up environment... (Running bootstrap script)".
 

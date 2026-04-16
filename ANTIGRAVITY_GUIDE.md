@@ -16,6 +16,10 @@ Before running any `flutter` command, make sure to set up the terminal session w
 * **Android SDK:** `devtools\android-sdk` (Inside the project itself)
 * **Java:** JDK 17 
 
+> [!IMPORTANT]
+> **Missing `devtools`?** The `devtools` folder (containing Flutter and Android SDKs) is NOT included in this Git repository due to its large size (~12GB). 
+> You must download the `devtools` folder separately from the user's private storage and extract it into the project root directory before running any build commands.
+
 **PowerShell Command Prefix Example:**
 ```powershell
 call %~dp0yousf.bat

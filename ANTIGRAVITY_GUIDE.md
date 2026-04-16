@@ -8,6 +8,15 @@
 * **Type:** Flutter Android Application
 * **User Context:** The user primarily builds this app for Android (APK for testing, AAB for Google Play Store upload). The user prefers stability and no unnecessary code changes unless explicitly requested.
 
+## 2. Ready-to-Work Checklist (FOR AI AGENT)
+Upon opening this project, the AI MUST verify the following and report to the user:
+1. **Check for `devtools` folder:** Does it contain `flutter` and `android-sdk`?
+2. **Environment Setup:** Run `yousf.bat` to set paths.
+3. **Target SDK:** Ensure `android/app/build.gradle.kts` is set to `targetSdk = 35`.
+4. **Keystore:** Verify if `yousf.jks` and `key.properties` exist (privately stored by the user).
+
+**Report Status:** "Ready to work (Local SDKs found)" OR "Missing SDKs (Please provide download link)".
+
 ## 2. Environment Variables & Paths (Crucial)
 The user's local machine has a specific configuration. If you try to run `flutter build` without these environment variables properly mapped, the build **WILL FAIL** due to read-only paths or missing SDKs.
 Before running any `flutter` command, make sure to set up the terminal session with:

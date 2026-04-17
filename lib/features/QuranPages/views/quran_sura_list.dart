@@ -320,13 +320,13 @@ class _SurahListPageState extends State<SurahListPage> {
                                                                     pageNumber:
                                                                         quran
                                                                             .getPageNumber(
-                                                                      int.parse(bookmarks[i]
+                                                                      int.parse((bookmarks[i]
                                                                               [
-                                                                              "suraNumber"]
+                                                                              "suraNumber"] ?? 1)
                                                                           .toString()),
-                                                                      int.parse(bookmarks[i]
+                                                                      int.parse((bookmarks[i]
                                                                               [
-                                                                              "verseNumber"]
+                                                                              "verseNumber"] ?? 1)
                                                                           .toString()),
                                                                     ),
                                                                     jsonData: widget
@@ -336,13 +336,13 @@ class _SurahListPageState extends State<SurahListPage> {
                                                                     highlightVerse:
                                                                         quran
                                                                             .getVerse(
-                                                                      int.parse(bookmarks[i]
+                                                                      int.parse((bookmarks[i]
                                                                               [
-                                                                              "suraNumber"]
+                                                                              "suraNumber"] ?? 1)
                                                                           .toString()),
-                                                                      int.parse(bookmarks[i]
+                                                                      int.parse((bookmarks[i]
                                                                               [
-                                                                              "verseNumber"]
+                                                                              "verseNumber"] ?? 1)
                                                                           .toString()),
                                                                     ),
                                                                     quarterJsonData:
@@ -365,12 +365,12 @@ class _SurahListPageState extends State<SurahListPage> {
                                                 Icon(
                                                   Icons.bookmark,
                                                   color: Color(int.parse(
-                                                      "0x${bookmarks[i]["color"]}")),
+                                                      "0x${bookmarks[i]["color"] ?? "FF2196F3"}")),
                                                 ),
                                                 SizedBox(
                                                   width: 20.w,
                                                 ),
-                                                Text(bookmarks[i]["name"],
+                                                Text(bookmarks[i]["name"] ?? "",
                                                     style: TextStyle(
                                                         fontFamily: "cairo",
                                                         fontSize: 14.sp,
@@ -389,11 +389,11 @@ class _SurahListPageState extends State<SurahListPage> {
                                               // width: MediaQuery.of(context).size.width * .4,
                                               child: Text(
                                                   quran.getVerse(
-                                                    int.parse(bookmarks[i]
-                                                            ["suraNumber"]
+                                                    int.parse((bookmarks[i]
+                                                            ["suraNumber"] ?? 1)
                                                         .toString()),
-                                                    int.parse(bookmarks[i]
-                                                            ["verseNumber"]
+                                                    int.parse((bookmarks[i]
+                                                            ["verseNumber"] ?? 1)
                                                         .toString()),
                                                   ),
                                                   textAlign: TextAlign.center,
@@ -411,12 +411,12 @@ class _SurahListPageState extends State<SurahListPage> {
                                               context.locale.languageCode ==
                                                       "ar"
                                                   ? quran.getSurahNameArabic(
-                                                      int.parse(bookmarks[i]
-                                                              ["suraNumber"]
+                                                      int.parse((bookmarks[i]
+                                                              ["suraNumber"] ?? 1)
                                                           .toString()))
                                                   : quran.getSurahNameEnglish(
-                                                      int.parse(bookmarks[i]
-                                                              ["suraNumber"]
+                                                      int.parse((bookmarks[i]
+                                                              ["suraNumber"] ?? 1)
                                                           .toString())),
                                               style: TextStyle(
                                                   color: getValue("darkMode")
@@ -426,7 +426,7 @@ class _SurahListPageState extends State<SurahListPage> {
                                             ),
                                             //
                                             Text(
-                                                "${convertToArabicNumber(int.parse(bookmarks[i]["verseNumber"].toString()).toString())} " //               quran.getVerseEndSymbol()
+                                                "${convertToArabicNumber(int.parse((bookmarks[i]["verseNumber"] ?? 1).toString()).toString())} " //               quran.getVerseEndSymbol()
                                                 ,
                                                 style: TextStyle(
                                                     fontSize: 24.sp,

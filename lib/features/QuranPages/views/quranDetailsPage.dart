@@ -404,11 +404,12 @@ class QuranDetailsPageState extends State<QuranDetailsPage> {
       onAddBookmark: (s, v) async {
          List<String> colorOptions = ["0xFF2196F3", "0xFFF44336", "0xFFE91E63", "0xFF9C27B0", "0xFF3F51B5"];
          String selectedColor = colorOptions[0];
-         bookmarks.add({
-             "suraNumber": s,
-             "verseNumber": v,
-             "color": selectedColor.replaceAll("0x", "")
-         });
+          bookmarks.add({
+              "suraNumber": s,
+              "verseNumber": v,
+              "name": "${quran.getSurahNameArabic(s)}: $v",
+              "color": selectedColor.replaceAll("0x", "")
+          });
          updateValue("bookmarks", json.encode(bookmarks));
          setState(() {});
       },

@@ -47,7 +47,7 @@ $env:JAVA_HOME = $JdkDir
 # 3. Setup Flutter SDK
 if (!(Test-Path $FlutterDir)) {
     echo "[...] Cloning Flutter SDK (Version 3.41.7)..."
-    git clone -b 3.41.7 https://github.com/flutter/flutter.git $FlutterDir --depth 1
+    git clone -c core.longpaths=true -b 3.41.7 https://github.com/flutter/flutter.git $FlutterDir --depth 1
     echo "[OK] Flutter SDK setup complete."
 } else {
     echo "[SKIP] Flutter SDK already exists."

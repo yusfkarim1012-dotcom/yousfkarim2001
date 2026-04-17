@@ -96,5 +96,10 @@
     "newBookmark": "Add New Bookmark",
     "nameOfBookmark": "Give it a unique name",
     "color": "Color of Bookmark",
-    "saveBookmark": "Save Bookmark"
+    "saveBookmark": "Save Bookmark",
+    "addbookmark": "Add Bookmark",
+    "addtofav": "Add to Favorites",
+    "removefav": "Remove from Favorites",
+    "soura": "Surah",
+    "ayah": "Ayah"
 }

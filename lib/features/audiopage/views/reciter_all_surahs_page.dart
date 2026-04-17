@@ -681,7 +681,11 @@ print(widget.jsonData.where((element)=>element["id"].toString()==e.toString()));
                                         json.encode(favoriteSurahList));
                                   }
 
-                                  setState(() {});
+                                  if (selectedMode == "favorite") {
+                                    filterFavoritesOnly();
+                                  } else {
+                                    setState(() {});
+                                  }
                                 },
                                 icon: Icon(
                                     favoriteSurahList.contains(

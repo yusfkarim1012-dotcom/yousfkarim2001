@@ -91,5 +91,10 @@
     "newBookmark": "Adicionar Novo Marcador",
     "nameOfBookmark": "Dê a ele um nome único",
     "color": "Cor do Marcador",
-    "saveBookmark": "Salvar Marcador"
+    "saveBookmark": "Salvar Marcador",
+    "addbookmark": "Adicionar Marcador",
+    "addtofav": "Adicionar aos Favoritos",
+    "removefav": "Remover dos Favoritos",
+    "soura": "Sura",
+    "ayah": "Versículo"
 }

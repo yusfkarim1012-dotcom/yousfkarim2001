@@ -349,6 +349,8 @@ class _SurahListPageState extends State<SurahListPage> {
                                                                         widget
                                                                             .quarterjsonData),
                                                           )));
+                                          fetchBookmarks();
+                                          getStarredVerse();
                                         }
                                       },
                                       child: SizedBox(
@@ -577,31 +579,34 @@ class _SurahListPageState extends State<SurahListPage> {
                               .map((e) => EasyContainer(
                                   color: primaryColors[0].withOpacity(.05),
                                   onTap: () async {
-                                    await Navigator.push(
-                                        context,
-                                        CupertinoPageRoute(
-                                            builder: (builder) => BlocProvider(
-                                                  create: (context) =>
-                                                      QuranPagePlayerBloc(),
-                                                  child: QuranDetailsPage(
-                                                      shouldHighlightSura:
-                                                          false,
-                                                      pageNumber:
-                                                          quran.getPageNumber(
-                                                              int.parse(e.split(
-                                                                  "-")[0]),
-                                                              int.parse(e.split(
-                                                                  "-")[1])),
-                                                      jsonData: widget.jsonData,
-                                                      shouldHighlightText: true,
-                                                      highlightVerse: quran.getVerse(
-                                                          int.parse(
-                                                              e.split("-")[0]),
-                                                          int.parse(
-                                                              e.split("-")[1])),
-                                                      quarterJsonData: widget
-                                                          .quarterjsonData),
-                                                )));
+                                                  await Navigator.push(
+                                                      context,
+                                                      CupertinoPageRoute(
+                                                          builder: (builder) =>
+                                                              BlocProvider(
+                                                                create: (context) =>
+                                                                    QuranPagePlayerBloc(),
+                                                                child: QuranDetailsPage(
+                                                                    shouldHighlightSura:
+                                                                        false,
+                                                                    pageNumber:
+                                                                        quran.getPageNumber(
+                                                                            int.parse(e.split(
+                                                                                "-")[0]),
+                                                                            int.parse(e.split(
+                                                                                "-")[1])),
+                                                                    jsonData: widget.jsonData,
+                                                                    shouldHighlightText: true,
+                                                                    highlightVerse: quran.getVerse(
+                                                                        int.parse(
+                                                                            e.split("-")[0]),
+                                                                        int.parse(
+                                                                            e.split("-")[1])),
+                                                                    quarterJsonData: widget
+                                                                        .quarterjsonData),
+                                                              )));
+                                                  fetchBookmarks();
+                                                  getStarredVerse();
                                   },
                                   child: Column(
                                     children: [
@@ -1187,6 +1192,8 @@ class _SurahListPageState extends State<SurahListPage> {
                                                                             suraNumberInQuran,
                                                                             1)),
                                                               )));
+                                                  fetchBookmarks();
+                                                  getStarredVerse();
                                                   // Handle tapping on a sura item here
                                                   // You can navigate to the sura details page or perform any other action.
                                                 },

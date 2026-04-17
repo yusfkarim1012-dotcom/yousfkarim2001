@@ -92,6 +92,10 @@
     "newBookmark": "Neues Lesezeichen hinzufügen",
     "nameOfBookmark": "Geben Sie ihm einen eindeutigen Namen",
     "color": "Farbe des Lesezeichens",
-    "saveBookmark": "Lesezeichen speichern"
-
+    "saveBookmark": "Lesezeichen speichern",
+    "addbookmark": "Lesezeichen hinzufügen",
+    "addtofav": "Zu Favoriten hinzufügen",
+    "removefav": "Aus Favoriten entfernen",
+    "soura": "Sure",
+    "ayah": "Vers"
 }

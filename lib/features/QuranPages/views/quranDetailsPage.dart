@@ -141,6 +141,15 @@ class QuranDetailsPageState extends State<QuranDetailsPage> {
     // print(bookmarks);
   }
 
+  getStarredVerse() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    final String? savedData = prefs.getString("starredVerses");
+    if (savedData != null) {
+      starredVerses = Set<String>.from(json.decode(savedData));
+    }
+    setState(() {});
+  }
+
   var dataOfCurrentTranslation;
   getTranslationData() async {
     if (getValue("indexOfTranslationInVerseByVerse") > 1) {
@@ -189,6 +198,7 @@ class QuranDetailsPageState extends State<QuranDetailsPage> {
   @override
   void initState() {
     fetchBookmarks();
+    getStarredVerse();
     //var formatter = NumberFormat('', 'ar');print("ننتاا");
     initialize();
     getTranslationData();

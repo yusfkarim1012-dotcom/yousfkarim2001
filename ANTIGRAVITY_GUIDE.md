@@ -57,5 +57,5 @@ call %~dp0yousf.bat
 
 ## 5. Rules of Engagement
 1. Do not indiscriminately upgrade `pubspec.yaml` dependencies unless the build strictly requires it, to avoid breaking changes.
-2. The user has `.git` configured locally and connected to a remote `origin`. Push changes using the existing Git Setup when completing a feature.
+2. The user has `.git` configured locally and connected to a remote `origin`. **NEVER push changes to GitHub automatically.** You must wait until the user explicitly commands you to push.
 3. Keep answers clear, explain technical concepts specifically in Kurdish when the user asks.

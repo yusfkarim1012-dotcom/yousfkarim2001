@@ -442,7 +442,7 @@ class _ShareAyahDialogState extends State<ShareAyahDialog> {
                     sharedText += "\n\n${removeHtmlTags(getValue("textWithoutDiacritics") ? removeDiacritics(tafseerContent) : tafseerContent)}";
                 }
                 if (getValue("addAppSlogan")) {
-                    sharedText += "\n\nShared with Skoon";
+                    sharedText += "\n\nShared with Khatmah";
                 }
 
                 Share.share(sharedText);

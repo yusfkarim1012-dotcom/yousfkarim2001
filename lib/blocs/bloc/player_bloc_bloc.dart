@@ -35,7 +35,7 @@ class PlayerBlocBloc extends Bloc<PlayerBlocEvent, PlayerBlocState> {
         audioPlayer.stop();
         int nextMediaId = 0;
         List<String> surahNumbers = event.moshaf.surahList.split(',');
-        final appDir = Directory("/storage/emulated/0/Download/skoon/");
+        final appDir = Directory("/storage/emulated/0/Download/Khatmah/");
 
         if (surahNumbers.any((element) {
           if (File(
@@ -146,7 +146,7 @@ class PlayerBlocBloc extends Bloc<PlayerBlocEvent, PlayerBlocState> {
             playList: playList));
       } else if (event is DownloadSurah) {
         final dio = Dio();
-        final appDir = Directory("/storage/emulated/0/Download/skoon/");
+        final appDir = Directory("/storage/emulated/0/Download/Khatmah/");
         // final ffmpeg = FlutterFFmpeg();
         PermissionStatus status = await Permission.storage.request();
         //PermissionStatus status1 = await Permission.accessMediaLocation.request();
@@ -188,7 +188,7 @@ class PlayerBlocBloc extends Bloc<PlayerBlocEvent, PlayerBlocState> {
             .toList();
 
         final dio = Dio();
-        final appDir = Directory("/storage/emulated/0/Download/skoon/");
+        final appDir = Directory("/storage/emulated/0/Download/Khatmah/");
         // final ffmpeg = FlutterFFmpeg();
         PermissionStatus status = await Permission.storage.request();
         //PermissionStatus status1 = await Permission.accessMediaLocation.request();

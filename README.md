@@ -1,4 +1,4 @@
-# Skoon - Flutter Islamic App
+# Khatmah - Flutter Islamic App
 
 <div style="display: flex; justify-content: space-around;">
   <img src="assets/screenshot2.jpg" alt="Screenshot 2" width="300">
@@ -9,7 +9,7 @@
 
 ## Overview
 
-Skoon is a comprehensive Islamic app built with Flutter. It offers a variety of features including Quran, Hadith, Quran audio, radio, the 99 names of Allah, Duaa, and more.
+Khatmah is a comprehensive Islamic app built with Flutter. It offers a variety of features including Quran, Hadith, Quran audio, radio, the 99 names of Allah, Duaa, and more.
 ## Demo Apk
 
 [Download Demo APK](https://drive.google.com/drive/folders/1WsFCFsHObbF4--v2sfog8ig8yzigSSoh?usp=sharing)  <!-- Replace # with your actual APK link -->
@@ -29,7 +29,7 @@ Skoon is a comprehensive Islamic app built with Flutter. It offers a variety of 
 
 ## Getting Started
 
-To get started with the Skoon app, follow these steps:
+To get started with the Khatmah app, follow these steps:
 
 1. **Clone the repository**
    ```sh

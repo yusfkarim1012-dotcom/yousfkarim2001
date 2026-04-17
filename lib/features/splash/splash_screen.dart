@@ -177,7 +177,7 @@ class _SplashScreenState extends State<SplashScreen> {
     }
 
     await permissions.request();
-    MediaStore.appFolder = "Skoon";
+    MediaStore.appFolder = "Khatmah";
     initMessaging();
     setOptimalDisplayMode();
   }

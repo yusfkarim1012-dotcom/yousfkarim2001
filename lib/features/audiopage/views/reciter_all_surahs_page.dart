@@ -155,7 +155,7 @@ print(widget.jsonData.where((element)=>element["id"].toString()==e.toString()));
 
   var selectedMode = "all";
   var searchQuery = "";
-  final appDir = Directory("/storage/emulated/0/Download/skoon/");
+  final appDir = Directory("/storage/emulated/0/Download/Khatmah/");
 
   TextEditingController textEditingController = TextEditingController();
   @override

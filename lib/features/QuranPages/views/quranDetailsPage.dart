@@ -62,6 +62,7 @@ import 'package:quran/quran.dart' as quran;
 
 import 'package:khatmah/features/QuranPages/widgets/details_page/ayah_options_sheet.dart';
 import 'package:khatmah/features/QuranPages/helpers/quran_audio_helper.dart';
+import 'package:khatmah/features/QuranPages/widgets/details_page/quran_settings_drawer.dart';
 
 import 'package:screenshot/screenshot.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -320,9 +321,10 @@ class QuranDetailsPageState extends State<QuranDetailsPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       key: scaffoldKey,
-      endDrawer: SizedBox(
-        height: MediaQuery.of(context).size.height,
-        width: MediaQuery.of(context).size.width * .5,
+      endDrawer: QuranSettingsDrawer(
+        onSettingsChanged: () {
+          setState(() {});
+        },
       ),
       backgroundColor: Colors.transparent,
       body: Builder(builder: (context) {

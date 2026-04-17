@@ -778,14 +778,14 @@ if(isQCF==false) {
                                 children: [
                                   Image(
                                     image: const AssetImage(
-                                        "assets/images/iconlauncher2.png"),
+                                        "assets/images/khatmah.jpg"),
                                     height: 25.h,
                                   ),
                                   SizedBox(
                                     width: 6.w,
                                   ),
                                   Text(
-                                    "Shared with skoon",
+                                    "Shared with Khatmah",
                                     style: TextStyle(
                                         fontSize: 10.sp,
                                         color: primaryColors[indexOfTheme]),

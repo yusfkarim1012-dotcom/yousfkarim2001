@@ -172,7 +172,6 @@ class _SplashScreenState extends State<SplashScreen> {
     if ((await mediaStorePlugin.getPlatformSDKInt()) >= 33) {
       permissions.add(Permission.photos);
       permissions.add(Permission.audio);
-      permissions.add(Permission.location);
 
       // permissions.add(Permission.videos);
     }

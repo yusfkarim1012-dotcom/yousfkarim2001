@@ -22,6 +22,7 @@ class _NativeCompassState extends State<NativeCompass> {
   }
 
   void _fetchPermissionStatus() {
+/*
     Permission.locationWhenInUse.status.then((status) {
       if (mounted) {
         setState(() {
@@ -29,6 +30,7 @@ class _NativeCompassState extends State<NativeCompass> {
         });
       }
     });
+*/
   }
 
   @override
@@ -36,10 +38,10 @@ class _NativeCompassState extends State<NativeCompass> {
     if (!_hasPermissions) {
       return Center(
         child: ElevatedButton(
-          child: const Text("Request Permission"),
+          child: const Text("Location Disabled"),
           onPressed: () async {
-            await [Permission.location, Permission.locationWhenInUse].request();
-            _fetchPermissionStatus();
+            // await [Permission.location, Permission.locationWhenInUse].request();
+            // _fetchPermissionStatus();
           },
         ),
       );

@@ -429,6 +429,7 @@ class _HomeState extends State<Home>
     DateTime dateTime = DateTime.now();
     if (getValue("prayerTimes/${dateTime.year}/${dateTime.month}") == null ||
         reload) {
+/*
       await Geolocator.requestPermission();
       Position geolocation = await Geolocator.getCurrentPosition();
       await placemarkFromCoordinates(
@@ -442,8 +443,15 @@ class _HomeState extends State<Home>
           "https://api.aladhan.com/v1/calendar/${dateTime.year}/${dateTime.month}?latitude=${geolocation.latitude}&longitude=${geolocation.longitude}");
       updateValue(
           "prayerTimes/${dateTime.year}/${dateTime.month}", response.data);
+*/
     }
     prayerTimes = getValue("prayerTimes/${dateTime.year}/${dateTime.month}");
+    if (prayerTimes == null) {
+      setState(() {
+        isLoading = false;
+      });
+      return;
+    }
     final currentDateTime = DateTime.now();
     final currentFormattedTime =
         DateFormat('HH:mm').format(currentDateTime.toUtc());
@@ -812,13 +820,7 @@ class _HomeState extends State<Home>
                                                Navigator.push(context, CupertinoPageRoute(builder: ((context) => const AzkarHomePage())));
                                             }
                                           ),
-                                          HomeGridItem(
-                                            text: "notifications".tr(),
-                                            imagePath: "assets/images/notifications.png",
-                                            onPressed: () {
-                                               Navigator.push(context, CupertinoPageRoute(builder: (builder) => const NotificationsPage()));
-                                            }
-                                          ),
+
                                           HomeGridItem(
                                             text: "sibha".tr(),
                                             imagePath: "assets/images/sibha.png",

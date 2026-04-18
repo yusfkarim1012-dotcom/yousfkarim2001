@@ -331,3 +331,5 @@ var languagesLetters = [
         33, (index) => String.fromCharCode('A'.codeUnitAt(0) + index))
   }
 ];
+
+const List<String> rtlLanguages = ['ar'];

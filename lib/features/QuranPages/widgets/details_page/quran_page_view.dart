@@ -85,7 +85,7 @@ class _QuranPageViewState extends State<QuranPageView> {
         widget.onPageChanged(a);
       },
       controller: widget.pageController,
-      reverse: context.locale.languageCode == "ar" ? false : true,
+      reverse: rtlLanguages.contains(context.locale.languageCode) ? false : true,
       itemCount: quran.totalPagesCount + 1,
       itemBuilder: (context, index) {
         bool isEvenPage = index.isEven;

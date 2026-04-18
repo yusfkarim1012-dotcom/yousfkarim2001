@@ -120,7 +120,7 @@ class _AyahOptionsSheetState extends State<AyahOptionsSheet> {
           children: [
             SizedBox(height: 10.h),
             Text(
-              "${"soura".tr()} ${context.locale.languageCode == "ar" ? quran.getSurahNameArabic(widget.surahNumber) : quran.getSurahNameEnglish(widget.surahNumber)} - ${"ayah".tr()} ${widget.verseNumber}",
+              "${"soura".tr()} ${rtlLanguages.contains(context.locale.languageCode) ? quran.getSurahNameArabic(widget.surahNumber) : quran.getSurahNameEnglish(widget.surahNumber)} - ${"ayah".tr()} ${widget.verseNumber}",
               style: TextStyle(
                   color: primaryColors[getValue("quranPageolorsIndex")],
                   fontSize: 18.sp,
@@ -318,7 +318,7 @@ class _AyahOptionsSheetState extends State<AyahOptionsSheet> {
                         return DropdownMenuItem<int>(
                           value: reciters.indexOf(reciter),
                           child: Text(
-                              context.locale.languageCode == "ar"
+                              rtlLanguages.contains(context.locale.languageCode)
                                   ? reciter.name
                                   : reciter.englishName,
                               style: TextStyle(

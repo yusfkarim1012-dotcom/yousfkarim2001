@@ -408,8 +408,7 @@ class _SurahListPageState extends State<SurahListPage> {
                                             ),
                                             const Divider(),
                                             Text(
-                                              context.locale.languageCode ==
-                                                      "ar"
+                                              rtlLanguages.contains(context.locale.languageCode)
                                                   ? quran.getSurahNameArabic(
                                                       int.parse((bookmarks[i]
                                                               ["suraNumber"] ?? 1)
@@ -623,7 +622,7 @@ class _SurahListPageState extends State<SurahListPage> {
                                                 : primaryColors[0],
                                           )),
                                       Text(
-                                        context.locale.languageCode == "ar"
+                                        rtlLanguages.contains(context.locale.languageCode)
                                             ? quran.getSurahNameArabic(
                                                 int.parse(e.split("-")[0]))
                                             : quran.getSurahNameEnglish(
@@ -763,7 +762,7 @@ class _SurahListPageState extends State<SurahListPage> {
                                               color: Colors.white),
                                         ),
                                         Text(
-                                            "${context.locale.languageCode == "ar" ? (quran.getSurahNameArabic(quran.getPageData(getValue("lastRead"))[0]["surah"])) : (quran.getSurahName(quran.getPageData(getValue("lastRead"))[0]["surah"]))} - ${getValue("lastRead")}",
+                                            "${rtlLanguages.contains(context.locale.languageCode) ? (quran.getSurahNameArabic(quran.getPageData(getValue("lastRead"))[0]["surah"])) : (quran.getSurahName(quran.getPageData(getValue("lastRead"))[0]["surah"]))} - ${getValue("lastRead")}",
                                             style: const TextStyle(
                                                 color: Colors.white)),
                                         const Icon(
@@ -1250,7 +1249,7 @@ class _SurahListPageState extends State<SurahListPage> {
                                                                   )));
                                                 },
                                                 child: Text(
-                                                  "سورة ${quran.getSurahNameArabic(ayatFiltered["result"][index]["surah"])} - ${quran.getVerse(ayatFiltered["result"][index]["surah"], ayatFiltered["result"][index]["verse"], verseEndSymbol: true)}",
+                                                  "${"soura".tr()} ${rtlLanguages.contains(context.locale.languageCode) ? quran.getSurahNameArabic(ayatFiltered["result"][index]["surah"]) : quran.getSurahNameEnglish(ayatFiltered["result"][index]["surah"])} - ${quran.getVerse(ayatFiltered["result"][index]["surah"], ayatFiltered["result"][index]["verse"], verseEndSymbol: true)}",
                                                   textDirection:
                                                       m.TextDirection.rtl,
                                                   style: TextStyle(

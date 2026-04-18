@@ -309,7 +309,7 @@ class _ShareAyahDialogState extends State<ShareAyahDialog> {
                         translationDataList[getValue("addTafseerValue") ?? 0].typeTextInRelatedLanguage,
                         style: TextStyle(
                             color: Colors.black,
-                            fontFamily: translationDataList[getValue("addTafseerValue") ?? 0].typeInNativeLanguage == "العربية"
+                            fontFamily: (translationDataList[getValue("addTafseerValue") ?? 0].typeInNativeLanguage == "العربية" || translationDataList[getValue("addTafseerValue") ?? 0].typeInNativeLanguage == "Kurdish")
                                 ? "cairo"
                                 : "roboto"),
                       ),
@@ -354,7 +354,7 @@ class _ShareAyahDialogState extends State<ShareAyahDialog> {
                         style: TextStyle(
                             color: primaryColors[getValue("quranPageolorsIndex")],
                             fontSize: 22.sp,
-                            fontFamily: context.locale.languageCode == "ar" ? "cairo" : "roboto"),
+                            fontFamily: rtlLanguages.contains(context.locale.languageCode) ? "cairo" : "roboto"),
                       ),
                     ),
                     Expanded(

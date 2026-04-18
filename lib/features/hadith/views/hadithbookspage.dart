@@ -136,8 +136,9 @@ class _HadithBooksPageState extends State<HadithBooksPage> {
                                 ),
                               ),
                               Text(
-                                "Hadith Count: ${categories[index].hadeethsCount}",
+                                "${'hadithCount'.tr()} ${categories[index].hadeethsCount}",
                                 style: TextStyle(
+                                    fontFamily: "cairo",
                                     color: getValue("darkMode")?orangeColor.withOpacity(.9): const Color(0xffA28858)
                                         .withOpacity(.9)),
                               )
@@ -148,7 +149,7 @@ class _HadithBooksPageState extends State<HadithBooksPage> {
                               mainAxisAlignment: MainAxisAlignment.end,
                               children: [
                                 Icon(
-                                  context.locale.languageCode == "ar"
+                                  rtlLanguages.contains(context.locale.languageCode)
                                       ? Entypo.left_open
                                       : Entypo.right_open,
                                   color: getValue("darkMode")?orangeColor.withOpacity(.87): Colors.black87,

@@ -549,8 +549,7 @@ if(isQCF==false) {
                                       fontFamily: translationDataList[getValue(
                                                           "addTafseerValue") ??
                                                       0]
-                                                  .typeInNativeLanguage ==
-                                              "العربية"
+                                                  .typeInNativeLanguage == "العربية" || translationDataList[getValue("addTafseerValue") ?? 0].typeInNativeLanguage == "Kurdish"
                                           ? "cairo"
                                           : "roboto"),
                                 ),
@@ -753,12 +752,7 @@ if(isQCF==false) {
                                   return Padding(
                                     padding: const EdgeInsets.all(6.0),
                                     child: RichText(
-                                        textDirection: translationDataList[
-                                                        getValue(
-                                                            "addTafseerValue")]
-                                                    .typeInNativeLanguage
-                                                    .toString() ==
-                                                "العربية"
+                                        textDirection: ["العربية", "Kurdish"].contains(translationDataList[getValue("addTafseerValue")].typeInNativeLanguage.toString())
                                             ? m.TextDirection.rtl
                                             : m.TextDirection.ltr,
                                         text: TextSpan(
@@ -894,7 +888,7 @@ if(isQCF==false) {
                     child: Text(
                       "savetogallery".tr(),
                       style: TextStyle(
-                          fontSize: context.locale.languageCode == "ar"
+                          fontSize: rtlLanguages.contains(context.locale.languageCode)
                               ? 12.sp
                               : 15.sp,
                           color: Colors.white),

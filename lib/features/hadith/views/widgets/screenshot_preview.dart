@@ -257,7 +257,7 @@ class _ScreenShotPreviewPageState extends State<HadithScreenShotPreviewPage> {
                                         )),
                                   ],
                                 ),
-                              if (context.locale.languageCode != "ar")
+                              if (!rtlLanguages.contains(context.locale.languageCode))
                                 Padding(
                                   padding: const EdgeInsets.symmetric(
                                       vertical: 8.0, horizontal: 12),
@@ -267,7 +267,7 @@ class _ScreenShotPreviewPageState extends State<HadithScreenShotPreviewPage> {
                                     style: TextStyle(
                                       color: const Color(0xff555555),
                                       fontSize: 16.sp,
-                                      fontFamily: 'roboto',
+                                      fontFamily: rtlLanguages.contains(context.locale.languageCode) ? 'cairo' : 'roboto',
                                     ),
                                   ),
                                 ),
@@ -284,7 +284,7 @@ class _ScreenShotPreviewPageState extends State<HadithScreenShotPreviewPage> {
                                           //fontFamily: 'roboto',
                                           color: const Color(
                                               0xffAE8422), //fontFamily: 'Taha',
-                                          fontSize: 16.sp, fontFamily: 'roboto',
+                                          fontSize: 16.sp, fontFamily: rtlLanguages.contains(context.locale.languageCode) ? 'cairo' : 'roboto',
                                         ),
                                       ),
                                     ],
@@ -390,7 +390,7 @@ class _ScreenShotPreviewPageState extends State<HadithScreenShotPreviewPage> {
                     child: Text(
                       "savetogallery".tr(),
                       style: TextStyle(
-                          fontSize: context.locale.languageCode == "ar"
+                          fontSize: rtlLanguages.contains(context.locale.languageCode)
                               ? 12.sp
                               : 15.sp,
                           color: Colors.white),

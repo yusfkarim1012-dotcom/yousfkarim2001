@@ -610,7 +610,7 @@ class _HomeState extends State<Home>
 
   updateDateData() async {
     await Future.delayed(const Duration(milliseconds: 300));
-    HijriCalendar.setLocal(context.locale.languageCode == "ar" ? "ar" : "en");
+    HijriCalendar.setLocal(rtlLanguages.contains(context.locale.languageCode) ? "ar" : "en");
     _today = HijriCalendar.now();
     setState(() {});
   }

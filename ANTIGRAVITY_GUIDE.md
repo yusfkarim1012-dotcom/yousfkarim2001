@@ -1,10 +1,10 @@
-# Antigravity & AI Agent Guide - Khatmah (Skoon) Project
+# Antigravity & AI Agent Guide - Khatmah (Khatmah) Project
 
 > **IMPORTANT NOTICE FOR ANY AI AGENT / LLM:** 
 > Read this document completely BEFORE making any modifications to the project or running any build commands. This ensures you do not break the environment setup.
 
 ## 1. Project Context
-* **App Name:** Khatmah / Skoon
+* **App Name:** Khatmah / Khatmah
 * **Type:** Flutter Android Application
 * **User Context:** The user primarily builds this app for Android (APK for testing, AAB for Google Play Store upload). The user prefers stability and no unnecessary code changes unless explicitly requested.
 

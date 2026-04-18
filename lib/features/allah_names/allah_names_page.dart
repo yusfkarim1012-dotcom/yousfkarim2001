@@ -9,6 +9,7 @@ import 'package:fluttericon/modern_pictograms_icons.dart';
 import 'package:khatmah/features/allah_names/data/allah_names.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter/material.dart' as m;
+import 'package:khatmah/features/allah_names/data/allah_names_ku.dart';
 
 class AllahNamesPage extends StatefulWidget {
   const AllahNamesPage({super.key});
@@ -124,7 +125,7 @@ class _AllahNamesPageState extends State<AllahNamesPage> {
                   gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: 3,
                   ),
-                  itemCount: 100,
+                  itemCount: 99,
                   itemBuilder: (BuildContext context, int index) {
                     return GestureDetector(
                       onTap: () async {
@@ -215,7 +216,7 @@ class _AllahNamesPageState extends State<AllahNamesPage> {
                                             duration: const Duration(
                                                 milliseconds: 1500),
                                             child: Text(
-                                              allahNamesEnglish[index]["en"]
+                                              context.locale.languageCode == "ku" ? allahNamesKu[index]["meaning"] : allahNamesEnglish[index]["en"]
                                                   ["meaning"],
                                               // textAlign: TextAlign.center,
                                               style: TextStyle(
@@ -225,6 +226,7 @@ class _AllahNamesPageState extends State<AllahNamesPage> {
                                               ),
                                             ),
                                           ),
+                                          if (context.locale.languageCode != "ku")
                                           FadeIn(
                                             duration: const Duration(
                                                 milliseconds: 1500),
@@ -269,7 +271,7 @@ class _AllahNamesPageState extends State<AllahNamesPage> {
                             FadeIn(
                                 duration: const Duration(milliseconds: 1500),
                                 child: Text(
-                                  allahNamesEnglish[index]["en"]["desc"],
+                                  context.locale.languageCode == "ku" ? allahNamesKu[index]["desc"] : allahNamesEnglish[index]["en"]["desc"],
                                   textAlign: TextAlign.center,
                                   style: TextStyle(
                                     color: Colors.white,
@@ -282,7 +284,9 @@ class _AllahNamesPageState extends State<AllahNamesPage> {
                             //   "assets/images/divider.png",
                             //   color: const Color(0xffe0cb8a)
                             // ),
+                            if (context.locale.languageCode != "ku")
                             SizedBox(height: 15.h),
+                            if (context.locale.languageCode != "ku")
                             FadeIn(
                                 duration: const Duration(milliseconds: 1500),
                                 child: Text(
@@ -299,7 +303,7 @@ class _AllahNamesPageState extends State<AllahNamesPage> {
                         ),
                       );
                     },
-                    itemCount: 100,
+                    itemCount: 99,
                     controller: pageController,
                     scrollDirection: Axis.vertical,
                     onPageChanged: (i) {

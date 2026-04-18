@@ -106,7 +106,7 @@ dependencies:
   arabic_roman_conv: 
   chewie: ^1.8.0
   flutter_compass_v2: ^1.0.0
-  radio_player:
+  radio_player: ^1.5.0
   in_app_review:
   # circular_progress_bar: 
   geocoding:

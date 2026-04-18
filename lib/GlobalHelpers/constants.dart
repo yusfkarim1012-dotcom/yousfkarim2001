@@ -13,13 +13,13 @@ const Color headingColor = Color(0xFF555555);
 const Color buttonColor = Color(0xFF5D9566);
 const Color borderColor = Color(0xFFDDDDDD);
 const Color homeBackgroundColor = Color.fromARGB(255, 87, 154, 98);
-const Color goldColor = Color.fromARGB(255, 150, 97, 0);
+const Color goldColor = Color(0xff9C27B0); // Purple for obvious update
 Color quranPagesColorLight =
     const Color(0xffF1EEE5);Color quranPagesColorDark =
   const Color(0xff292C31);
 const Color  darkModeSecondaryColor =Color(0xff443F42);
 const Color darkPrimaryColor = Color.fromARGB(255, 17, 18, 27);
-Color orangeColor = const Color(0xffF8672F);
+Color orangeColor = const Color(0xffE91E63); // Pink for obvious update
 Color blueColor =
 const Color(0xff00a2b5);
 List colorsOfBookmarks = [

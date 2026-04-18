@@ -10,7 +10,7 @@ $AndroidSdkDir = Join-Path $DevToolsDir "android-sdk"
 $JdkDir = Join-Path $DevToolsDir "jdk"
 
 echo "--------------------------------------------------------"
-echo "   Khatmah (Skoon) Environment Bootstrap Script"
+echo "   Khatmah (Khatmah) Environment Bootstrap Script"
 echo "--------------------------------------------------------"
 
 # 1. Create directory structure

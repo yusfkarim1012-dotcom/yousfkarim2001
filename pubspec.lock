@@ -1128,10 +1128,10 @@ packages:
     dependency: "direct main"
     description:
       name: radio_player
-      sha256: d8a5af5e7f174cfde62c3e908ca3bc5e48f8d9575d403d3f37dcd1aa18b24ce7
+      sha256: fd204f2e5f99c66f0b8453ef5fb35c0edb0d61d2f4bab5fa86fbbc4186f0588b
       url: "https://pub.dev"
     source: hosted
-    version: "2.2.1"
+    version: "1.7.2"
   rxdart:
     dependency: transitive
     description:

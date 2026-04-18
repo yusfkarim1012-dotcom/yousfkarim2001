@@ -1,8 +1,8 @@
 @echo off
-TITLE Development Environment - Khatmah (Skoon)
+TITLE Development Environment - Khatmah (Khatmah)
 
 echo ========================================================
-echo        Khatmah (Skoon) Portable Development Setup
+echo        Khatmah (Khatmah) Portable Development Setup
 echo              Created specially for Yousf
 echo ========================================================
 

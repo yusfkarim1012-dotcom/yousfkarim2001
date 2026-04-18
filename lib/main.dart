@@ -81,11 +81,11 @@ void main() async {
         Locale('en'),
         Locale('de'),
         Locale("am"),
-        // Locale("jp"),
         Locale("ms"),
         Locale("pt"),
         Locale("tr"),
-        Locale("ru")
+        Locale("ru"),
+        Locale("ku")
       ],
       path:
           'assets/translations', // <-- change the path of the translation files

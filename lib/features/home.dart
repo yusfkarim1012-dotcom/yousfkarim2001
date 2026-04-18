@@ -62,7 +62,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:after_layout/after_layout.dart';
 import 'package:workmanager/workmanager.dart';
 // import 'package:periodic_alarm/src/android_alarm.dart';
-import 'package:flutter/material.dart';
 
 final qurapPagePlayerBloc = QuranPagePlayerBloc();
 final playerPageBloc = PlayerBlocBloc();
@@ -314,6 +313,8 @@ class _HomeState extends State<Home>
         return 'Türkçe';
       case 'ru':
         return 'Русский';
+      case 'ku':
+        return 'کوردی';
       default:
         return languageCode; // Return the language code if not found
     }
@@ -736,18 +737,36 @@ class _HomeState extends State<Home>
                                       child: Row(
                                         mainAxisAlignment: MainAxisAlignment.center,
                                         children: [
-                                          Text(
-                                            _today.toFormat("dd - MMMM - yyyy"),
-                                            style: TextStyle(
-                                                color: getValue("darkMode") ? Colors.white70 : goldColor,
-                                                fontSize: 14.sp),
+                                          Builder(
+                                            builder: (context) {
+                                              try {
+                                                return Text(
+                                                  _today.toFormat("dd - MMMM - yyyy"),
+                                                  style: TextStyle(
+                                                      color: getValue("darkMode") ? Colors.white70 : goldColor,
+                                                      fontSize: 14.sp),
+                                                );
+                                              } catch (e) {
+                                                return Container();
+                                              }
+                                            }
                                           ),
                                           SizedBox(width: 10.w),
-                                          Text(
-                                            DateFormat.yMMMEd(context.locale.languageCode).format(DateTime.now()),
-                                            style: TextStyle(
-                                                color: getValue("darkMode") ? Colors.white70 : goldColor,
-                                                fontSize: 14.sp),
+                                          Builder(
+                                            builder: (context) {
+                                              String formattedDate;
+                                              try {
+                                                formattedDate = DateFormat.yMMMEd(context.locale.languageCode).format(DateTime.now());
+                                              } catch (e) {
+                                                formattedDate = DateFormat.yMMMEd("en").format(DateTime.now());
+                                              }
+                                              return Text(
+                                                formattedDate,
+                                                style: TextStyle(
+                                                    color: getValue("darkMode") ? Colors.white70 : goldColor,
+                                                    fontSize: 14.sp),
+                                              );
+                                            }
                                           ),
                                         ],
                                       ),
@@ -806,13 +825,7 @@ class _HomeState extends State<Home>
                                           //      Navigator.push(context, CupertinoPageRoute(builder: (builder) => const QiblaPage()));
                                           //   }
                                           // ),
-                                          HomeGridItem(
-                                            text: "asmaa".tr(),
-                                            imagePath: "assets/images/names.svg",
-                                            onPressed: () {
-                                               Navigator.push(context, CupertinoPageRoute(builder: (c) => const AllahNamesPage()));
-                                            }
-                                          ),
+
                                            HomeGridItem(
                                             text: "azkar".tr(),
                                             imagePath: "assets/images/azkar.png",
@@ -828,11 +841,12 @@ class _HomeState extends State<Home>
                                                Navigator.push(context, CupertinoPageRoute(builder: (builder) => const SibhaPage()));
                                             }
                                           ),
+
                                           HomeGridItem(
-                                            text: "calender".tr(),
-                                            imagePath: "assets/images/calender1.png",
+                                            text: "radios".tr(),
+                                            imagePath: "assets/images/radio.png",
                                             onPressed: () {
-                                               Navigator.push(context, CupertinoPageRoute(builder: (builder) => const CalenderPage()));
+                                               Navigator.push(context, CupertinoPageRoute(builder: (builder) => const RadioPage()));
                                             }
                                           ),
                                       ],

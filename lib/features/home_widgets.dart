@@ -53,12 +53,24 @@ class HomeHeader extends StatelessWidget {
                   const Locale("ms"),
                   const Locale("pt"),
                   const Locale("tr"),
-                  const Locale("ru")
+                  const Locale("ru"),
+                  const Locale("ku")
                 ].map<DropdownMenuItem<Locale>>((Locale locale) {
+                  Map<String, String> languageNames = {
+                    "ar": "العربية",
+                    "en": "English",
+                    "de": "Deutsch",
+                    "am": "አማርኛ",
+                    "ms": "Melayu",
+                    "pt": "Português",
+                    "tr": "Türkçe",
+                    "ru": "Русский",
+                    "ku": "کوردی"
+                  };
                   return DropdownMenuItem<Locale>(
                     value: locale,
                     child: Text(
-                   locale.languageCode.toUpperCase(),
+                      languageNames[locale.languageCode] ?? locale.languageCode.toUpperCase(),
                       style: TextStyle(
                           color: getValue("darkMode") ? orangeColor : blueColor),
                     ),
@@ -105,12 +117,12 @@ class DailyContentCard extends StatelessWidget {
       onTap: onTap,
       child: Container(
         margin: EdgeInsets.symmetric(horizontal: 16.w),
-        padding: EdgeInsets.all(20.r),
+        padding: EdgeInsets.all(18.0.w),
         decoration: BoxDecoration(
           color: getValue("darkMode")
                         ? const Color(0xff443F42).withOpacity(.9)
                         : const Color(0xffFEFEFE),
-          borderRadius: BorderRadius.circular(24.r),
+          borderRadius: BorderRadius.circular(24.0.r),
            boxShadow: [
             BoxShadow(
               color: Colors.black.withOpacity(0.05),
@@ -186,14 +198,14 @@ class HomeGridItem extends StatelessWidget {
             ? const Color(0xff443F42).withOpacity(.9) // Keeping original dark palette logic
             : const Color(0xffFEFEFE),
         shape: SuperellipseShape(
-          borderRadius: BorderRadius.circular(24.0.r), // Softer radius
+          borderRadius: BorderRadius.circular(20.0.r), // Changed from 24 to 20
         ),
-        elevation: 2,
-        shadowColor: Colors.black12,
+        elevation: 3, // Increased elevation
+        shadowColor: Colors.black26,
         child: InkWell(
           onTap: onPressed,
-          splashColor: orangeColor.withOpacity(0.1),
-          borderRadius: BorderRadius.circular(24.0.r),
+          splashColor: orangeColor.withOpacity(0.2), // Increased opacity
+          borderRadius: BorderRadius.circular(20.0.r),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [

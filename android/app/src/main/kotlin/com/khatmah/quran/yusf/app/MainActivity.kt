@@ -1,4 +1,4 @@
-package com.khatmah.quran.islamic.app
+package com.khatmah.quran.yusf.app
 
 import androidx.annotation.NonNull
 import com.ryanheise.audioservice.AudioServiceActivity

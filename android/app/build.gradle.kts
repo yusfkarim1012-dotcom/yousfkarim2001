@@ -13,7 +13,7 @@ android {
         // ndkVersion = flutter.ndkVersion
     // ndkVersion = "27.0.12077973"
     ndkVersion = "29.0.14206865"
-    namespace = "com.khatmah.quran.islamic.app"
+    namespace = "com.khatmah.quran.yusf.app"
     compileSdk = flutter.compileSdkVersion
 
 
@@ -30,7 +30,7 @@ android {
 
     defaultConfig {
         // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
-        applicationId = "com.khatmah.quran.islamic.app"
+        applicationId = "com.khatmah.quran.yusf.app"
         // You can update the following values to match your application needs.
         // For more information, see: https://flutter.dev/to/review-gradle-config.
         minSdk = 24

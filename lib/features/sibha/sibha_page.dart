@@ -1,8 +1,10 @@
 import 'dart:convert';
 import 'dart:math';
+import 'dart:ui';
 
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:khatmah/GlobalHelpers/constants.dart';
 import 'package:khatmah/GlobalHelpers/hive_helper.dart';
@@ -16,7 +18,7 @@ class SibhaPage extends StatefulWidget {
   State<SibhaPage> createState() => _SibhaPageState();
 }
 
-class _SibhaPageState extends State<SibhaPage> {
+class _SibhaPageState extends State<SibhaPage> with SingleTickerProviderStateMixin {
   List<Tasbeeh> tasbeehList = [
     Tasbeeh(
       id: 0,
@@ -112,15 +114,33 @@ class _SibhaPageState extends State<SibhaPage> {
     ),
   ];
 
+  late AnimationController _tapController;
+  late Animation<double> _scaleAnimation;
+  PageController tasbeehScrollController = PageController(initialPage: 0);
+
   @override
   void initState() {
+    tasbeehScrollController = PageController(initialPage: getValue("tasbeehLastIndex") ?? 0);
     customTasbeehFetcher();
+    _tapController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 100),
+    );
+    _scaleAnimation = Tween<double>(begin: 1.0, end: 0.95).animate(
+      CurvedAnimation(parent: _tapController, curve: Curves.easeInOut),
+    );
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    _tapController.dispose();
+    tasbeehScrollController.dispose();
+    super.dispose();
   }
 
   customTasbeehFetcher() {
     var customTasbeehs = getValue("customTasbeehs");
-    print(customTasbeehs);
     if (customTasbeehs != null) {
       json.decode(customTasbeehs).forEach((t) {
         tasbeehList.add(Tasbeeh(
@@ -134,7 +154,7 @@ class _SibhaPageState extends State<SibhaPage> {
     }
   }
 
-  addCustomTasbeeh(arabic) async{
+  addCustomTasbeeh(arabic) async {
     var customTasbeehs = getValue("customTasbeehs");
     if (customTasbeehs != null) {
       var tasbeehs = json.decode(customTasbeehs);
@@ -169,231 +189,348 @@ class _SibhaPageState extends State<SibhaPage> {
         duration: const Duration(milliseconds: 300), curve: Curves.bounceInOut);
   }
 
-  // removeTasbeeh(arabic) {
-  //   var customTasbeehs = getValue("customTasbeehs");
-  //   if (customTasbeehs != null) {
-  //     var tasbeehs = json.decode(customTasbeehs);
-  //     tasbeehs.add({
-  //       "id": Random().nextInt(665656),
-  //       "arabic": arabic,
-  //     });
-  //     tasbeehList.add(
-  //       Tasbeeh(id: tasbeehs[tasbeehs.length]["id"], arabic: tasbeehs[tasbeehs.length]["arabic"], translation: "", pronunciation: "")
-  //     );
-  //     updateValue("customTasbeehs", json.encode(tasbeehs));
-  //   }
+  void _onTasbeehTap() {
+    HapticFeedback.lightImpact();
+    _tapController.forward().then((_) => _tapController.reverse());
+    updateValue(
+        "${getValue("tasbeehLastIndex")}number",
+        (getValue("${getValue("tasbeehLastIndex")}number") ?? 0) + 1);
+    setState(() {});
+  }
 
-  // }
-  PageController tasbeehScrollController =
-      PageController(initialPage: getValue("tasbeehLastIndex") ?? 0);
+  void _resetCount() {
+    HapticFeedback.mediumImpact();
+    updateValue("${getValue("tasbeehLastIndex")}number", 0);
+    setState(() {});
+  }
+
   @override
   Widget build(BuildContext context) {
     final screenSize = MediaQuery.of(context).size;
+    final isDark = getValue("darkMode") == true;
+    
+    final Color bgGradientStart = isDark ? const Color(0xff0F2027) : const Color(0xff1A2980);
+    final Color bgGradientEnd = isDark ? const Color(0xff203A43) : const Color(0xff26D0CE);
+    final Color textColor = Colors.white;
+
     return Container(
-      decoration: const BoxDecoration(
-          color: darkPrimaryColor,
-          image: DecorationImage(
-              image: AssetImage(
-                "assets/images/tasbeehbackground.png",
-              ),
-              opacity: .03,
-              fit: BoxFit.cover)),
-      child: Scaffold(
-        backgroundColor: Colors.transparent,
-        appBar: AppBar(
-          elevation: 0,
-          backgroundColor: Colors.transparent,
-          actions: [
-            IconButton(
-                onPressed: () {
-showDialog(
-                      // alignment: Alignment.center,
-                      // animationType: DialogTransitionType.,
-                      context: context,
-                      builder: (c) => AddTasbeehDialog(
-                            function: addCustomTasbeeh,
-                          ));
-                },
-                icon: const Icon(Icons.add))
-          ],
-          title: Text(
-            "sibha".tr(),
-            style: const TextStyle(fontFamily: 'cairo'),
-          ),
-          centerTitle: true,
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          colors: [bgGradientStart, bgGradientEnd],
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
         ),
-        body: Column(
-          children: [
-            SizedBox(
-              height: screenSize.height * .04,
+      ),
+      child: Stack(
+        children: [
+          // Subtle Islamic Pattern Overlay
+          Positioned.fill(
+            child: Opacity(
+              opacity: 0.05,
+              child: Image.asset(
+                "assets/images/tasbeehbackground.png",
+                fit: BoxFit.cover,
+                color: Colors.white,
+              ),
             ),
-            Expanded(
-              // height: screenSize.height * .2,
-              // width: screenSize.width,
-              child: PageView.builder(
-                onPageChanged: ((value) {
-                  updateValue("tasbeehLastIndex", value);
-                  setState(() {});
-                }),
-                itemBuilder: (itemBuilder, i) {
-                  return Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Container(
-                      decoration: BoxDecoration(
-                        color: backgroundColor.withOpacity(.75),
-                        borderRadius: BorderRadius.circular(18.r),
+          ),
+          Scaffold(
+            backgroundColor: Colors.transparent,
+            appBar: AppBar(
+              elevation: 0,
+              backgroundColor: Colors.transparent,
+              iconTheme: const IconThemeData(color: Colors.white),
+              actions: [
+                IconButton(
+                  onPressed: () {
+                    showDialog(
+                        context: context,
+                        builder: (c) => AddTasbeehDialog(
+                              function: addCustomTasbeeh,
+                            ));
+                  },
+                  icon: const Icon(Icons.add, color: Colors.white),
+                )
+              ],
+              title: Text(
+                "sibha".tr(),
+                style: TextStyle(
+                  fontFamily: 'cairo',
+                  color: Colors.white,
+                  fontSize: 20.sp,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              centerTitle: true,
+            ),
+            body: Column(
+              children: [
+                SizedBox(height: 20.h),
+                // Glassmorphism Tasbeeh Card
+                SizedBox(
+                  height: screenSize.height * 0.28,
+                  child: PageView.builder(
+                    onPageChanged: ((value) {
+                      updateValue("tasbeehLastIndex", value);
+                      setState(() {});
+                    }),
+                    itemBuilder: (context, i) {
+                      return Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 8.h),
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(25.r),
+                          child: BackdropFilter(
+                            filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+                            child: Container(
+                              padding: EdgeInsets.all(16.w),
+                              decoration: BoxDecoration(
+                                color: Colors.white.withOpacity(0.15),
+                                borderRadius: BorderRadius.circular(25.r),
+                                border: Border.all(
+                                  color: Colors.white.withOpacity(0.3),
+                                  width: 1.5,
+                                ),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.black.withOpacity(0.1),
+                                    blurRadius: 10,
+                                    spreadRadius: 2,
+                                  ),
+                                ],
+                              ),
+                              child: SingleChildScrollView(
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    SizedBox(height: 10.h),
+                                    Text(
+                                      tasbeehList[i].arabic,
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(
+                                        color: textColor,
+                                        fontFamily: "cairo",
+                                        fontSize: 22.sp,
+                                        height: 1.5,
+                                        fontWeight: FontWeight.w700,
+                                      ),
+                                    ),
+                                    if (tasbeehList[i].pronunciation != "" || tasbeehList[i].translation != "")
+                                      Padding(
+                                        padding: EdgeInsets.symmetric(vertical: 8.h),
+                                        child: Divider(color: Colors.white.withOpacity(0.3), thickness: 1),
+                                      ),
+                                    if (tasbeehList[i].pronunciation != "")
+                                      Text(
+                                        tasbeehList[i].pronunciation,
+                                        textAlign: TextAlign.center,
+                                        style: TextStyle(
+                                          color: textColor.withOpacity(0.9),
+                                          fontFamily: "roboto",
+                                          fontSize: 14.sp,
+                                          fontStyle: FontStyle.italic,
+                                        ),
+                                      ),
+                                    if (tasbeehList[i].translation != "") SizedBox(height: 4.h),
+                                    if (tasbeehList[i].translation != "")
+                                      Text(
+                                        tasbeehList[i].translation,
+                                        textAlign: TextAlign.center,
+                                        style: TextStyle(
+                                          color: textColor.withOpacity(0.8),
+                                          fontFamily: "roboto",
+                                          fontSize: 13.sp,
+                                        ),
+                                      ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      );
+                    },
+                    itemCount: tasbeehList.length,
+                    scrollDirection: Axis.horizontal,
+                    controller: tasbeehScrollController,
+                  ),
+                ),
+                
+                SizedBox(height: 30.h),
+                
+                // Navigation and Reset Controls
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 40.w),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      // Previous Button
+                      _buildNavButton(
+                        icon: Icons.arrow_back_ios_new_rounded,
+                        onTap: () {
+                          if (getValue("tasbeehLastIndex") != 0) {
+                            tasbeehScrollController.animateToPage(
+                                getValue("tasbeehLastIndex") - 1,
+                                duration: const Duration(milliseconds: 300),
+                                curve: Curves.easeOutCubic);
+                          }
+                        },
                       ),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
+                      
+                      // Reset Button
+                      InkWell(
+                        onTap: _resetCount,
+                        borderRadius: BorderRadius.circular(30.r),
+                        child: Container(
+                          padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 12.h),
+                          decoration: BoxDecoration(
+                            color: Colors.white.withOpacity(0.2),
+                            borderRadius: BorderRadius.circular(30.r),
+                            border: Border.all(color: Colors.white.withOpacity(0.4), width: 1),
+                          ),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Icon(Icons.refresh_rounded, color: Colors.white, size: 20.sp),
+                              SizedBox(width: 8.w),
+                              Text(
+                                "0",
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 16.sp,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      
+                      // Next Button
+                      _buildNavButton(
+                        icon: Icons.arrow_forward_ios_rounded,
+                        onTap: () {
+                          if (getValue("tasbeehLastIndex") != tasbeehList.length - 1) {
+                            tasbeehScrollController.animateToPage(
+                                getValue("tasbeehLastIndex") + 1,
+                                duration: const Duration(milliseconds: 300),
+                                curve: Curves.easeOutCubic);
+                          }
+                        },
+                      ),
+                    ],
+                  ),
+                ),
+                
+                const Spacer(),
+                
+                // Giant Interactive Counter Button
+                GestureDetector(
+                  onTap: _onTasbeehTap,
+                  child: ScaleTransition(
+                    scale: _scaleAnimation,
+                    child: Container(
+                      width: 220.w,
+                      height: 220.w,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: Colors.white.withOpacity(0.1),
+                        border: Border.all(color: Colors.white.withOpacity(0.5), width: 2),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.cyanAccent.withOpacity(0.2),
+                            blurRadius: 40,
+                            spreadRadius: 10,
+                          ),
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.3),
+                            blurRadius: 15,
+                            offset: const Offset(0, 10),
+                          )
+                        ],
+                      ),
+                      child: Stack(
+                        alignment: Alignment.center,
                         children: [
-                          Text(tasbeehList[i].arabic,
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                  color: Colors.black,
-                                  fontFamily: "cairo",
-                                  fontSize: 18.sp,
-                                  fontWeight: FontWeight.bold)),
-                          if (tasbeehList[i].pronunciation != "")
-                            const Divider(),
-                          if (tasbeehList[i].pronunciation != "")
-                            Text(tasbeehList[i].pronunciation,
-                                textAlign: TextAlign.center,
+                          // Outer ring decoration
+                          Container(
+                            width: 190.w,
+                            height: 190.w,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              border: Border.all(color: Colors.white.withOpacity(0.2), width: 1),
+                            ),
+                          ),
+                          // Inner circle
+                          Container(
+                            width: 160.w,
+                            height: 160.w,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              gradient: LinearGradient(
+                                colors: [
+                                  Colors.white.withOpacity(0.3),
+                                  Colors.white.withOpacity(0.05)
+                                ],
+                                begin: Alignment.topLeft,
+                                end: Alignment.bottomRight,
+                              ),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black.withOpacity(0.2),
+                                  blurRadius: 10,
+                                  spreadRadius: -5,
+                                  offset: const Offset(0, 5),
+                                )
+                              ]
+                            ),
+                            child: Center(
+                              child: Text(
+                                "${getValue("${getValue("tasbeehLastIndex")}number") ?? 0}",
                                 style: TextStyle(
-                                    color: Colors.black.withOpacity(.6),
-                                    fontFamily: "roboto",
-                                    fontSize: 14.sp,
-                                    fontWeight: FontWeight.bold)),
-                          if (tasbeehList[i].translation != "") const Divider(),
-                          if (tasbeehList[i].translation != "")
-                            Text(tasbeehList[i].translation,
-                                textAlign: TextAlign.center,
-                                style: TextStyle(
-                                    color: Colors.black.withOpacity(.5),
-                                    fontFamily: "roboto",
-                                    fontSize: 14.sp,
-                                    fontWeight: FontWeight.bold))
+                                  color: Colors.white,
+                                  fontSize: 60.sp,
+                                  fontWeight: FontWeight.w800,
+                                  fontFamily: "roboto",
+                                  shadows: [
+                                    Shadow(
+                                      color: Colors.black.withOpacity(0.3),
+                                      blurRadius: 10,
+                                      offset: const Offset(0, 4),
+                                    ),
+                                  ]
+                                ),
+                              ),
+                            ),
+                          ),
                         ],
                       ),
                     ),
-                  );
-                },
-                itemCount: tasbeehList.length,
-                scrollDirection: Axis.horizontal,
-                controller: tasbeehScrollController,
-              ),
-            ),
-            SizedBox(
-              height: 20.h,
-            ),
-            SizedBox(
-              width: screenSize.width,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  InkWell(
-                    splashColor: Colors.transparent,
-                    highlightColor: Colors.transparent,
-                    onTap: () {
-                      print("object");
-                      if (getValue("tasbeehLastIndex") != 0) {
-                        tasbeehScrollController.animateToPage(
-                            getValue("tasbeehLastIndex") - 1,
-                            duration: const Duration(milliseconds: 200),
-                            curve: Curves.decelerate);
-                      }
-                      setState(() {});
-                    },
-                    child: SizedBox(
-                      width: screenSize.width * .3,
-                      height: screenSize.height * .062,
-                      child: Center(
-                        child: Padding(
-                          padding: EdgeInsets.only(left: 40.w),
-                          child: Icon(
-                            Icons.arrow_back_ios,
-                            color: Colors.white.withOpacity(.8),
-                          ),
-                        ),
-                      ),
-                    ),
                   ),
-                  InkWell(
-                    splashColor: Colors.transparent,
-                    highlightColor: Colors.transparent,
-                    onTap: () {
-                      updateValue("${getValue("tasbeehLastIndex")}number", (0));
-                      setState(() {});
-                    },
-                    child: SizedBox(
-                      width: screenSize.width * .3,
-                      height: screenSize.height * .062,
-                      child: Center(
-                        child: Padding(
-                          padding: EdgeInsets.only(left: 0.w),
-                          child: Icon(
-                            Icons.replay_outlined,
-                            color: Colors.white.withOpacity(.8),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                  InkWell(
-                    splashColor: Colors.transparent,
-                    highlightColor: Colors.transparent,
-                    onTap: () {
-                      if (getValue("tasbeehLastIndex") !=
-                          tasbeehList.length - 1) {
-                        tasbeehScrollController.animateToPage(
-                            getValue("tasbeehLastIndex") + 1,
-                            duration: const Duration(milliseconds: 200),
-                            curve: Curves.decelerate);
-                        setState(() {});
-                      }
-                    },
-                    child: SizedBox(
-                      height: screenSize.height * .062,
-                      width: screenSize.width * .3,
-                      child: Padding(
-                        padding: EdgeInsets.only(right: 40.w),
-                        child: Icon(
-                          Icons.arrow_forward_ios,
-                          color: Colors.white.withOpacity(.8),
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
+                ),
+                SizedBox(height: screenSize.height * 0.1),
+              ],
             ),
-            Expanded(
-              child: InkWell(
-                  overlayColor:
-                      WidgetStatePropertyAll(Colors.white.withOpacity(.2)),
-                  splashColor: Colors.white.withOpacity(.1),
-                  focusColor: Colors.white.withOpacity(.1),
-                  hoverColor: Colors.white.withOpacity(.1),
-                  highlightColor: Colors.white.withOpacity(.1),
-                  borderRadius: BorderRadius.circular(200),
-                  onTap: () {
-                    updateValue(
-                        "${getValue("tasbeehLastIndex")}number",
-                        (getValue("${getValue("tasbeehLastIndex")}number") ??
-                                0) +
-                            1);
-                    setState(() {});
-                  },
-                  child: Center(
-                    child: Text(
-                        "${getValue("${getValue("tasbeehLastIndex")}number") ?? 0}",
-                        style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 50.sp,
-                            fontWeight: FontWeight.bold,
-                            fontFamily: "roboto")),
-                  )),
-            )
-          ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildNavButton({required IconData icon, required VoidCallback onTap}) {
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(25.r),
+      child: Container(
+        padding: EdgeInsets.all(12.w),
+        decoration: BoxDecoration(
+          color: Colors.white.withOpacity(0.1),
+          shape: BoxShape.circle,
+        ),
+        child: Icon(
+          icon,
+          color: Colors.white.withOpacity(0.9),
+          size: 22.sp,
         ),
       ),
     );

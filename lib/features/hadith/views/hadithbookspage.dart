@@ -30,7 +30,7 @@ class _HadithBooksPageState extends State<HadithBooksPage> {
     categories = [];
        categories.add(Category(id: "100000", title: "allHadith".tr(), hadeethsCount: "2000+", parentId: "parentId"));
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-    if (prefs.getString("categories-${widget.locale}") == null) {
+    if (prefs.getString("categories-v2-${widget.locale}") == null) {
       Response response = await Dio().get(
           "https://hadeethenc.com/api/v1/categories/roots/?language=${widget.locale}");
       print(response.data);
@@ -40,7 +40,7 @@ class _HadithBooksPageState extends State<HadithBooksPage> {
       isLoading = false;
     } else {
       print("stored offline");
-      final jsonData = prefs.getString("categories-${widget.locale}");
+      final jsonData = prefs.getString("categories-v2-${widget.locale}");
 
       if (jsonData != null) {
         

@@ -37,9 +37,9 @@ class _HadithListState extends State<HadithList> {
     hadithes = [];
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     final jsonData =
-        prefs.getString("hadithlist-${widget.id}-${widget.locale}");
-    if (widget.id == "100000"&&prefs.getString("hadithlist-100000-${widget.locale}")!=null) {
-      final jsonData = prefs.getString("hadithlist-100000-${widget.locale}");
+        prefs.getString("hadithlist-v2-${widget.id}-${widget.locale}");
+    if (widget.id == "100000"&&prefs.getString("hadithlist-v2-100000-${widget.locale}")!=null) {
+      final jsonData = prefs.getString("hadithlist-v2-100000-${widget.locale}");
       final data = json.decode(jsonData!) as List<dynamic>;
       for (var hadith in data) {
         if (hadithes

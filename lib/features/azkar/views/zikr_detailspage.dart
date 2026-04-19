@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart' hide TextDirection;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -51,7 +52,7 @@ class _ZikrPageState extends State<ZikrPage> {
                       height: 50.h,
                     ),
                     Text(
-                      widget.zikr.category,
+                      widget.zikr.category.tr(),
                       style: TextStyle(
                           fontFamily: "cairo",
                           color: Colors.white,
@@ -95,18 +96,42 @@ class _ZikrPageState extends State<ZikrPage> {
                                                     msg:
                                                         "Copied to Clipboard"));
                                       },
-                                      child: Text(
-                                        widget
-                                            .zikr
-                                            .array[getValue(
-                                                "${widget.zikr.category}zikrIndex")]
-                                            .text,
-                                        textDirection: TextDirection.rtl,
-                                        textAlign: TextAlign.center,
-                                        style: TextStyle(
-                                            color: Colors.white,
-                                            locale: const Locale("ar"),
-                                            fontSize: 19.sp),
+                                      child: Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          Text(
+                                            widget
+                                                .zikr
+                                                .array[getValue(
+                                                    "${widget.zikr.category}zikrIndex")]
+                                                .text,
+                                            textDirection: TextDirection.rtl,
+                                            textAlign: TextAlign.center,
+                                            style: TextStyle(
+                                                color: Colors.white,
+                                                locale: const Locale("ar"),
+                                                fontSize: 19.sp,
+                                                height: 1.6),
+                                          ),
+                                          SizedBox(height: 20.h),
+                                          Container(
+                                            padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 8.h),
+                                            decoration: BoxDecoration(
+                                              color: Colors.white.withOpacity(0.15),
+                                              borderRadius: BorderRadius.circular(30.r),
+                                              border: Border.all(color: Colors.white.withOpacity(0.3)),
+                                            ),
+                                            child: Text(
+                                              "العدد: ${widget.zikr.array[getValue("${widget.zikr.category}zikrIndex")].count}",
+                                              style: TextStyle(
+                                                color: Colors.white,
+                                                fontSize: 16.sp,
+                                                fontWeight: FontWeight.bold,
+                                                fontFamily: "cairo",
+                                              ),
+                                            ),
+                                          ),
+                                        ],
                                       ),
                                     ),
                                   ),

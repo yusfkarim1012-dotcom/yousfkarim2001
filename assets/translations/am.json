@@ -90,5 +90,7 @@
   "newBookmark": "አዲስ መገልገያ መጨመር",
   "nameOfBookmark": "የተለያዩ ስም ይምረጡ",
   "color": "የመገልገያ ቀለም",
-  "saveBookmark": "መገልገያ አስቀምጥ"
+  "saveBookmark": "መገልገያ አስቀምጥ",
+  "morning_azkar": "የጠዋት ዚክሮች",
+  "evening_azkar": "የማታ ዚክሮች"
 }

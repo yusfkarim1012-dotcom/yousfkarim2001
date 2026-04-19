@@ -155,7 +155,7 @@ class _AzkarHomePageState extends State<AzkarHomePage> {
                                       MainAxisAlignment.spaceBetween,
                                   children: [
                                     Text(
-                                      tempAzkar[i]["category"],
+                                      tempAzkar[i]["category"].toString().tr(),
                                       style: TextStyle(
                                         color:getValue("darkMode")
               ? Colors.white.withOpacity(.9): blueColor,

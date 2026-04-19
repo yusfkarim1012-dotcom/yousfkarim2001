@@ -117,14 +117,14 @@ class _SplashScreenState extends State<SplashScreen> {
   downloadAndStoreHadithData() async {
     await Future.delayed(const Duration(seconds: 1));
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-    if (prefs.getString("hadithlist-100000-${context.locale.languageCode}") ==
+    if (prefs.getString("hadithlist-v2-100000-${context.locale.languageCode}") ==
         null) {
       Response response = await Dio().get(
           "https://hadeethenc.com/api/v1/categories/roots/?language=${context.locale.languageCode}");
 
       if (response.data != null) {
         final jsonData = json.encode(response.data);
-        prefs.setString("categories-${context.locale.languageCode}", jsonData);
+        prefs.setString("categories-v2-${context.locale.languageCode}", jsonData);
 
         response.data.forEach((category) async {
           Response response2 = await Dio().get(
@@ -133,22 +133,22 @@ class _SplashScreenState extends State<SplashScreen> {
           if (response2.data != null) {
             final jsonData = json.encode(response2.data["data"]);
             prefs.setString(
-                "hadithlist-${category["id"]}-${context.locale.languageCode}",
+                "hadithlist-v2-${category["id"]}-${context.locale.languageCode}",
                 jsonData);
 
             ///add to category of all hadithlist
             if (prefs.getString(
-                    "hadithlist-100000-${context.locale.languageCode}") ==
+                    "hadithlist-v2-100000-${context.locale.languageCode}") ==
                 null) {
               prefs.setString(
-                  "hadithlist-100000-${context.locale.languageCode}", jsonData);
+                  "hadithlist-v2-100000-${context.locale.languageCode}", jsonData);
             } else {
               final dataOfOldHadithlist = json.decode(prefs.getString(
-                      "hadithlist-100000-${context.locale.languageCode}")!)
+                      "hadithlist-v2-100000-${context.locale.languageCode}")!)
                   as List<dynamic>;
               dataOfOldHadithlist.addAll(json.decode(jsonData));
               prefs.setString(
-                  "hadithlist-100000-${context.locale.languageCode}",
+                  "hadithlist-v2-100000-${context.locale.languageCode}",
                   json.encode(dataOfOldHadithlist));
             }
           }

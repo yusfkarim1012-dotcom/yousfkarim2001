@@ -1,7 +1,7 @@
 List azkar = [
   {
     "id": 1,
-    "category": "جوامع الدعاء",
+    "category": "concise_supplications",
     "audio":
         "http://www.hisnmuslim.com/audio/ar/ar_7esn_AlMoslem_by_Doors_028.mp3",
     "filename": "ar_7esn_AlMoslem_by_Doors_028",
@@ -325,7 +325,7 @@ List azkar = [
 
   {
     "id": 2,
-    "category": "أذكار النوم",
+    "category": "azkar_sleeping",
     "audio":
         "http://www.hisnmuslim.com/audio/ar/ar_7esn_AlMoslem_by_Doors_029.mp3",
     "filename": "ar_7esn_AlMoslem_by_Doors_029",
@@ -436,7 +436,7 @@ List azkar = [
   },
   {
     "id": 3,
-    "category": "أذكار الاستيقاظ من النوم",
+    "category": "azkar_waking_up",
     "audio":
         "http://www.hisnmuslim.com/audio/ar/ar_7esn_AlMoslem_by_Doors_002.mp3",
     "filename": "ar_7esn_AlMoslem_by_Doors_002",
@@ -477,7 +477,7 @@ List azkar = [
   },
   {
     "id": 4,
-    "category": "دعاء دخول الخلاء",
+    "category": "dua_entering_toilet",
     "audio":
         "http://www.hisnmuslim.com/audio/ar/ar_7esn_AlMoslem_by_Doors_007.mp3",
     "filename": "ar_7esn_AlMoslem_by_Doors_007",
@@ -494,7 +494,7 @@ List azkar = [
   },
   {
     "id": 5,
-    "category": "دعاء الخروج من الخلاء",
+    "category": "dua_leaving_toilet",
     "audio":
         "http://www.hisnmuslim.com/audio/ar/ar_7esn_AlMoslem_by_Doors_008.mp3",
     "filename": "ar_7esn_AlMoslem_by_Doors_008",
@@ -510,7 +510,7 @@ List azkar = [
   },
   {
     "id": 6,
-    "category": "الذكر قبل الوضوء",
+    "category": "azkar_before_wudu",
     "audio":
         "http://www.hisnmuslim.com/audio/ar/ar_7esn_AlMoslem_by_Doors_009.mp3",
     "filename": "ar_7esn_AlMoslem_by_Doors_009",
@@ -526,7 +526,7 @@ List azkar = [
   },
   {
     "id": 7,
-    "category": "الذكر بعد الفراغ من الوضوء",
+    "category": "azkar_after_wudu",
     "audio":
         "http://www.hisnmuslim.com/audio/ar/ar_7esn_AlMoslem_by_Doors_010.mp3",
     "filename": "ar_7esn_AlMoslem_by_Doors_010",
@@ -559,7 +559,7 @@ List azkar = [
   },
   {
     "id": 8,
-    "category": "الذكر عند الخروج من المنزل",
+    "category": "azkar_leaving_home",
     "audio":
         "http://www.hisnmuslim.com/audio/ar/ar_7esn_AlMoslem_by_Doors_011.mp3",
     "filename": "ar_7esn_AlMoslem_by_Doors_011",
@@ -584,7 +584,7 @@ List azkar = [
   },
   {
     "id": 9,
-    "category": "الذكر عند دخول المنزل",
+    "category": "azkar_entering_home",
     "audio":
         "http://www.hisnmuslim.com/audio/ar/ar_7esn_AlMoslem_by_Doors_012.mp3",
     "filename": "ar_7esn_AlMoslem_by_Doors_012",
@@ -601,7 +601,7 @@ List azkar = [
   },
   {
     "id": 10,
-    "category": "دعاء الذهاب إلى المسجد",
+    "category": "dua_going_to_mosque",
     "audio":
         "http://www.hisnmuslim.com/audio/ar/ar_7esn_AlMoslem_by_Doors_013.mp3",
     "filename": "ar_7esn_AlMoslem_by_Doors_013",
@@ -618,7 +618,7 @@ List azkar = [
   },
   {
     "id": 11,
-    "category": "دعاء دخول المسجد",
+    "category": "dua_entering_mosque",
     "audio":
         "http://www.hisnmuslim.com/audio/ar/ar_7esn_AlMoslem_by_Doors_014.mp3",
     "filename": "ar_7esn_AlMoslem_by_Doors_014",
@@ -635,7 +635,7 @@ List azkar = [
   },
   {
     "id": 12,
-    "category": "دعاء الخروج من المسجد",
+    "category": "dua_leaving_mosque",
     "audio":
         "http://www.hisnmuslim.com/audio/ar/ar_7esn_AlMoslem_by_Doors_015.mp3",
     "filename": "ar_7esn_AlMoslem_by_Doors_015",
@@ -652,7 +652,7 @@ List azkar = [
   },
   {
     "id": 13,
-    "category": "أذكار الآذان",
+    "category": "azkar_adhan",
     "audio":
         "http://www.hisnmuslim.com/audio/ar/ar_7esn_AlMoslem_by_Doors_016.mp3",
     "filename": "ar_7esn_AlMoslem_by_Doors_016",
@@ -701,7 +701,7 @@ List azkar = [
   },
   {
     "id": 14,
-    "category": "دعاء ُلبْس الثوب",
+    "category": "dua_wearing_clothes",
     "audio":
         "http://www.hisnmuslim.com/audio/ar/ar_7esn_AlMoslem_by_Doors_003.mp3",
     "filename": "ar_7esn_AlMoslem_by_Doors_003",
@@ -718,7 +718,7 @@ List azkar = [
   },
   {
     "id": 15,
-    "category": "دعاء ُلبْس الثوب الجديد",
+    "category": "dua_wearing_new_clothes",
     "audio":
         "http://www.hisnmuslim.com/audio/ar/ar_7esn_AlMoslem_by_Doors_004.mp3",
     "filename": "ar_7esn_AlMoslem_by_Doors_004",
@@ -735,7 +735,7 @@ List azkar = [
   },
   {
     "id": 16,
-    "category": "الدعاء لمن لبس ثوبا جديدا",
+    "category": "dua_for_someone_wearing_new_clothes",
     "audio":
         "http://www.hisnmuslim.com/audio/ar/ar_7esn_AlMoslem_by_Doors_005.mp3",
     "filename": "ar_7esn_AlMoslem_by_Doors_005",
@@ -758,7 +758,7 @@ List azkar = [
   },
   {
     "id": 17,
-    "category": "ما يقول إذا وضع ثوبه",
+    "category": "what_to_say_undressing",
     "audio":
         "http://www.hisnmuslim.com/audio/ar/ar_7esn_AlMoslem_by_Doors_006.mp3",
     "filename": "ar_7esn_AlMoslem_by_Doors_006",
@@ -774,7 +774,7 @@ List azkar = [
   },
   {
     "id": 18,
-    "category": "دعاء الاستفتاح",
+    "category": "dua_istiftah",
     "audio":
         "http://www.hisnmuslim.com/audio/ar/ar_7esn_AlMoslem_by_Doors_017.mp3",
     "filename": "ar_7esn_AlMoslem_by_Doors_017",
@@ -831,7 +831,7 @@ List azkar = [
   },
   {
     "id": 19,
-    "category": "دعاء الركوع",
+    "category": "dua_bowing",
     "audio":
         "http://www.hisnmuslim.com/audio/ar/ar_7esn_AlMoslem_by_Doors_018.mp3",
     "filename": "ar_7esn_AlMoslem_by_Doors_018",
@@ -878,7 +878,7 @@ List azkar = [
   },
   {
     "id": 20,
-    "category": "دعاء الرفع من الركوع",
+    "category": "dua_rising_from_bowing",
     "audio":
         "http://www.hisnmuslim.com/audio/ar/ar_7esn_AlMoslem_by_Doors_019.mp3",
     "filename": "ar_7esn_AlMoslem_by_Doors_019",
@@ -910,7 +910,7 @@ List azkar = [
   },
   {
     "id": 21,
-    "category": "دعاء السجود",
+    "category": "dua_prostration",
     "audio":
         "http://www.hisnmuslim.com/audio/ar/ar_7esn_AlMoslem_by_Doors_020.mp3",
     "filename": "ar_7esn_AlMoslem_by_Doors_020",
@@ -973,7 +973,7 @@ List azkar = [
   },
   {
     "id": 22,
-    "category": "دعاء الجلسة بين السجدتين",
+    "category": "dua_sitting_between_prostrations",
     "audio":
         "http://www.hisnmuslim.com/audio/ar/ar_7esn_AlMoslem_by_Doors_021.mp3",
     "filename": "ar_7esn_AlMoslem_by_Doors_021",
@@ -997,7 +997,7 @@ List azkar = [
   },
   {
     "id": 23,
-    "category": "دعاء سجود التلاوة",
+    "category": "dua_prostration_recitation",
     "audio":
         "http://www.hisnmuslim.com/audio/ar/ar_7esn_AlMoslem_by_Doors_022.mp3",
     "filename": "ar_7esn_AlMoslem_by_Doors_022",
@@ -1022,7 +1022,7 @@ List azkar = [
   },
   {
     "id": 24,
-    "category": "التشهد",
+    "category": "tashahhud",
     "audio":
         "http://www.hisnmuslim.com/audio/ar/ar_7esn_AlMoslem_by_Doors_023.mp3",
     "filename": "ar_7esn_AlMoslem_by_Doors_023",
@@ -1039,7 +1039,7 @@ List azkar = [
   },
   {
     "id": 25,
-    "category": "الصلاة على النبي بعد التشهد",
+    "category": "salah_on_prophet_after_tashahhud",
     "audio":
         "http://www.hisnmuslim.com/audio/ar/ar_7esn_AlMoslem_by_Doors_024.mp3",
     "filename": "ar_7esn_AlMoslem_by_Doors_024",
@@ -1064,7 +1064,7 @@ List azkar = [
   },
   {
     "id": 26,
-    "category": "الدعاء بعد التشهد الأخير قبل السلام",
+    "category": "dua_after_last_tashahhud",
     "audio":
         "http://www.hisnmuslim.com/audio/ar/ar_7esn_AlMoslem_by_Doors_025.mp3",
     "filename": "ar_7esn_AlMoslem_by_Doors_025",
@@ -1161,7 +1161,7 @@ List azkar = [
   },
   {
     "id": 27,
-    "category": "الأذكار بعد السلام من الصلاة",
+    "category": "azkar_after_prayer",
     "audio":
         "http://www.hisnmuslim.com/audio/ar/ar_7esn_AlMoslem_by_Doors_026.mp3",
     "filename": "ar_7esn_AlMoslem_by_Doors_026",
@@ -1234,7 +1234,7 @@ List azkar = [
   },
   {
     "id": 28,
-    "category": "دعاء صلاة الاستخارة",
+    "category": "dua_istikhara",
     "audio":
         "http://www.hisnmuslim.com/audio/ar/ar_7esn_AlMoslem_by_Doors_027.mp3",
     "filename": "ar_7esn_AlMoslem_by_Doors_027",
@@ -1251,7 +1251,7 @@ List azkar = [
   },
   {
     "id": 29,
-    "category": "الدعاء إذا تقلب ليلا",
+    "category": "dua_if_turning_at_night",
     "audio":
         "http://www.hisnmuslim.com/audio/ar/ar_7esn_AlMoslem_by_Doors_030.mp3",
     "filename": "ar_7esn_AlMoslem_by_Doors_030",
@@ -1268,7 +1268,7 @@ List azkar = [
   },
   {
     "id": 30,
-    "category": "دعاء الفزع في النوم و من بُلِيَ بالوحشة",
+    "category": "dua_fear_during_sleep",
     "audio":
         "http://www.hisnmuslim.com/audio/ar/ar_7esn_AlMoslem_by_Doors_031.mp3",
     "filename": "ar_7esn_AlMoslem_by_Doors_031",
@@ -1285,7 +1285,7 @@ List azkar = [
   },
   {
     "id": 31,
-    "category": "ما يفعل من رأى الرؤيا أو الحلم",
+    "category": "what_to_do_after_dream",
     "audio":
         "http://www.hisnmuslim.com/audio/ar/ar_7esn_AlMoslem_by_Doors_032.mp3",
     "filename": "ar_7esn_AlMoslem_by_Doors_032",
@@ -1309,7 +1309,7 @@ List azkar = [
   },
   {
     "id": 32,
-    "category": "دعاء قنوت الوتر",
+    "category": "dua_qunut_witr",
     "audio":
         "http://www.hisnmuslim.com/audio/ar/ar_7esn_AlMoslem_by_Doors_033.mp3",
     "filename": "ar_7esn_AlMoslem_by_Doors_033",
@@ -1342,7 +1342,7 @@ List azkar = [
   },
   {
     "id": 33,
-    "category": "الذكر عقب السلام من الوتر",
+    "category": "azkar_after_witr",
     "audio":
         "http://www.hisnmuslim.com/audio/ar/ar_7esn_AlMoslem_by_Doors_034.mp3",
     "filename": "ar_7esn_AlMoslem_by_Doors_034",
@@ -1359,7 +1359,7 @@ List azkar = [
   },
   {
     "id": 34,
-    "category": "دعاء الهم والحزن",
+    "category": "dua_anxiety_sorrow",
     "audio":
         "http://www.hisnmuslim.com/audio/ar/ar_7esn_AlMoslem_by_Doors_035.mp3",
     "filename": "ar_7esn_AlMoslem_by_Doors_035",
@@ -1384,7 +1384,7 @@ List azkar = [
   },
   {
     "id": 35,
-    "category": "دعاء الكرب",
+    "category": "dua_distress",
     "audio":
         "http://www.hisnmuslim.com/audio/ar/ar_7esn_AlMoslem_by_Doors_036.mp3",
     "filename": "ar_7esn_AlMoslem_by_Doors_036",
@@ -1424,7 +1424,7 @@ List azkar = [
   },
   {
     "id": 36,
-    "category": "دعاء لقاء العدو و ذي السلطان",
+    "category": "dua_meeting_enemy_ruler",
     "audio":
         "http://www.hisnmuslim.com/audio/ar/ar_7esn_AlMoslem_by_Doors_037.mp3",
     "filename": "ar_7esn_AlMoslem_by_Doors_037",
@@ -1456,7 +1456,7 @@ List azkar = [
   },
   {
     "id": 37,
-    "category": "دعاء من خاف ظلم السلطان",
+    "category": "dua_fear_of_ruler_oppression",
     "audio":
         "http://www.hisnmuslim.com/audio/ar/ar_7esn_AlMoslem_by_Doors_038.mp3",
     "filename": "ar_7esn_AlMoslem_by_Doors_038",
@@ -1481,7 +1481,7 @@ List azkar = [
   },
   {
     "id": 38,
-    "category": "الدعاء على العدو",
+    "category": "dua_against_enemy",
     "audio":
         "http://www.hisnmuslim.com/audio/ar/ar_7esn_AlMoslem_by_Doors_039.mp3",
     "filename": "ar_7esn_AlMoslem_by_Doors_039",
@@ -1498,7 +1498,7 @@ List azkar = [
   },
   {
     "id": 39,
-    "category": "ما يقول من خاف قوما",
+    "category": "what_to_say_when_fearing_people",
     "audio":
         "http://www.hisnmuslim.com/audio/ar/ar_7esn_AlMoslem_by_Doors_040.mp3",
     "filename": "ar_7esn_AlMoslem_by_Doors_040",
@@ -1514,7 +1514,7 @@ List azkar = [
   },
   {
     "id": 40,
-    "category": "دعاء من أصابه وسوسة في الإيمان",
+    "category": "dua_distraction_faith",
     "audio":
         "http://www.hisnmuslim.com/audio/ar/ar_7esn_AlMoslem_by_Doors_041.mp3",
     "filename": "ar_7esn_AlMoslem_by_Doors_041",
@@ -1545,7 +1545,7 @@ List azkar = [
   },
   {
     "id": 41,
-    "category": "دعاء قضاء الدين",
+    "category": "dua_repaying_debt",
     "audio":
         "http://www.hisnmuslim.com/audio/ar/ar_7esn_AlMoslem_by_Doors_042.mp3",
     "filename": "ar_7esn_AlMoslem_by_Doors_042",
@@ -1570,7 +1570,7 @@ List azkar = [
   },
   {
     "id": 42,
-    "category": "دعاء الوسوسة في الصلاة و القراءة",
+    "category": "dua_distraction_prayer",
     "audio":
         "http://www.hisnmuslim.com/audio/ar/ar_7esn_AlMoslem_by_Doors_043.mp3",
     "filename": "ar_7esn_AlMoslem_by_Doors_043",
@@ -1587,7 +1587,7 @@ List azkar = [
   },
   {
     "id": 43,
-    "category": "دعاء من استصعب عليه أمر",
+    "category": "dua_difficult_task",
     "audio":
         "http://www.hisnmuslim.com/audio/ar/ar_7esn_AlMoslem_by_Doors_044.mp3",
     "filename": "ar_7esn_AlMoslem_by_Doors_044",
@@ -1604,7 +1604,7 @@ List azkar = [
   },
   {
     "id": 44,
-    "category": "ما يقول ويفعل من أذنب ذنبا",
+    "category": "what_to_do_after_sin",
     "audio":
         "http://www.hisnmuslim.com/audio/ar/ar_7esn_AlMoslem_by_Doors_045.mp3",
     "filename": "ar_7esn_AlMoslem_by_Doors_045",
@@ -1621,7 +1621,7 @@ List azkar = [
   },
   {
     "id": 45,
-    "category": "دعاء طرد الشيطان و وساوسه",
+    "category": "dua_expelling_shaytan",
     "audio":
         "http://www.hisnmuslim.com/audio/ar/ar_7esn_AlMoslem_by_Doors_046.mp3",
     "filename": "ar_7esn_AlMoslem_by_Doors_046",
@@ -1651,7 +1651,7 @@ List azkar = [
   },
   {
     "id": 46,
-    "category": "الدعاء حينما يقع ما لا يرضاه أو ُ غلب على أمره",
+    "category": "dua_when_afflicted",
     "audio":
         "http://www.hisnmuslim.com/audio/ar/ar_7esn_AlMoslem_by_Doors_047.mp3",
     "filename": "ar_7esn_AlMoslem_by_Doors_047",
@@ -1667,7 +1667,7 @@ List azkar = [
   },
   {
     "id": 47,
-    "category": "ﺗﻬنئة المولود له وجوابه",
+    "category": "congratulating_on_newborn",
     "audio":
         "http://www.hisnmuslim.com/audio/ar/ar_7esn_AlMoslem_by_Doors_048.mp3",
     "filename": "ar_7esn_AlMoslem_by_Doors_048",
@@ -1684,7 +1684,7 @@ List azkar = [
   },
   {
     "id": 48,
-    "category": "ما يعوذ به الأولاد",
+    "category": "protection_for_children",
     "audio":
         "http://www.hisnmuslim.com/audio/ar/ar_7esn_AlMoslem_by_Doors_049.mp3",
     "filename": "ar_7esn_AlMoslem_by_Doors_049",
@@ -1701,7 +1701,7 @@ List azkar = [
   },
   {
     "id": 49,
-    "category": "الدعاء للمريض في عيادته",
+    "category": "dua_for_the_sick",
     "audio":
         "http://www.hisnmuslim.com/audio/ar/ar_7esn_AlMoslem_by_Doors_050.mp3",
     "filename": "ar_7esn_AlMoslem_by_Doors_050",
@@ -1725,7 +1725,7 @@ List azkar = [
   },
   {
     "id": 50,
-    "category": "فضل عيادة المريض",
+    "category": "virtue_visiting_sick",
     "audio":
         "http://www.hisnmuslim.com/audio/ar/ar_7esn_AlMoslem_by_Doors_051.mp3",
     "filename": "ar_7esn_AlMoslem_by_Doors_051",
@@ -1742,7 +1742,7 @@ List azkar = [
   },
   {
     "id": 51,
-    "category": "دعاء المريض الذي يئس من حياته",
+    "category": "dua_terminally_ill",
     "audio":
         "http://www.hisnmuslim.com/audio/ar/ar_7esn_AlMoslem_by_Doors_052.mp3",
     "filename": "ar_7esn_AlMoslem_by_Doors_052",
@@ -1775,7 +1775,7 @@ List azkar = [
   },
   {
     "id": 52,
-    "category": "تلقين المحتضر",
+    "category": "prompting_dying_person",
     "audio":
         "http://www.hisnmuslim.com/audio/ar/ar_7esn_AlMoslem_by_Doors_053.mp3",
     "filename": "ar_7esn_AlMoslem_by_Doors_053",
@@ -1793,7 +1793,7 @@ List azkar = [
   },
   {
     "id": 53,
-    "category": "دعاء من أصيب بمصيبة",
+    "category": "dua_calamity",
     "audio":
         "http://www.hisnmuslim.com/audio/ar/ar_7esn_AlMoslem_by_Doors_054.mp3",
     "filename": "ar_7esn_AlMoslem_by_Doors_054",
@@ -1810,7 +1810,7 @@ List azkar = [
   },
   {
     "id": 54,
-    "category": "الدعاء عند إغماض الميت",
+    "category": "dua_closing_eyes_of_deceased",
     "audio":
         "http://www.hisnmuslim.com/audio/ar/ar_7esn_AlMoslem_by_Doors_055.mp3",
     "filename": "ar_7esn_AlMoslem_by_Doors_055",
@@ -1827,7 +1827,7 @@ List azkar = [
   },
   {
     "id": 55,
-    "category": "الدعاء للميت في الصلاة عليه",
+    "category": "dua_for_deceased_in_prayer",
     "audio":
         "http://www.hisnmuslim.com/audio/ar/ar_7esn_AlMoslem_by_Doors_056.mp3",
     "filename": "ar_7esn_AlMoslem_by_Doors_056",
@@ -1868,7 +1868,7 @@ List azkar = [
   },
   {
     "id": 56,
-    "category": "الدعاء للفرط في الصلاة عليه",
+    "category": "dua_for_deceased_child",
     "audio":
         "http://www.hisnmuslim.com/audio/ar/ar_7esn_AlMoslem_by_Doors_057.mp3",
     "filename": "ar_7esn_AlMoslem_by_Doors_057",
@@ -1892,7 +1892,7 @@ List azkar = [
   },
   {
     "id": 57,
-    "category": "دعاء التعزية",
+    "category": "dua_condolence",
     "audio":
         "http://www.hisnmuslim.com/audio/ar/ar_7esn_AlMoslem_by_Doors_058.mp3",
     "filename": "ar_7esn_AlMoslem_by_Doors_058",
@@ -1909,7 +1909,7 @@ List azkar = [
   },
   {
     "id": 58,
-    "category": "الدعاء عند إدخال الميت القبر",
+    "category": "dua_placing_deceased_in_grave",
     "audio":
         "http://www.hisnmuslim.com/audio/ar/ar_7esn_AlMoslem_by_Doors_059.mp3",
     "filename": "ar_7esn_AlMoslem_by_Doors_059",
@@ -1925,7 +1925,7 @@ List azkar = [
   },
   {
     "id": 59,
-    "category": "الدعاء بعد دفن الميت",
+    "category": "dua_after_burial",
     "audio":
         "http://www.hisnmuslim.com/audio/ar/ar_7esn_AlMoslem_by_Doors_060.mp3",
     "filename": "ar_7esn_AlMoslem_by_Doors_060",
@@ -1941,7 +1941,7 @@ List azkar = [
   },
   {
     "id": 60,
-    "category": "دعاء زيارة القبور",
+    "category": "dua_visiting_graves",
     "audio":
         "http://www.hisnmuslim.com/audio/ar/ar_7esn_AlMoslem_by_Doors_061.mp3",
     "filename": "ar_7esn_AlMoslem_by_Doors_061",
@@ -1958,7 +1958,7 @@ List azkar = [
   },
   {
     "id": 61,
-    "category": "دعاء الريح",
+    "category": "dua_wind",
     "audio":
         "http://www.hisnmuslim.com/audio/ar/ar_7esn_AlMoslem_by_Doors_062.mp3",
     "filename": "ar_7esn_AlMoslem_by_Doors_062",
@@ -1983,7 +1983,7 @@ List azkar = [
   },
   {
     "id": 62,
-    "category": "دعاء الرعد",
+    "category": "dua_thunder",
     "audio":
         "http://www.hisnmuslim.com/audio/ar/ar_7esn_AlMoslem_by_Doors_063.mp3",
     "filename": "ar_7esn_AlMoslem_by_Doors_063",
@@ -2000,7 +2000,7 @@ List azkar = [
   },
   {
     "id": 63,
-    "category": "من أدعية الاستسقاء",
+    "category": "dua_for_rain",
     "audio":
         "http://www.hisnmuslim.com/audio/ar/ar_7esn_AlMoslem_by_Doors_064.mp3",
     "filename": "ar_7esn_AlMoslem_by_Doors_064",
@@ -2033,7 +2033,7 @@ List azkar = [
   },
   {
     "id": 64,
-    "category": "الدعاء إذا نزل المطر",
+    "category": "dua_when_it_rains",
     "audio":
         "http://www.hisnmuslim.com/audio/ar/ar_7esn_AlMoslem_by_Doors_065.mp3",
     "filename": "ar_7esn_AlMoslem_by_Doors_065",
@@ -2049,7 +2049,7 @@ List azkar = [
   },
   {
     "id": 65,
-    "category": "الذكر بعد نزول المطر",
+    "category": "azkar_after_rain",
     "audio":
         "http://www.hisnmuslim.com/audio/ar/ar_7esn_AlMoslem_by_Doors_066.mp3",
     "filename": "ar_7esn_AlMoslem_by_Doors_066",
@@ -2065,7 +2065,7 @@ List azkar = [
   },
   {
     "id": 66,
-    "category": "من أدعية الاستصحاء",
+    "category": "dua_for_clear_skies",
     "audio":
         "http://www.hisnmuslim.com/audio/ar/ar_7esn_AlMoslem_by_Doors_067.mp3",
     "filename": "ar_7esn_AlMoslem_by_Doors_067",
@@ -2082,7 +2082,7 @@ List azkar = [
   },
   {
     "id": 67,
-    "category": "دعاء رؤية الهلال",
+    "category": "dua_seeing_crescent",
     "audio":
         "http://www.hisnmuslim.com/audio/ar/ar_7esn_AlMoslem_by_Doors_068.mp3",
     "filename": "ar_7esn_AlMoslem_by_Doors_068",
@@ -2099,7 +2099,7 @@ List azkar = [
   },
   {
     "id": 68,
-    "category": "الدعاء عند إفطار الصائم",
+    "category": "dua_breaking_fast",
     "audio":
         "http://www.hisnmuslim.com/audio/ar/ar_7esn_AlMoslem_by_Doors_069.mp3",
     "filename": "ar_7esn_AlMoslem_by_Doors_069",
@@ -2124,7 +2124,7 @@ List azkar = [
   },
   {
     "id": 69,
-    "category": "الدعاء قبل الطعام",
+    "category": "dua_before_eating",
     "audio":
         "http://www.hisnmuslim.com/audio/ar/ar_7esn_AlMoslem_by_Doors_070.mp3",
     "filename": "ar_7esn_AlMoslem_by_Doors_070",
@@ -2149,7 +2149,7 @@ List azkar = [
   },
   {
     "id": 70,
-    "category": "الدعاء عند الفراغ من الطعام",
+    "category": "dua_after_eating",
     "audio":
         "http://www.hisnmuslim.com/audio/ar/ar_7esn_AlMoslem_by_Doors_071.mp3",
     "filename": "ar_7esn_AlMoslem_by_Doors_071",
@@ -2174,7 +2174,7 @@ List azkar = [
   },
   {
     "id": 71,
-    "category": "دعاء الضيف لصاحب الطعام",
+    "category": "dua_guest_for_host",
     "audio":
         "http://www.hisnmuslim.com/audio/ar/ar_7esn_AlMoslem_by_Doors_072.mp3",
     "filename": "ar_7esn_AlMoslem_by_Doors_072",
@@ -2191,7 +2191,7 @@ List azkar = [
   },
   {
     "id": 72,
-    "category": "التعريض بالدعاء لطلب الطعام أو الشراب",
+    "category": "asking_for_food_drink",
     "audio":
         "http://www.hisnmuslim.com/audio/ar/ar_7esn_AlMoslem_by_Doors_073.mp3",
     "filename": "ar_7esn_AlMoslem_by_Doors_073",
@@ -2208,7 +2208,7 @@ List azkar = [
   },
   {
     "id": 73,
-    "category": "الدعاء إذا أفطر عند أهل بيت",
+    "category": "dua_if_breaking_fast_with_people",
     "audio":
         "http://www.hisnmuslim.com/audio/ar/ar_7esn_AlMoslem_by_Doors_074.mp3",
     "filename": "ar_7esn_AlMoslem_by_Doors_074",
@@ -2225,7 +2225,7 @@ List azkar = [
   },
   {
     "id": 74,
-    "category": "دعاء الصائم إذا حضر الطعام ولم يفطر",
+    "category": "dua_fasting_person_at_food",
     "audio":
         "http://www.hisnmuslim.com/audio/ar/ar_7esn_AlMoslem_by_Doors_075.mp3",
     "filename": "ar_7esn_AlMoslem_by_Doors_075",
@@ -2242,7 +2242,7 @@ List azkar = [
   },
   {
     "id": 75,
-    "category": "ما يقول الصائم إذا سابه أحد",
+    "category": "what_to_say_if_insulted_while_fasting",
     "audio":
         "http://www.hisnmuslim.com/audio/ar/ar_7esn_AlMoslem_by_Doors_076.mp3",
     "filename": "ar_7esn_AlMoslem_by_Doors_076",
@@ -2258,7 +2258,7 @@ List azkar = [
   },
   {
     "id": 76,
-    "category": "الدعاء عند رؤية باكورة الثمر",
+    "category": "dua_seeing_first_fruit",
     "audio":
         "http://www.hisnmuslim.com/audio/ar/ar_7esn_AlMoslem_by_Doors_077.mp3",
     "filename": "ar_7esn_AlMoslem_by_Doors_077",
@@ -2275,7 +2275,7 @@ List azkar = [
   },
   {
     "id": 77,
-    "category": "دعاء العطاس",
+    "category": "dua_sneezing",
     "audio":
         "http://www.hisnmuslim.com/audio/ar/ar_7esn_AlMoslem_by_Doors_078.mp3",
     "filename": "ar_7esn_AlMoslem_by_Doors_078",
@@ -2292,7 +2292,7 @@ List azkar = [
   },
   {
     "id": 78,
-    "category": "ما يقال للكافر إذا عطس فحمد الله",
+    "category": "what_to_say_to_disbeliever_sneezing",
     "audio":
         "http://www.hisnmuslim.com/audio/ar/ar_7esn_AlMoslem_by_Doors_079.mp3",
     "filename": "ar_7esn_AlMoslem_by_Doors_079",
@@ -2308,7 +2308,7 @@ List azkar = [
   },
   {
     "id": 79,
-    "category": "الدعاء للمتزوج",
+    "category": "dua_for_married_couple",
     "audio":
         "http://www.hisnmuslim.com/audio/ar/ar_7esn_AlMoslem_by_Doors_080.mp3",
     "filename": "ar_7esn_AlMoslem_by_Doors_080",
@@ -2325,7 +2325,7 @@ List azkar = [
   },
   {
     "id": 80,
-    "category": "دعاء المتزوج و شراء الدابة",
+    "category": "dua_newlywed_mount",
     "audio":
         "http://www.hisnmuslim.com/audio/ar/ar_7esn_AlMoslem_by_Doors_081.mp3",
     "filename": "ar_7esn_AlMoslem_by_Doors_081",
@@ -2342,7 +2342,7 @@ List azkar = [
   },
   {
     "id": 81,
-    "category": "الدعاء قبل إتيان الزوجة",
+    "category": "dua_before_intercourse",
     "audio":
         "http://www.hisnmuslim.com/audio/ar/ar_7esn_AlMoslem_by_Doors_082.mp3",
     "filename": "ar_7esn_AlMoslem_by_Doors_082",
@@ -2359,7 +2359,7 @@ List azkar = [
   },
   {
     "id": 82,
-    "category": "دعاء الغضب",
+    "category": "dua_anger",
     "audio":
         "http://www.hisnmuslim.com/audio/ar/ar_7esn_AlMoslem_by_Doors_083.mp3",
     "filename": "ar_7esn_AlMoslem_by_Doors_083",
@@ -2375,7 +2375,7 @@ List azkar = [
   },
   {
     "id": 83,
-    "category": "دعاء من رأى مبتلى",
+    "category": "dua_seeing_afflicted_person",
     "audio":
         "http://www.hisnmuslim.com/audio/ar/ar_7esn_AlMoslem_by_Doors_084.mp3",
     "filename": "ar_7esn_AlMoslem_by_Doors_084",
@@ -2392,7 +2392,7 @@ List azkar = [
   },
   {
     "id": 84,
-    "category": "ما يقال في اﻟﻤﺠلس",
+    "category": "what_to_say_in_assembly",
     "audio":
         "http://www.hisnmuslim.com/audio/ar/ar_7esn_AlMoslem_by_Doors_085.mp3",
     "filename": "ar_7esn_AlMoslem_by_Doors_085",
@@ -2409,7 +2409,7 @@ List azkar = [
   },
   {
     "id": 85,
-    "category": "كفارة اﻟﻤﺠلس",
+    "category": "expiation_of_assembly",
     "audio":
         "http://www.hisnmuslim.com/audio/ar/ar_7esn_AlMoslem_by_Doors_086.mp3",
     "filename": "ar_7esn_AlMoslem_by_Doors_086",
@@ -2426,7 +2426,7 @@ List azkar = [
   },
   {
     "id": 86,
-    "category": "الدعاء لمن قال غفر الله لك",
+    "category": "dua_for_asking_forgiveness",
     "audio":
         "http://www.hisnmuslim.com/audio/ar/ar_7esn_AlMoslem_by_Doors_087.mp3",
     "filename": "ar_7esn_AlMoslem_by_Doors_087",
@@ -2442,7 +2442,7 @@ List azkar = [
   },
   {
     "id": 87,
-    "category": "الدعاء لمن صنع إليك معروفا",
+    "category": "dua_for_one_who_does_kindness",
     "audio":
         "http://www.hisnmuslim.com/audio/ar/ar_7esn_AlMoslem_by_Doors_088.mp3",
     "filename": "ar_7esn_AlMoslem_by_Doors_088",
@@ -2458,7 +2458,7 @@ List azkar = [
   },
   {
     "id": 88,
-    "category": "ما يعصم الله به من الدجال",
+    "category": "protection_from_dajjal",
     "audio":
         "http://www.hisnmuslim.com/audio/ar/ar_7esn_AlMoslem_by_Doors_089.mp3",
     "filename": "ar_7esn_AlMoslem_by_Doors_089",
@@ -2475,7 +2475,7 @@ List azkar = [
   },
   {
     "id": 89,
-    "category": "الدعاء لمن قال إني أحبك في الله",
+    "category": "dua_for_loving_for_allah",
     "audio":
         "http://www.hisnmuslim.com/audio/ar/ar_7esn_AlMoslem_by_Doors_090.mp3",
     "filename": "ar_7esn_AlMoslem_by_Doors_090",
@@ -2491,7 +2491,7 @@ List azkar = [
   },
   {
     "id": 90,
-    "category": "الدعاء لمن عرض عليك ماله",
+    "category": "dua_for_one_offering_wealth",
     "audio":
         "http://www.hisnmuslim.com/audio/ar/ar_7esn_AlMoslem_by_Doors_091.mp3",
     "filename": "ar_7esn_AlMoslem_by_Doors_091",
@@ -2507,7 +2507,7 @@ List azkar = [
   },
   {
     "id": 91,
-    "category": "الدعاء لمن أقرض عند القضاء",
+    "category": "dua_for_lender",
     "audio":
         "http://www.hisnmuslim.com/audio/ar/ar_7esn_AlMoslem_by_Doors_091.mp3",
     "filename": "ar_7esn_AlMoslem_by_Doors_091",
@@ -2524,7 +2524,7 @@ List azkar = [
   },
   {
     "id": 92,
-    "category": "دعاء الخوف من الشرك",
+    "category": "dua_fear_of_shirk",
     "audio":
         "http://www.hisnmuslim.com/audio/ar/ar_7esn_AlMoslem_by_Doors_092.mp3",
     "filename": "ar_7esn_AlMoslem_by_Doors_092",
@@ -2541,7 +2541,7 @@ List azkar = [
   },
   {
     "id": 93,
-    "category": "الدعاء لمن قال بارك الله فيك",
+    "category": "dua_for_barakallah",
     "audio":
         "http://www.hisnmuslim.com/audio/ar/ar_7esn_AlMoslem_by_Doors_094.mp3",
     "filename": "ar_7esn_AlMoslem_by_Doors_094",
@@ -2557,7 +2557,7 @@ List azkar = [
   },
   {
     "id": 94,
-    "category": "دعاء كراهية الطيرة",
+    "category": "dua_against_evil_omens",
     "audio":
         "http://www.hisnmuslim.com/audio/ar/ar_7esn_AlMoslem_by_Doors_095.mp3",
     "filename": "ar_7esn_AlMoslem_by_Doors_095",
@@ -2574,7 +2574,7 @@ List azkar = [
   },
   {
     "id": 95,
-    "category": "دعاء الركوب",
+    "category": "dua_riding",
     "audio":
         "http://www.hisnmuslim.com/audio/ar/ar_7esn_AlMoslem_by_Doors_096.mp3",
     "filename": "ar_7esn_AlMoslem_by_Doors_096",
@@ -2591,7 +2591,7 @@ List azkar = [
   },
   {
     "id": 96,
-    "category": "دعاء السفر",
+    "category": "dua_travel",
     "audio":
         "http://www.hisnmuslim.com/audio/ar/ar_7esn_AlMoslem_by_Doors_097.mp3",
     "filename": "ar_7esn_AlMoslem_by_Doors_097",
@@ -2608,7 +2608,7 @@ List azkar = [
   },
   {
     "id": 97,
-    "category": "دعاء دخول القرية أو البلدة",
+    "category": "dua_entering_town",
     "audio":
         "http://www.hisnmuslim.com/audio/ar/ar_7esn_AlMoslem_by_Doors_098.mp3",
     "filename": "ar_7esn_AlMoslem_by_Doors_098",
@@ -2625,7 +2625,7 @@ List azkar = [
   },
   {
     "id": 98,
-    "category": "دعاء دخول السوق",
+    "category": "dua_entering_market",
     "audio":
         "http://www.hisnmuslim.com/audio/ar/ar_7esn_AlMoslem_by_Doors_099.mp3",
     "filename": "ar_7esn_AlMoslem_by_Doors_099",
@@ -2642,7 +2642,7 @@ List azkar = [
   },
   {
     "id": 99,
-    "category": "الدعاء إذا تعس المركوب",
+    "category": "dua_if_mount_stumbles",
     "audio":
         "http://www.hisnmuslim.com/audio/ar/ar_7esn_AlMoslem_by_Doors_100.mp3",
     "filename": "ar_7esn_AlMoslem_by_Doors_100",
@@ -2658,7 +2658,7 @@ List azkar = [
   },
   {
     "id": 100,
-    "category": "دعاء المسافر للمقيم",
+    "category": "dua_traveler_for_resident",
     "audio":
         "http://www.hisnmuslim.com/audio/ar/ar_7esn_AlMoslem_by_Doors_101.mp3",
     "filename": "ar_7esn_AlMoslem_by_Doors_101",
@@ -2674,7 +2674,7 @@ List azkar = [
   },
   {
     "id": 101,
-    "category": "دعاء المقيم للمسافر",
+    "category": "dua_resident_for_traveler",
     "audio":
         "http://www.hisnmuslim.com/audio/ar/ar_7esn_AlMoslem_by_Doors_102.mp3",
     "filename": "ar_7esn_AlMoslem_by_Doors_102",
@@ -2699,7 +2699,7 @@ List azkar = [
   },
   {
     "id": 102,
-    "category": "التكبير و التسبيح في سير السفر",
+    "category": "takbir_tasbih_travel",
     "audio":
         "http://www.hisnmuslim.com/audio/ar/ar_7esn_AlMoslem_by_Doors_103.mp3",
     "filename": "ar_7esn_AlMoslem_by_Doors_103",
@@ -2716,7 +2716,7 @@ List azkar = [
   },
   {
     "id": 103,
-    "category": "دعاء المسافر إذا أسحر",
+    "category": "dua_traveler_at_dawn",
     "audio":
         "http://www.hisnmuslim.com/audio/ar/ar_7esn_AlMoslem_by_Doors_104.mp3",
     "filename": "ar_7esn_AlMoslem_by_Doors_104",
@@ -2733,7 +2733,7 @@ List azkar = [
   },
   {
     "id": 104,
-    "category": "الدعاء إذا نزل مترلا في سفر أو غيره",
+    "category": "dua_at_lodging_travel",
     "audio":
         "http://www.hisnmuslim.com/audio/ar/ar_7esn_AlMoslem_by_Doors_105.mp3",
     "filename": "ar_7esn_AlMoslem_by_Doors_105",
@@ -2750,7 +2750,7 @@ List azkar = [
   },
   {
     "id": 105,
-    "category": "ذكر الرجوع من السفر",
+    "category": "azkar_returning_from_travel",
     "audio":
         "http://www.hisnmuslim.com/audio/ar/ar_7esn_AlMoslem_by_Doors_106.mp3",
     "filename": "ar_7esn_AlMoslem_by_Doors_106",
@@ -2767,7 +2767,7 @@ List azkar = [
   },
   {
     "id": 106,
-    "category": "ما يقول من أتاه أمر يسره أو يكرهه",
+    "category": "what_to_say_good_or_bad_news",
     "audio":
         "http://www.hisnmuslim.com/audio/ar/ar_7esn_AlMoslem_by_Doors_107.mp3",
     "filename": "ar_7esn_AlMoslem_by_Doors_107",
@@ -2784,7 +2784,7 @@ List azkar = [
   },
   {
     "id": 107,
-    "category": "فضل الصلاة على النبي صلى الله عليه و سلم",
+    "category": "virtue_salah_on_prophet",
     "audio":
         "http://www.hisnmuslim.com/audio/ar/ar_7esn_AlMoslem_by_Doors_108.mp3",
     "filename": "ar_7esn_AlMoslem_by_Doors_108",
@@ -2833,7 +2833,7 @@ List azkar = [
   },
   {
     "id": 108,
-    "category": "إفشاء السلام",
+    "category": "spreading_salam",
     "audio":
         "http://www.hisnmuslim.com/audio/ar/ar_7esn_AlMoslem_by_Doors_109.mp3",
     "filename": "ar_7esn_AlMoslem_by_Doors_109",
@@ -2866,7 +2866,7 @@ List azkar = [
   },
   {
     "id": 109,
-    "category": "كيف يرد السلام على الكافر إذا سلم",
+    "category": "responding_salam_to_disbeliever",
     "audio":
         "http://www.hisnmuslim.com/audio/ar/ar_7esn_AlMoslem_by_Doors_110.mp3",
     "filename": "ar_7esn_AlMoslem_by_Doors_110",
@@ -2883,7 +2883,7 @@ List azkar = [
   },
   {
     "id": 110,
-    "category": "الدُّعاءُ عِنْدَ سَمَاعِ صِياحِ الدِّيكِ ونَهِيقِ الْحِمَارِ",
+    "category": "dua_hearing_rooster_donkey",
     "audio":
         "http://www.hisnmuslim.com/audio/ar/ar_7esn_AlMoslem_by_Doors_111.mp3",
     "filename": "ar_7esn_AlMoslem_by_Doors_111",
@@ -2900,7 +2900,7 @@ List azkar = [
   },
   {
     "id": 111,
-    "category": "دعاء نباح الكلاب بالليل",
+    "category": "dua_hearing_dogs_bark",
     "audio":
         "http://www.hisnmuslim.com/audio/ar/ar_7esn_AlMoslem_by_Doors_112.mp3",
     "filename": "ar_7esn_AlMoslem_by_Doors_112",
@@ -2917,7 +2917,7 @@ List azkar = [
   },
   {
     "id": 112,
-    "category": "الدعاء لمن سببته",
+    "category": "dua_for_one_you_insulted",
     "audio":
         "http://www.hisnmuslim.com/audio/ar/ar_7esn_AlMoslem_by_Doors_113.mp3",
     "filename": "ar_7esn_AlMoslem_by_Doors_113",
@@ -2934,7 +2934,7 @@ List azkar = [
   },
   {
     "id": 113,
-    "category": "ما يقول المسلم إذا مدح المسلم",
+    "category": "what_to_say_when_praising_muslim",
     "audio":
         "http://www.hisnmuslim.com/audio/ar/ar_7esn_AlMoslem_by_Doors_114.mp3",
     "filename": "ar_7esn_AlMoslem_by_Doors_114",
@@ -2951,7 +2951,7 @@ List azkar = [
   },
   {
     "id": 114,
-    "category": "ما يقول المسلم إذا زكي",
+    "category": "what_to_say_when_praised",
     "audio":
         "http://www.hisnmuslim.com/audio/ar/ar_7esn_AlMoslem_by_Doors_115.mp3",
     "filename": "ar_7esn_AlMoslem_by_Doors_115",
@@ -2968,7 +2968,7 @@ List azkar = [
   },
   {
     "id": 115,
-    "category": "كيف يلبي المحرم في الحج أو العمرة ؟",
+    "category": "how_to_perform_talbiyah",
     "audio":
         "http://www.hisnmuslim.com/audio/ar/ar_7esn_AlMoslem_by_Doors_116.mp3",
     "filename": "ar_7esn_AlMoslem_by_Doors_116",
@@ -2985,7 +2985,7 @@ List azkar = [
   },
   {
     "id": 116,
-    "category": "التكبير إذا أتى الركن الأسود",
+    "category": "takbir_at_black_stone",
     "audio":
         "http://www.hisnmuslim.com/audio/ar/ar_7esn_AlMoslem_by_Doors_117.mp3",
     "filename": "ar_7esn_AlMoslem_by_Doors_117",
@@ -3002,7 +3002,7 @@ List azkar = [
   },
   {
     "id": 117,
-    "category": "الدعاء بين الركن اليماني والحجر الأسود",
+    "category": "dua_between_yemeni_corner_and_black_stone",
     "audio":
         "http://www.hisnmuslim.com/audio/ar/ar_7esn_AlMoslem_by_Doors_118.mp3",
     "filename": "ar_7esn_AlMoslem_by_Doors_118",
@@ -3019,7 +3019,7 @@ List azkar = [
   },
   {
     "id": 118,
-    "category": "دعاء الوقوف على الصفا والمروة",
+    "category": "dua_safa_marwa",
     "audio":
         "http://www.hisnmuslim.com/audio/ar/ar_7esn_AlMoslem_by_Doors_119.mp3",
     "filename": "ar_7esn_AlMoslem_by_Doors_119",
@@ -3036,7 +3036,7 @@ List azkar = [
   },
   {
     "id": 119,
-    "category": "الدعاء يوم عرفة",
+    "category": "dua_day_of_arafah",
     "audio":
         "http://www.hisnmuslim.com/audio/ar/ar_7esn_AlMoslem_by_Doors_120.mp3",
     "filename": "ar_7esn_AlMoslem_by_Doors_120",
@@ -3053,7 +3053,7 @@ List azkar = [
   },
   {
     "id": 120,
-    "category": "الذكر عند المشعر الحرام",
+    "category": "azkar_at_mashar_al_haram",
     "audio":
         "http://www.hisnmuslim.com/audio/ar/ar_7esn_AlMoslem_by_Doors_121.mp3",
     "filename": "ar_7esn_AlMoslem_by_Doors_121",
@@ -3070,7 +3070,7 @@ List azkar = [
   },
   {
     "id": 121,
-    "category": "التكبير عند رمي الجمار مع كل حصاة",
+    "category": "takbir_at_stoning",
     "audio":
         "http://www.hisnmuslim.com/audio/ar/ar_7esn_AlMoslem_by_Doors_122.mp3",
     "filename": "ar_7esn_AlMoslem_by_Doors_122",
@@ -3087,7 +3087,7 @@ List azkar = [
   },
   {
     "id": 122,
-    "category": "دعاء التعجب والأمر السار",
+    "category": "dua_wonder_joy",
     "audio":
         "http://www.hisnmuslim.com/audio/ar/ar_7esn_AlMoslem_by_Doors_123.mp3",
     "filename": "ar_7esn_AlMoslem_by_Doors_123",
@@ -3110,7 +3110,7 @@ List azkar = [
   },
   {
     "id": 123,
-    "category": "ما يفعل من أتاه أمر يسره",
+    "category": "what_to_do_when_pleased",
     "audio":
         "http://www.hisnmuslim.com/audio/ar/ar_7esn_AlMoslem_by_Doors_124.mp3",
     "filename": "ar_7esn_AlMoslem_by_Doors_124",
@@ -3127,7 +3127,7 @@ List azkar = [
   },
   {
     "id": 124,
-    "category": "ما يقول من أحس وجعا في جسده",
+    "category": "what_to_say_when_in_pain",
     "audio":
         "http://www.hisnmuslim.com/audio/ar/ar_7esn_AlMoslem_by_Doors_125.mp3",
     "filename": "ar_7esn_AlMoslem_by_Doors_125",
@@ -3144,7 +3144,7 @@ List azkar = [
   },
   {
     "id": 125,
-    "category": "دعاء من خشي أن يصيب شيئا بعينه",
+    "category": "dua_against_evil_eye",
     "audio":
         "http://www.hisnmuslim.com/audio/ar/ar_7esn_AlMoslem_by_Doors_126.mp3",
     "filename": "ar_7esn_AlMoslem_by_Doors_126",
@@ -3161,7 +3161,7 @@ List azkar = [
   },
   {
     "id": 126,
-    "category": "ما يقال عند الفزع",
+    "category": "what_to_say_when_frightened",
     "audio":
         "http://www.hisnmuslim.com/audio/ar/ar_7esn_AlMoslem_by_Doors_127.mp3",
     "filename": "ar_7esn_AlMoslem_by_Doors_127",
@@ -3177,7 +3177,7 @@ List azkar = [
   },
   {
     "id": 127,
-    "category": "ما يقول عند الذبح أو النحر",
+    "category": "what_to_say_at_slaughter",
     "audio":
         "http://www.hisnmuslim.com/audio/ar/ar_7esn_AlMoslem_by_Doors_128.mp3",
     "filename": "ar_7esn_AlMoslem_by_Doors_128",
@@ -3194,7 +3194,7 @@ List azkar = [
   },
   {
     "id": 128,
-    "category": "ما يقول لرد كيد مردة الشياطين",
+    "category": "what_to_say_against_shaytan_plots",
     "audio":
         "http://www.hisnmuslim.com/audio/ar/ar_7esn_AlMoslem_by_Doors_129.mp3",
     "filename": "ar_7esn_AlMoslem_by_Doors_129",
@@ -3211,7 +3211,7 @@ List azkar = [
   },
   {
     "id": 129,
-    "category": "الاستغفار و التوبة",
+    "category": "repentance_seeking_forgiveness",
     "audio":
         "http://www.hisnmuslim.com/audio/ar/ar_7esn_AlMoslem_by_Doors_130.mp3",
     "filename": "ar_7esn_AlMoslem_by_Doors_130",
@@ -3268,7 +3268,7 @@ List azkar = [
   },
   {
     "id": 130,
-    "category": "فضل التسبيح و التحميد، و التهليل، و التكبير",
+    "category": "virtue_tasbih_tahmid_tahlil_takbir",
     "audio":
         "http://www.hisnmuslim.com/audio/ar/ar_7esn_AlMoslem_by_Doors_131.mp3",
     "filename": "ar_7esn_AlMoslem_by_Doors_131",
@@ -3373,7 +3373,7 @@ List azkar = [
   },
   {
     "id": 131,
-    "category": "كيف كان النبي يسبح؟",
+    "category": "how_prophet_made_tasbih",
     "audio":
         "http://www.hisnmuslim.com/audio/ar/ar_7esn_AlMoslem_by_Doors_132.mp3",
     "filename": "ar_7esn_AlMoslem_by_Doors_132",
@@ -3390,7 +3390,7 @@ List azkar = [
   },
   {
     "id": 132,
-    "category": "من أنواع الخير والآداب الجامعة",
+    "category": "types_of_goodness_etiquette",
     "audio":
         "http://www.hisnmuslim.com/audio/ar/ar_7esn_AlMoslem_by_Doors_133.mp3",
     "filename": "ar_7esn_AlMoslem_by_Doors_133",

@@ -621,43 +621,14 @@ class _HomeState extends State<Home>
     // print(screenSize.height);
     // print(screenSize.width);
     return Scaffold(
-        bottomNavigationBar: BlocConsumer(
-          bloc: playerbarBloc,
-          listener: ((context, state) => print(state.toString())),
-          builder: (contextt, state) {
-            if (state is PlayerBarHidden) {
-              return Container(
-                  color: Colors.white,
-                  height: 80,
-                  width: 400,
-                  child: Center(
-                    child: Text("hidden"),
-                  ));
-            } else if (state is PlayerBarInitial) {
-              return Container(height:1
-                  // color: Colors.white,
-                 );
-            } else if (state is PlayerBarVisible) {
-              return PlayerBar();
-            } else if (state is PlayerBarClosed) {
-              return Container(
-                  color: Colors.white,
-                  height: 80,
-                  width: 400,
-                  child: Center(
-                    child: Text("closed"),
-                  ));
-            }
-            return Container();
-          },
-        ), // this is where you put your player bar
-
         backgroundColor: Colors.transparent,
-        body: Navigator(
-            onGenerateRoute: (settings) => MaterialPageRoute(
-                settings: settings,
-                builder: (builder) => Container(
-                    height: screenSize.height,
+        body: Stack(
+          children: [
+            Navigator(
+                onGenerateRoute: (settings) => MaterialPageRoute(
+                    settings: settings,
+                    builder: (builder) => Container(
+                        height: screenSize.height,
                     decoration: BoxDecoration(
                         color: index == 1
                             ? getValue("darkMode")
@@ -865,6 +836,18 @@ class _HomeState extends State<Home>
               ),
             ),
           ),
+            ),
+            BlocConsumer(
+              bloc: playerbarBloc,
+              listener: ((context, state) => print(state.toString())),
+              builder: (contextt, state) {
+                if (state is PlayerBarVisible) {
+                  return const PlayerBar();
+                }
+                return const SizedBox.shrink();
+              },
+            ),
+          ],
         ),
       );
   }

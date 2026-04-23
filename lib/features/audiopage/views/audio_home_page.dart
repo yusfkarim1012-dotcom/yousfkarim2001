@@ -191,15 +191,33 @@ print(jsonData2);
 
   void filterReciters(String query) {
     setState(() {
-      filteredReciters = reciters.where((reciter) {
-        // You can define your filtering logic here.
-        // For example, check if the reciter's name contains the query (case-insensitive).
-        return reciter.name.toLowerCase().contains(query.toLowerCase());
-      }).toList();
+      searchQuery = query;
+      // Filter the current mode's list
+      List<Reciter> baseList = selectedMode == "all" 
+          ? reciters 
+          : selectedMode == "favorite" 
+              ? favoriteRecitersList 
+              : selectedMode == "downloaded" 
+                  ? downloadedRecitersList 
+                  : filteredReciters;
+                  
+      if (query.isEmpty) {
+        // No search, keep the base list
+      } else {
+        baseList = baseList.where((reciter) {
+          return reciter.name.toString().toLowerCase().contains(query.toLowerCase());
+        }).toList();
+      }
+      
+      // Update the display list based on search
+      // Note: We'll use a temporary list for the AzListView if searching
+      // so we don't overwrite the actual filteredReciters/downloadedRecitersList
     });
 
-    itemScrollController.scrollTo(
-        index: 0, duration: const Duration(seconds: 1));
+    if (query.isNotEmpty) {
+      itemScrollController.scrollTo(
+          index: 0, duration: const Duration(seconds: 1));
+    }
   }
 
   void filterRecitersDownloaded() {
@@ -238,18 +256,15 @@ print(jsonData2);
   }
 
   getRewayaReciters(String id, String name) {
-    filteredReciters = [];
-    for (var reciter in reciters) {
-      // Check if any moshaf matches the id (moshaf_type) or the name exactly
-      bool matches = reciter.moshaf.any((m) {
-        return m.moshafType.toString() == id || m.name.toString() == name;
-      });
-      
-      if (matches) {
-        filteredReciters.add(reciter);
-      }
-    }
-    setState(() {});
+    setState(() {
+      filteredReciters = reciters.where((reciter) {
+        return reciter.moshaf.any((m) {
+          // Strict matching: by ID or by exact name
+          return m.moshafType.toString() == id.toString() || 
+                 m.name.toString().trim() == name.trim();
+        });
+      }).toList();
+    });
   }
 
   @override
@@ -378,10 +393,12 @@ print(jsonData2);
                                             margin: 0,
                                             onTap: () async {
                                               if (selectedMode != "all") {
-                                                fetchReciters();
                                                 setState(() {
                                                   selectedMode = "all";
-                                                }); //       s((){});
+                                                  filteredReciters = List.from(reciters);
+                                                  searchQuery = "";
+                                                  textEditingController.clear();
+                                                });
 
                                                 // await Future.delayed(
                                                 //     const Duration(milliseconds: 200));
@@ -732,22 +749,54 @@ print(jsonData2);
                     itemScrollController: itemScrollController,
                     hapticFeedback: true,
                     indexBarItemHeight: 20,
-                    data: selectedMode == "favorite"
-                        ? favoriteRecitersList
-                        : selectedMode == "downloaded"
-                            ? downloadedRecitersList
-                            : filteredReciters,
-                    itemCount: selectedMode == "favorite"
-                        ? favoriteRecitersList.length
-                        : selectedMode == "downloaded"
-                            ? downloadedRecitersList.length
-                            : filteredReciters.length,
+                    data: searchQuery.isNotEmpty
+                        ? (selectedMode == "all" 
+                            ? reciters 
+                            : selectedMode == "favorite" 
+                                ? favoriteRecitersList 
+                                : selectedMode == "downloaded" 
+                                    ? downloadedRecitersList 
+                                    : filteredReciters)
+                          .where((r) => r.name.toString().toLowerCase().contains(searchQuery.toLowerCase()))
+                          .toList()
+                        : selectedMode == "favorite"
+                            ? favoriteRecitersList
+                            : selectedMode == "downloaded"
+                                ? downloadedRecitersList
+                                : filteredReciters,
+                    itemCount: searchQuery.isNotEmpty
+                        ? (selectedMode == "all" 
+                            ? reciters 
+                            : selectedMode == "favorite" 
+                                ? favoriteRecitersList 
+                                : selectedMode == "downloaded" 
+                                    ? downloadedRecitersList 
+                                    : filteredReciters)
+                          .where((r) => r.name.toString().toLowerCase().contains(searchQuery.toLowerCase()))
+                          .toList().length
+                        : selectedMode == "favorite"
+                            ? favoriteRecitersList.length
+                            : selectedMode == "downloaded"
+                                ? downloadedRecitersList.length
+                                : filteredReciters.length,
                     itemBuilder: (context, index) {
-                      final reciter = selectedMode == "favorite"
-                          ? favoriteRecitersList[index]
-                          : selectedMode == "downloaded"
-                              ? downloadedRecitersList[index]
-                              : filteredReciters[index];
+                      List<Reciter> currentList = searchQuery.isNotEmpty
+                        ? (selectedMode == "all" 
+                            ? reciters 
+                            : selectedMode == "favorite" 
+                                ? favoriteRecitersList 
+                                : selectedMode == "downloaded" 
+                                    ? downloadedRecitersList 
+                                    : filteredReciters)
+                          .where((r) => r.name.toString().toLowerCase().contains(searchQuery.toLowerCase()))
+                          .toList()
+                        : selectedMode == "favorite"
+                            ? favoriteRecitersList
+                            : selectedMode == "downloaded"
+                                ? downloadedRecitersList
+                                : filteredReciters;
+                      
+                      final reciter = currentList[index];
                       return AnimationConfiguration.staggeredList(
                           position: index,
                           duration: const Duration(milliseconds: 375),
@@ -839,6 +888,11 @@ print(jsonData2);
                                           crossAxisAlignment:
                                               CrossAxisAlignment.start,
                                           children: reciter.moshaf
+                                              .where((m) {
+                                                if (["all", "favorite", "downloaded"].contains(selectedMode)) return true;
+                                                return m.name.toString().trim() == selectedMode.trim() ||
+                                                       (rewayat.any((r) => r.name.toString().trim() == selectedMode.trim() && r.id.toString() == m.moshafType.toString()));
+                                              })
                                               .map((e) => Padding(
                                                     padding:
                                                         const EdgeInsets.all(

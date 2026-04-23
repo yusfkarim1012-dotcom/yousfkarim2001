@@ -48,13 +48,23 @@ class _RecitersSurahListPageState extends State<RecitersSurahListPage> {
       surahs = widget.mushaf.surahList
           .split(',')
           .map((e) {
-                  print(e);
-                  print(widget.jsonData);
-print(widget.jsonData.where((element)=>element["id"].toString()==e.toString()));
-            return {
+            try {
+              final matchingSurah = widget.jsonData.firstWhere(
+                (element) => element["id"].toString() == e.toString(),
+                orElse: () => null,
+              );
+              
+              return {
                 "surahNumber": e,
-                "suraName": widget.jsonData.where((element)=>element["id"].toString()==e.toString()).first["name"]
-              };})
+                "suraName": matchingSurah != null ? matchingSurah["name"] : "Surah $e"
+              };
+            } catch (err) {
+              return {
+                "surahNumber": e, 
+                "suraName": "Surah $e"
+              };
+            }
+          })
           .toList();
     });
 
@@ -110,7 +120,8 @@ print(widget.jsonData.where((element)=>element["id"].toString()==e.toString()));
   }
 
   addFavorites() {
-    favoriteSurahList = json.decode(getValue("favoriteSurahList"));
+    var jsonData = getValue("favoriteSurahList");
+    favoriteSurahList = jsonData != null ? json.decode(jsonData) : [];
     setState(() {});
   }
 
@@ -151,6 +162,16 @@ print(widget.jsonData.where((element)=>element["id"].toString()==e.toString()));
     addSuraNames();
     super.initState();
     storePhotoUrl();
+  }
+
+  @override
+  void dispose() {
+    // Note: We don't necessarily want to hide the bar if we are going back to RecitersPage,
+    // but if we are jumping to Home, we might need to.
+    // However, RecitersPage.initState will set it to true again.
+    // To be safe and consistent with the requirement of fixing the grey screen/bar issue:
+    // playerbarBloc.add(SetSectionVisibilityEvent(false));
+    super.dispose();
   }
 
   List favoriteSurahList = [];

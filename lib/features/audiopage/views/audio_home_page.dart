@@ -54,13 +54,12 @@ class _RecitersPageState extends State<RecitersPage> {
     fetchReciters();
   }
 
-  List<String>? getLettersForLocale(String locale) {
+  List<String> getLettersForLocale(String locale) {
     for (var language in languagesLetters) {
       if (language.containsKey(locale)) {
-        return language[locale];
+        return language[locale]!;
       }
     }
-    // Return an empty list or handle the case where the locale is not found.
     return [];
   }
 
@@ -70,16 +69,18 @@ class _RecitersPageState extends State<RecitersPage> {
       try {
         final data = json.decode(jsonData) as List<dynamic>;
         
-        favoriteRecitersList = [];
+        List<Reciter> tempFavorites = [];
         for (var reciterId in data) {
           try {
             var reciter = reciters.firstWhere((element) => element.id.toString() == reciterId.toString());
-            favoriteRecitersList.add(reciter);
+            tempFavorites.add(reciter);
           } catch (e) {
             // Reciter not found in current list, skip
           }
         }
+        
         setState(() {
+          favoriteRecitersList = tempFavorites;
           isLoading = false;
         });
       } catch (e) {
@@ -180,9 +181,11 @@ print(jsonData2);
       }
     } catch (error) {
       print('Error while fetching data: $error');
-      setState(() {
-        isLoading = false;
-      });
+      if (mounted) {
+        setState(() {
+          isLoading = false;
+        });
+      }
     }
   }
 
@@ -719,7 +722,7 @@ print(jsonData2);
                   child: AzListView(
                     physics: const BouncingScrollPhysics(),
                     indexBarData:
-                        getLettersForLocale(context.locale.languageCode)!,
+                        getLettersForLocale(context.locale.languageCode) ?? [],
                     indexBarHeight: screenSize.height,
                     itemScrollController: itemScrollController,
                     hapticFeedback: true,

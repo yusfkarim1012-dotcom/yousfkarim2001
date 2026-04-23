@@ -622,9 +622,7 @@ class _HomeState extends State<Home>
     // print(screenSize.width);
     return Scaffold(
         backgroundColor: Colors.transparent,
-        body: Stack(
-          children: [
-            Navigator(
+        body: Navigator(
                 onGenerateRoute: (settings) => MaterialPageRoute(
                     settings: settings,
                     builder: (builder) => Container(
@@ -836,18 +834,6 @@ class _HomeState extends State<Home>
               ),
             ),
           ),
-            ),
-            BlocConsumer(
-              bloc: playerbarBloc,
-              listener: ((context, state) => print(state.toString())),
-              builder: (contextt, state) {
-                if (state is PlayerBarVisible) {
-                  return const PlayerBar();
-                }
-                return const SizedBox.shrink();
-              },
-            ),
-          ],
         ),
       );
   }

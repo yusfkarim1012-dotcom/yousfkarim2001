@@ -380,6 +380,22 @@ class _MyAppState extends State<MyApp> {
                             primarySwatch: Colors.blue,
                           ),
                           home:SplashScreen(),
+                          builder: (context, child) {
+                            return Stack(
+                              children: [
+                                child!,
+                                BlocConsumer(
+                                  bloc: playerbarBloc,
+                                  builder: (context, state) {
+                                    if (state is PlayerBarVisible) {
+                                      return const PlayerBar();
+                                    }
+                                    return const SizedBox.shrink();
+                                  },
+                                ),
+                              ],
+                            );
+                          },
                           )));
   }
 }

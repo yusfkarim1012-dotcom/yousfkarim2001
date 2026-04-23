@@ -136,7 +136,7 @@ class _PlayerBarState extends State<PlayerBar> {
                       isMinimized = false;
                     }
                     return Positioned(
-                      bottom: 0,
+                      bottom: 12.h,
                       child: FadeInUp(
                         child: Material(
                           color: Colors.transparent,

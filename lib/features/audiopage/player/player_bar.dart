@@ -43,11 +43,14 @@ class _PlayerBarState extends State<PlayerBar> {
   }
 
   bool myInterceptor(bool stopDefaultButtonEvent, RouteInfo info) {
-    if (isMinimized) {
+    final playerBarState = BlocProvider.of<PlayerBarBloc>(context).state;
+    bool isCurrentlyMinimized = true;
+    if (playerBarState is PlayerBarVisible) isCurrentlyMinimized = playerBarState.isMinimized;
+
+    if (isCurrentlyMinimized) {
       return false;
     } else {
       BlocProvider.of<PlayerBarBloc>(context).add(MinimizeBarEvent());
-      isMinimized = true;
     }
     return true;
   }
@@ -60,7 +63,6 @@ class _PlayerBarState extends State<PlayerBar> {
 
   final appDir = Directory(kDownloadPath);
   bool isPlaylistShown = false;
-  bool isMinimized = true;
 
   @override
   Widget build(BuildContext context) {
@@ -123,9 +125,9 @@ class _PlayerBarState extends State<PlayerBar> {
                                 }),
                           ),
                         ));
-                  } else if (statee is PlayerBarVisible) {
-                    isMinimized = statee.height == 60;
-                    
+                  }
+                  if (statee is PlayerBarVisible || statee is PlayerBarInitial) {
+                    final bool isMinimized = (statee as dynamic).isMinimized;
                     return AnimatedPositioned(
                       duration: const Duration(milliseconds: 300),
                       bottom: isMinimized ? (MediaQuery.of(context).padding.bottom + 10.h) : 0,
@@ -139,7 +141,7 @@ class _PlayerBarState extends State<PlayerBar> {
                           child: GestureDetector(
                             onTap: () {
                               if (isMinimized) {
-                                BlocProvider.of<PlayerBarBloc>(context).add(ExtendBarEvent());
+                                BlocProvider.of<PlayerBarBloc>(context).add(ShowBarEvent());
                               }
                             },
                             child: AnimatedContainer(
@@ -169,7 +171,6 @@ class _PlayerBarState extends State<PlayerBar> {
                         ),
                       ),
                     );
-
                   } else if (statee is PlayerBarClosed) {
                     return const SizedBox.shrink();
                   }

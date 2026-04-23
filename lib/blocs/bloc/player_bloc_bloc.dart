@@ -153,21 +153,18 @@ class PlayerBlocBloc extends Bloc<PlayerBlocEvent, PlayerBlocState> {
         final dio = Dio();
         final appDir = Directory(kDownloadPath);
         
-        PermissionStatus status;
-        if (Platform.isAndroid) {
-          status = await Permission.audio.request();
-          if (!status.isGranted) {
-             status = await Permission.storage.request();
-          }
-        } else {
-          status = await Permission.storage.request();
+        PermissionStatus status = await Permission.audio.status;
+        if (!status.isGranted) {
+           status = await Permission.audio.request();
+           if (!status.isGranted) {
+              status = await Permission.storage.request();
+           }
         }
         
         if (!(status.isGranted || status.isLimited)) {
           if (status.isPermanentlyDenied) {
             await openAppSettings();
           }
-          print('Permission Denied');
           return;
         }
 
@@ -183,9 +180,37 @@ class PlayerBlocBloc extends Bloc<PlayerBlocEvent, PlayerBlocState> {
           print('Full sura audio file already cached: $fullSuraFilePath');
         } else {
           try {
+            int lastProgress = -1;
             await dio.download(event.url, fullSuraFilePath, onReceiveProgress: (received, total) {
               if (total != -1) {
-                if (state is PlayerBlocPlaying) {
+                int currentProgress = ((received / total) * 100).toInt();
+                if (currentProgress != lastProgress) {
+                  lastProgress = currentProgress;
+                  if (state is PlayerBlocPlaying) {
+                    final s = state as PlayerBlocPlaying;
+                    emit(PlayerBlocPlaying(
+                      moshaf: s.moshaf,
+                      reciter: s.reciter,
+                      suraNumber: s.suraNumber,
+                      jsonData: s.jsonData,
+                      audioPlayer: s.audioPlayer,
+                      surahNumbers: s.surahNumbers,
+                      playList: s.playList,
+                      downloadProgress: received / total,
+                      downloadingSuraNumber: event.suraNumber,
+                    ));
+                  } else {
+                    emit(PlayerBlocDownloading(
+                      suraNumber: event.suraNumber,
+                      progress: received / total,
+                    ));
+                  }
+                }
+              }
+            });
+            
+            if (state is PlayerBlocPlaying || state is PlayerBlocDownloading) {
+               if (state is PlayerBlocPlaying) {
                   final s = state as PlayerBlocPlaying;
                   emit(PlayerBlocPlaying(
                     moshaf: s.moshaf,
@@ -195,33 +220,10 @@ class PlayerBlocBloc extends Bloc<PlayerBlocEvent, PlayerBlocState> {
                     audioPlayer: s.audioPlayer,
                     surahNumbers: s.surahNumbers,
                     playList: s.playList,
-                    downloadProgress: received / total,
-                    downloadingSuraNumber: event.suraNumber,
                   ));
-                } else {
-                  emit(PlayerBlocDownloading(
-                    suraNumber: event.suraNumber,
-                    progress: received / total,
-                  ));
-                }
-              }
-            });
-            
-            if (state is PlayerBlocPlaying) {
-              final s = state as PlayerBlocPlaying;
-              emit(PlayerBlocPlaying(
-                moshaf: s.moshaf,
-                reciter: s.reciter,
-                suraNumber: s.suraNumber,
-                jsonData: s.jsonData,
-                audioPlayer: s.audioPlayer,
-                surahNumbers: s.surahNumbers,
-                playList: s.playList,
-                downloadProgress: null,
-                downloadingSuraNumber: null,
-              ));
-            } else {
-              emit(PlayerBlocInitial());
+               } else {
+                  emit(PlayerBlocInitial());
+               }
             }
           } catch (e) {
             print(e);

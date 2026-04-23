@@ -637,32 +637,58 @@ print(widget.jsonData.where((element)=>element["id"].toString()==e.toString()));
                                 ),
                                 color: blueColor,
                               ),
-                              IconButton(
-                                onPressed: () {
-                                  //               "${event.moshaf.server}/${e.toString().padLeft(3, "0")}.mp3"
-                                  // .replace(scheme: 'http');
+                              BlocBuilder<PlayerBlocBloc, PlayerBlocState>(
+                                bloc: playerPageBloc,
+                                builder: (context, state) {
+                                  final isDownloadingThis = state is PlayerBlocDownloading && 
+                                      state.suraNumber == (selectedMode == "all" ? surah["surahNumber"] : surah["surahNumber"]);
+                                  
+                                  if (isDownloadingThis) {
+                                    return SizedBox(
+                                      width: 48,
+                                      height: 48,
+                                      child: Stack(
+                                        alignment: Alignment.center,
+                                        children: [
+                                          CircularProgressIndicator(
+                                            value: state.progress,
+                                            strokeWidth: 2,
+                                            color: orangeColor,
+                                          ),
+                                          Text(
+                                            "${(state.progress * 100).toInt()}%",
+                                            style: TextStyle(fontSize: 8.sp, color: orangeColor, fontWeight: FontWeight.bold),
+                                          ),
+                                        ],
+                                      ),
+                                    );
+                                  }
 
-                                  if (File(
-                                          "${appDir.path}${widget.reciter.name}-${widget.mushaf.id}-${quran.getSurahNameArabic(int.parse(selectedMode == "all" ? surah["surahNumber"] : surah["surahNumber"]))}.mp3")
-                                      .existsSync()) {
-                                  } else {
-                                    playerPageBloc.add(DownloadSurah(
-                                        reciter: widget.reciter,
-                                        moshaf: widget.mushaf,
-                                        suraNumber: selectedMode == "all"
-                                            ? surah["surahNumber"]
-                                            : surah["surahNumber"],
-                                        url:
-                                            "${widget.mushaf.server}/${(selectedMode == "all" ? surah["surahNumber"] : surah["surahNumber"]).padLeft(3, "0")}.mp3"));
-                                  } // .replace(scheme: 'http')));
+                                  return IconButton(
+                                    onPressed: () {
+                                      if (File(
+                                              "${appDir.path}${widget.reciter.name}-${widget.mushaf.id}-${quran.getSurahNameArabic(int.parse(selectedMode == "all" ? surah["surahNumber"] : surah["surahNumber"]))}.mp3")
+                                          .existsSync()) {
+                                      } else {
+                                        playerPageBloc.add(DownloadSurah(
+                                            reciter: widget.reciter,
+                                            moshaf: widget.mushaf,
+                                            suraNumber: selectedMode == "all"
+                                                ? surah["surahNumber"]
+                                                : surah["surahNumber"],
+                                            url:
+                                                "${widget.mushaf.server}/${(selectedMode == "all" ? surah["surahNumber"] : surah["surahNumber"]).padLeft(3, "0")}.mp3"));
+                                      }
+                                    },
+                                    icon: Icon(
+                                        File("${appDir.path}${widget.reciter.name}-${widget.mushaf.id}-${quran.getSurahNameArabic(int.parse(selectedMode == "all" ? surah["surahNumber"] : surah["surahNumber"]))}.mp3")
+                                                .existsSync()
+                                            ? Icons.download_done
+                                            : Icons.download,
+                                        size: 24.sp),
+                                    color: orangeColor,
+                                  );
                                 },
-                                icon: Icon(
-                                    File("${appDir.path}${widget.reciter.name}-${widget.mushaf.id}-${quran.getSurahNameArabic(int.parse(selectedMode == "all" ? surah["surahNumber"] : surah["surahNumber"]))}.mp3")
-                                            .existsSync()
-                                        ? Icons.download_done
-                                        : Icons.download,
-                                    size: 24.sp),
-                                color: orangeColor,
                               ),
                               IconButton(
                                 onPressed: () {

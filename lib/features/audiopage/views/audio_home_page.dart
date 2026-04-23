@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:animations/animations.dart';
 import 'package:azlistview/azlistview.dart';
@@ -21,7 +22,7 @@ import 'package:khatmah/features/audiopage/views/reciter_all_surahs_page.dart';
 import 'dart:math' as math;
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:khatmah/features/home.dart';
-import 'package:quran/quran.dart';
+import 'package:quran/quran.dart' as quran;
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:simple_annimated_staggered/simple_annimated_staggered.dart'; // import this
@@ -77,6 +78,7 @@ class _RecitersPageState extends State<RecitersPage> {
   final ContainerTransitionType _transitionType =
       ContainerTransitionType.fadeThrough;
   List<Reciter> filteredReciters = []; // Store the filtered list
+  List<Reciter> downloadedRecitersList = [];
   List<Moshaf> rewayat = [];
   List suwar = []; // Store
 
@@ -175,17 +177,39 @@ print(jsonData2);
         index: 0, duration: const Duration(seconds: 1));
   }
 
-  void filterRecitersDownloaded(String query) {
-    setState(() {
-      filteredReciters = reciters.where((reciter) {
-        // You can define your filtering logic here.
-        // For example, check if the reciter's name contains the query (case-insensitive).
-        return reciter.name.toLowerCase().contains(query.toLowerCase());
-      }).toList();
-    });
+  void filterRecitersDownloaded() {
+    final appDir = Directory(kDownloadPath);
+    if (!appDir.existsSync()) {
+      downloadedRecitersList = [];
+      setState(() {});
+      return;
+    }
 
-    itemScrollController.scrollTo(
-        index: 0, duration: const Duration(seconds: 1));
+    try {
+      final entities = appDir.listSync();
+      Set<String> downloadedReciterNames = {};
+      
+      for (var entity in entities) {
+        if (entity is Directory) {
+          final reciterName = entity.path.split(Platform.pathSeparator).last;
+          // Check if this directory has any mp3 files
+          if (entity.listSync().any((file) => file.path.endsWith('.mp3'))) {
+            downloadedReciterNames.add(reciterName);
+          }
+        } else if (entity is File) {
+          // Legacy check for files in the root Khatmah folder
+          String fileName = entity.path.split(Platform.pathSeparator).last;
+          if (fileName.contains('-')) {
+            downloadedReciterNames.add(fileName.split('-').first);
+          }
+        }
+      }
+
+      downloadedRecitersList = reciters.where((reciter) => downloadedReciterNames.contains(reciter.name)).toList();
+      setState(() {});
+    } catch (e) {
+      print("Error listing downloads: $e");
+    }
   }
 
   getRewayaReciters(String id) {
@@ -402,16 +426,10 @@ print(jsonData2);
                                             padding: 0,
                                             margin: 0,
                                             onTap: () async {
-                                              // filteredReciters = [];
-
                                               setState(() {
                                                 selectedMode = "favorite";
                                               });
-                                              // s((){});
-                                              // await Future.delayed(
-                                              //     const Duration(milliseconds: 200));
                                               Navigator.pop(context);
-
                                               itemScrollController.scrollTo(
                                                   index: 0,
                                                   duration: const Duration(
@@ -454,6 +472,73 @@ print(jsonData2);
                                                             color: selectedMode ==
                                                                     "favorite"
                                                                 ?  getValue("darkMode")?quranPagesColorDark:quranPagesColorLight
+                                                                : Colors.grey,
+                                                            size: 20.sp,
+                                                          ),
+                                                          SizedBox(
+                                                            width: 40.w,
+                                                          )
+                                                        ],
+                                                      ),
+                                                    )
+                                                  ],
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                          Divider(
+                                            height: 15.h,
+                                            color: Colors.grey,
+                                          ),
+                                          EasyContainer(
+                                            elevation: 0,
+                                            padding: 0,
+                                            margin: 0,
+                                            onTap: () async {
+                                              filterRecitersDownloaded();
+                                              setState(() {
+                                                selectedMode = "downloaded";
+                                              });
+                                              Navigator.pop(context);
+                                              itemScrollController.scrollTo(
+                                                  index: 0,
+                                                  duration: const Duration(
+                                                      seconds: 1));
+                                            },
+                                            child: Padding(
+                                              padding: EdgeInsets.symmetric(
+                                                  vertical: 0.0.h),
+                                              child: SizedBox(
+                                                height: 45.h,
+                                                child: Row(
+                                                  children: [
+                                                    SizedBox(
+                                                      width: 30.w,
+                                                    ),
+                                                    Icon(
+                                                      Icons.download_for_offline,
+                                                      color: selectedMode ==
+                                                              "downloaded"
+                                                          ? getValue("darkMode") ? quranPagesColorDark : quranPagesColorLight
+                                                          : Colors.grey,
+                                                    ),
+                                                    SizedBox(
+                                                      width: 10.w,
+                                                    ),
+                                                    Text("downloaded".tr()),
+                                                    Expanded(
+                                                      child: Row(
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment.end,
+                                                        children: [
+                                                          Icon(
+                                                            selectedMode ==
+                                                                    "downloaded"
+                                                                ? FontAwesome.dot_circled
+                                                                : FontAwesome.circle_empty,
+                                                            color: selectedMode ==
+                                                                    "downloaded"
+                                                                ? getValue("darkMode") ? quranPagesColorDark : quranPagesColorLight
                                                                 : Colors.grey,
                                                             size: 20.sp,
                                                           ),
@@ -618,14 +703,20 @@ print(jsonData2);
                     indexBarItemHeight: 20,
                     data: selectedMode == "favorite"
                         ? favoriteRecitersList
-                        : filteredReciters,
+                        : selectedMode == "downloaded"
+                            ? downloadedRecitersList
+                            : filteredReciters,
                     itemCount: selectedMode == "favorite"
                         ? favoriteRecitersList.length
-                        : filteredReciters.length,
+                        : selectedMode == "downloaded"
+                            ? downloadedRecitersList.length
+                            : filteredReciters.length,
                     itemBuilder: (context, index) {
                       final reciter = selectedMode == "favorite"
                           ? favoriteRecitersList[index]
-                          : filteredReciters[index];
+                          : selectedMode == "downloaded"
+                              ? downloadedRecitersList[index]
+                              : filteredReciters[index];
                       return AnimationConfiguration.staggeredList(
                           position: index,
                           duration: const Duration(milliseconds: 375),
@@ -829,21 +920,46 @@ print(jsonData2);
                                                                             color:
                                                                          orangeColor,
                                                                           )),
-                                                                      IconButton(
-                                                                          onPressed:
-                                                                              () {
-                                                                            playerPageBloc.add(DownloadAllSurahs(
-                                                                                moshaf: e,
-                                                                                reciter: reciter));
-                                                                          },
-                                                                          icon:
-                                                                              Icon(
-                                                                            size:
-                                                                                20.sp,
-                                                                            Icons.download,
-                                                                            color:
-                                                                               blueColor,
-                                                                          )),
+                                                                      BlocBuilder<PlayerBlocBloc, PlayerBlocState>(
+                                                                        bloc: playerPageBloc,
+                                                                        builder: (context, state) {
+                                                                          final isDownloadingAll = state is PlayerBlocDownloading && 
+                                                                              state.suraNumber == "all-${reciter.name}-${e.id}";
+                                                                          
+                                                                          if (isDownloadingAll) {
+                                                                            return SizedBox(
+                                                                              width: 40,
+                                                                              height: 40,
+                                                                              child: Stack(
+                                                                                alignment: Alignment.center,
+                                                                                children: [
+                                                                                  CircularProgressIndicator(
+                                                                                    value: state.progress,
+                                                                                    strokeWidth: 2,
+                                                                                    color: blueColor,
+                                                                                  ),
+                                                                                  Text(
+                                                                                    "${(state.progress * 100).toInt()}%",
+                                                                                    style: TextStyle(fontSize: 8.sp, color: blueColor, fontWeight: FontWeight.bold),
+                                                                                  ),
+                                                                                ],
+                                                                              ),
+                                                                            );
+                                                                          }
+
+                                                                          return IconButton(
+                                                                              onPressed: () {
+                                                                                playerPageBloc.add(DownloadAllSurahs(
+                                                                                    moshaf: e,
+                                                                                    reciter: reciter));
+                                                                              },
+                                                                              icon: Icon(
+                                                                                size: 20.sp,
+                                                                                Icons.download,
+                                                                                color: blueColor,
+                                                                              ));
+                                                                        },
+                                                                      ),
                                                                       //  SizedBox(
                                                                       //   width:
                                                                       //       10.w,

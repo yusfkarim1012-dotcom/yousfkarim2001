@@ -17,7 +17,8 @@ import 'package:khatmah/blocs/bloc/bloc/player_bar_bloc.dart';
 import 'package:khatmah/GlobalHelpers/hive_helper.dart';
 import 'package:audio_session/audio_session.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:quran/quran.dart';
+import 'package:quran/quran.dart' as quran;
+import 'package:khatmah/GlobalHelpers/constants.dart';
 part 'player_bloc_event.dart';
 part 'player_bloc_state.dart';
 
@@ -39,7 +40,7 @@ class PlayerBlocBloc extends Bloc<PlayerBlocEvent, PlayerBlocState> {
 
         if (surahNumbers.any((element) {
           if (File(
-                  "${appDir.path}${event.reciter.name}-${event.moshaf.id}-${getSurahNameArabic(int.parse(element))}.mp3")
+                  "${appDir.path}${event.reciter.name}-${event.moshaf.id}-${quran.getSurahNameArabic(int.parse(element))}.mp3")
               .existsSync()) {
             return true;
           } else {
@@ -62,11 +63,11 @@ class PlayerBlocBloc extends Bloc<PlayerBlocEvent, PlayerBlocState> {
         }
         List reciterLinks = surahNumbers.map((e) {
           if (File(
-                  "${appDir.path}${event.reciter.name}-${event.moshaf.id}-${getSurahNameArabic(int.parse(e))}.mp3")
+                  "${appDir.path}${event.reciter.name}-${event.moshaf.id}-${quran.getSurahNameArabic(int.parse(e))}.mp3")
               .existsSync()) {
             var link = {
               "link": Uri.file(
-                  "${appDir.path}${event.reciter.name}-${event.moshaf.id}-${getSurahNameArabic(int.parse(e))}.mp3"),
+                  "${appDir.path}${event.reciter.name}-${event.moshaf.id}-${quran.getSurahNameArabic(int.parse(e))}.mp3"),
               "suraNumber": e
             };
             return link;
@@ -146,76 +147,117 @@ class PlayerBlocBloc extends Bloc<PlayerBlocEvent, PlayerBlocState> {
             playList: playList));
       } else if (event is DownloadSurah) {
         final dio = Dio();
-        final appDir = Directory("/storage/emulated/0/Download/Khatmah/");
-        // final ffmpeg = FlutterFFmpeg();
-        PermissionStatus status = await Permission.storage.request();
-        //PermissionStatus status1 = await Permission.accessMediaLocation.request();
-        PermissionStatus status2 =
-            await Permission.manageExternalStorage.request();
-        print('status $status   -> $status2');
-        if (status.isGranted && status2.isGranted) {
-          print(true);
-        } else if (status.isPermanentlyDenied || status2.isPermanentlyDenied) {
-          await openAppSettings();
-        } else if (status.isDenied) {
-          print('Permission Denied');
+        final appDir = Directory(kDownloadPath);
+        
+        PermissionStatus status;
+        if (Platform.isAndroid) {
+          status = await Permission.audio.request();
+          if (!status.isGranted) {
+             status = await Permission.storage.request();
+          }
+        } else {
+          status = await Permission.storage.request();
         }
+        PermissionStatus status2 = await Permission.manageExternalStorage.request();
+        
+        if (!(status.isGranted || status2.isGranted || status.isLimited)) {
+          if (status.isPermanentlyDenied || status2.isPermanentlyDenied) {
+            await openAppSettings();
+          }
+          print('Permission Denied');
+          emit(PlayerBlocInitial());
+          return;
+        }
+
+        final reciterDir = Directory("${appDir.path}${event.reciter.name}");
+        if (!reciterDir.existsSync()) {
+          reciterDir.createSync(recursive: true);
+        }
+
         final fullSuraFilePath =
-            "${appDir.path}${event.reciter.name}-${event.moshaf.id}-${getSurahNameArabic(int.parse(event.suraNumber))}.mp3";
+            "${reciterDir.path}/${event.moshaf.id}-${quran.getSurahNameArabic(int.parse(event.suraNumber))}.mp3";
 
         // Check if the full sura file already exists
         if (File(fullSuraFilePath).existsSync()) {
           print('Full sura audio file already cached: $fullSuraFilePath');
         } else {
           try {
-            await dio.download(event.url, fullSuraFilePath);
+            await dio.download(event.url, fullSuraFilePath, onReceiveProgress: (received, total) {
+              if (total != -1) {
+                emit(PlayerBlocDownloading(
+                  suraNumber: event.suraNumber,
+                  progress: received / total,
+                ));
+              }
+            });
+            emit(PlayerBlocInitial()); // Or another appropriate state when finished
           } catch (e) {
             print(e);
-          } // updateValue(
+            emit(PlayerBlocInitial());
+          }
           //     "downloadedSurahs",
           //     json.decode(getValue("downloadedSurahs").add(
           //         "${event.suraName}-${event.moshafId}-${event.reciterName}")));
         }
       } else if (event is DownloadAllSurahs) {
-        List<String> surahNumbers = event.moshaf.surahList.split(',');
-
-        List reciterLinks = surahNumbers
-            .map((e) => {
-                  "link":
-                      "${event.moshaf.server}/${e.toString().padLeft(3, "0")}.mp3",
-                  "suraNumber": e
-                })
-            .toList();
-
         final dio = Dio();
-        final appDir = Directory("/storage/emulated/0/Download/Khatmah/");
-        // final ffmpeg = FlutterFFmpeg();
-        PermissionStatus status = await Permission.storage.request();
-        //PermissionStatus status1 = await Permission.accessMediaLocation.request();
-        PermissionStatus status2 =
-            await Permission.manageExternalStorage.request();
-        print('status $status   -> $status2');
-        if (status.isGranted && status2.isGranted) {
-          print(true);
-        } else if (status.isPermanentlyDenied || status2.isPermanentlyDenied) {
-          await openAppSettings();
-        } else if (status.isDenied) {
-          print('Permission Denied');
+        final appDir = Directory(kDownloadPath);
+        
+        if (!appDir.existsSync()) {
+          appDir.createSync(recursive: true);
         }
 
-        for (var suraLink in reciterLinks) {
-          final fullSuraFilePath =
-              "${appDir.path}${event.reciter.name}-${event.moshaf.id}-${getSurahNameArabic(int.parse(suraLink["suraNumber"]))}.mp3";
+        PermissionStatus status;
+        if (Platform.isAndroid) {
+          // For Android 13+ (API 33+)
+          // We check if we can request audio permission
+          status = await Permission.audio.request();
+          if (!status.isGranted) {
+             status = await Permission.storage.request();
+          }
+        } else {
+          status = await Permission.storage.request();
+        }
 
-          // Check if the full sura file already exists
-          if (File(fullSuraFilePath).existsSync()) {
-            print('Full sura audio file already cached: $fullSuraFilePath');
-          } else {
-            try {
-              await dio.download(suraLink["link"], fullSuraFilePath);
-            } catch (e) {
-              print(e);
+        PermissionStatus status2 = await Permission.manageExternalStorage.request();
+        
+        if (status.isGranted || status2.isGranted || status.isLimited) {
+          final reciterDir = Directory("${appDir.path}${event.reciter.name}");
+          if (!reciterDir.existsSync()) {
+            reciterDir.createSync(recursive: true);
+          }
+
+          List<String> surahNumbers = event.moshaf.surahList.split(',');
+          int total = surahNumbers.length;
+          
+          for (var i = 0; i < total; i++) {
+            final sNumRaw = surahNumbers[i].trim();
+            if (sNumRaw.isEmpty) continue;
+            
+            final suraNumber = sNumRaw.padLeft(3, "0");
+            final suraName = quran.getSurahNameArabic(int.parse(sNumRaw));
+            final fullSuraFilePath = "${reciterDir.path}/${event.moshaf.id}-$suraName.mp3";
+            final url = "${event.moshaf.server}/$suraNumber.mp3";
+
+            emit(PlayerBlocDownloading(
+              suraNumber: "all-${event.reciter.name}-${event.moshaf.id}",
+              progress: (i + 1) / total,
+            ));
+
+            if (!File(fullSuraFilePath).existsSync()) {
+              try {
+                await dio.download(url, fullSuraFilePath);
+              } catch (e) {
+                print("Error downloading surah $sNumRaw: $e");
+              }
             }
+          }
+          emit(PlayerBlocInitial());
+        } else {
+          print("Permissions denied for download all");
+          // Maybe open app settings if permanently denied
+          if (status.isPermanentlyDenied || status2.isPermanentlyDenied) {
+            await openAppSettings();
           }
         }
       } else if (event is ClosePlayerEvent) {

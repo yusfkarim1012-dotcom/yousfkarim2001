@@ -18,6 +18,7 @@ import 'package:khatmah/features/QuranPages/helpers/quran_data.dart';
 import 'package:khatmah/features/QuranPages/widgets/details_page/share_ayah_dialog.dart';
 import 'package:khatmah/features/home.dart';
 import 'package:quran/quran.dart' as quran;
+import 'package:khatmah/features/QuranPages/widgets/tafseer_and_translation_sheet.dart';
 
 class AyahOptionsSheet extends StatefulWidget {
   final int surahNumber;
@@ -93,6 +94,10 @@ class _AyahOptionsSheetState extends State<AyahOptionsSheet> {
 
   @override
   Widget build(BuildContext context) {
+    bool isBookmarked = widget.bookmarks.any((element) =>
+        element["suraNumber"] == widget.surahNumber &&
+        element["verseNumber"] == widget.verseNumber);
+
     if (reciters.isEmpty) addReciters();
     // Access Blocs
     // final qurapPagePlayerBloc = BlocProvider.of<QuranPagePlayerBloc>(context);
@@ -168,14 +173,6 @@ class _AyahOptionsSheetState extends State<AyahOptionsSheet> {
               borderRadius: 8,
               color: primaryColors[getValue("quranPageolorsIndex")].withOpacity(.05),
               onTap: () async {
-                bool isBookmarked = false;
-                for (var element in widget.bookmarks) {
-                  if (element["suraNumber"] == widget.surahNumber &&
-                      element["verseNumber"] == widget.verseNumber) {
-                    isBookmarked = true;
-                  }
-                }
-
                 if (isBookmarked) {
                   widget.onRemoveBookmark(widget.surahNumber, widget.verseNumber);
                 } else {
@@ -189,13 +186,13 @@ class _AyahOptionsSheetState extends State<AyahOptionsSheet> {
                   children: [
                     SizedBox(width: 20.w),
                     Icon(
-                      FontAwesome5.bookmark,
+                      isBookmarked ? Icons.bookmark : Icons.bookmark_border,
                       color: getValue("quranPageolorsIndex") == 0
                           ? secondaryColors[getValue("quranPageolorsIndex")]
                           : highlightColors[getValue("quranPageolorsIndex")],
                     ),
                     SizedBox(width: 20.w),
-                    Text("addbookmark".tr(),
+                    Text(isBookmarked ? "removebookmark".tr() : "addbookmark".tr(),
                         style: TextStyle(
                             fontFamily: "cairo",
                             fontSize: 14.sp,
@@ -233,6 +230,53 @@ class _AyahOptionsSheetState extends State<AyahOptionsSheet> {
                         widget.isVerseStarred(widget.surahNumber, widget.verseNumber)
                             ? "removefav".tr()
                             : "addtofav".tr(),
+                        style: TextStyle(
+                            fontFamily: "cairo",
+                            fontSize: 14.sp,
+                            color: primaryColors[getValue("quranPageolorsIndex")])),
+                    SizedBox(width: 30.w)
+                  ],
+                ),
+              ),
+            ),
+            SizedBox(height: 10.h),
+
+            // Tafseer Button
+            EasyContainer(
+              borderRadius: 8,
+              color: primaryColors[getValue("quranPageolorsIndex")].withOpacity(.05),
+              onTap: () {
+                Navigator.pop(context);
+                showMaterialModalBottomSheet(
+                  enableDrag: true,
+                  animationCurve: Curves.easeInOutQuart,
+                  elevation: 0,
+                  bounce: true,
+                  duration: const Duration(milliseconds: 400),
+                  backgroundColor: backgroundColors[getValue("quranPageolorsIndex")],
+                  context: context,
+                  builder: (builder) {
+                    return TafseerAndTranslateSheet(
+                      surahNumber: widget.surahNumber,
+                      verseNumber: widget.verseNumber,
+                      isVerseByVerseSelection: true,
+                    );
+                  },
+                );
+              },
+              child: SizedBox(
+                width: MediaQuery.of(context).size.width,
+                child: Row(
+                  children: [
+                    SizedBox(width: 20.w),
+                    Icon(
+                      Icons.menu_book,
+                      color: getValue("quranPageolorsIndex") == 0
+                          ? secondaryColors[getValue("quranPageolorsIndex")]
+                          : highlightColors[getValue("quranPageolorsIndex")],
+                    ),
+                    SizedBox(width: 20.w),
+                    Text("tafseer".tr(),
                         style: TextStyle(
                             fontFamily: "cairo",
                             fontSize: 14.sp,

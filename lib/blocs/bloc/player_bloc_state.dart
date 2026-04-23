@@ -28,3 +28,9 @@ class PlayerBlocPlaying extends PlayerBlocState {
 class PlayerBlocPaused extends PlayerBlocState {}
 
 class PlayerBlocClosed extends PlayerBlocState {}
+
+class PlayerBlocDownloading extends PlayerBlocState {
+  final String suraNumber;
+  final double progress;
+  PlayerBlocDownloading({required this.suraNumber, required this.progress});
+}

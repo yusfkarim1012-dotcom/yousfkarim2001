@@ -14,6 +14,7 @@ const Color buttonColor = Color(0xFF5D9566);
 const Color borderColor = Color(0xFFDDDDDD);
 const Color homeBackgroundColor = Color.fromARGB(255, 87, 154, 98);
 const Color goldColor = Color(0xff9C27B0); // Purple for obvious update
+const String kDownloadPath = "/storage/emulated/0/Android/media/com.khatmah.quran.yusf.app/Khatmah/";
 Color quranPagesColorLight =
     const Color(0xffF1EEE5);Color quranPagesColorDark =
   const Color(0xff292C31);

@@ -47,8 +47,10 @@ class _RecitersPageState extends State<RecitersPage> {
     super.initState();
     playerbarBloc.add(SetSectionVisibilityEvent(true));
     reciters = [];
+    filteredReciters = [];
+    favoriteRecitersList = [];
+    downloadedRecitersList = [];
     dio = Dio();
-    getFavoriteList();
     fetchReciters();
   }
 
@@ -65,15 +67,24 @@ class _RecitersPageState extends State<RecitersPage> {
   getFavoriteList() {
     var jsonData = getValue("favoriteRecitersList");
     if (jsonData != null) {
-      final data = json.decode(jsonData) as List<dynamic>;
-
-      setState(() {
-        favoriteRecitersList = data
-            .map((reciterJson) =>
-                reciters.where((element) => element.id == reciterJson).first)
-            .toList();
-        isLoading = false;
-      });
+      try {
+        final data = json.decode(jsonData) as List<dynamic>;
+        
+        favoriteRecitersList = [];
+        for (var reciterId in data) {
+          try {
+            var reciter = reciters.firstWhere((element) => element.id.toString() == reciterId.toString());
+            favoriteRecitersList.add(reciter);
+          } catch (e) {
+            // Reciter not found in current list, skip
+          }
+        }
+        setState(() {
+          isLoading = false;
+        });
+      } catch (e) {
+        print("Error decoding favorites: $e");
+      }
     }
   }
 
@@ -156,6 +167,8 @@ print(jsonData2);
 
         ////
         suwar = data3;
+        
+        getFavoriteList();
 
         setState(() {
           isLoading = false;
@@ -598,13 +611,13 @@ print(jsonData2);
                                                               //   return hasMatchingMoshaf;
                                                               // }).toList();
                                                               getRewayaReciters(
-                                                                  selectedMode);
+                                                                  e.id.toString());
                                                               print(
                                                                   filteredReciters
                                                                       .length);
                                                               setState(() {
                                                                 selectedMode = e
-                                                                    .moshafType
+                                                                    .name
                                                                     .toString();
                                                               });
                                                               //  s((){});
@@ -638,10 +651,10 @@ print(jsonData2);
                                                                     Image(
                                                                         height: 25
                                                                             .h,
-                                                                        color: selectedMode == e.moshafType
-                                                                            ? null
-                                                                            : Colors
-                                                                                .grey,
+                                                                        color: selectedMode == e.name.toString()
+                                                                          ? null
+                                                                          : Colors
+                                                                              .grey,
                                                                         image: const AssetImage(
                                                                             "assets/images/reading.png")),
                                                                     SizedBox(
@@ -657,10 +670,10 @@ print(jsonData2);
                                                                             MainAxisAlignment.end,
                                                                         children: [
                                                                           Icon(
-                                                                            selectedMode == e.moshafType.toString()
+                                                                            selectedMode == e.name.toString()
                                                                                 ? FontAwesome.dot_circled
                                                                                 : FontAwesome.circle_empty,
-                                                                            color: selectedMode == e.moshafType.toString()
+                                                                            color: selectedMode == e.name.toString()
                                                                                 ?  getValue("darkMode")?quranPagesColorDark:quranPagesColorLight
                                                                                 : Colors.grey,
                                                                             size:
@@ -776,7 +789,7 @@ print(jsonData2);
                                                       updateValue(
                                                           "favoriteRecitersList",
                                                           json.encode(
-                                                              favoriteRecitersList));
+                                                              favoriteRecitersList.map((e) => e.id).toList()));
                                                     } else {
                                                       print("adding favorites");
 
@@ -785,7 +798,7 @@ print(jsonData2);
                                                       updateValue(
                                                           "favoriteRecitersList",
                                                           json.encode(
-                                                              favoriteRecitersList));
+                                                              favoriteRecitersList.map((e) => e.id).toList()));
                                                     }
                                                     setState(() {});
                                                   },

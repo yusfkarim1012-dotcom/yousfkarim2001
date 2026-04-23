@@ -7,21 +7,27 @@ part 'player_bar_event.dart';
 part 'player_bar_state.dart';
 
 class PlayerBarBloc extends Bloc<PlayerBarEvent, PlayerBarState> {
-  PlayerBarBloc() : super(PlayerBarInitial(height: 60)) {
+  PlayerBarBloc() : super(PlayerBarInitial(height: 60, isInAudioSection: false)) {
     on<PlayerBarEvent>((event, emit) {
-      if (event is HideBarEvent) {
-        print("HideBarEvent");
+      final currentState = state;
+      bool currentSection = false;
+      if (currentState is PlayerBarVisible) currentSection = currentState.isInAudioSection;
+      if (currentState is PlayerBarInitial) currentSection = currentState.isInAudioSection;
 
+      if (event is HideBarEvent) {
         emit(PlayerBarHidden());
       } else if (event is ShowBarEvent || event is MinimizeBarEvent) {
-        print("ShowBarEvent MinimizeBarEvent");
-        emit(PlayerBarVisible(height: 60));
+        emit(PlayerBarVisible(height: 60, isInAudioSection: currentSection));
       } else if (event is ExtendBarEvent) {
-        print("ExtendBarEvent");
-        emit(PlayerBarVisible(height: 70));
+        emit(PlayerBarVisible(height: 70, isInAudioSection: currentSection));
       } else if (event is CloseBarEvent) {
-        print("CloseBarEvent");
         emit(PlayerBarClosed());
+      } else if (event is SetSectionVisibilityEvent) {
+        if (currentState is PlayerBarVisible) {
+          emit(PlayerBarVisible(height: currentState.height, isInAudioSection: event.isInAudioSection));
+        } else if (currentState is PlayerBarInitial) {
+          emit(PlayerBarInitial(height: currentState.height, isInAudioSection: event.isInAudioSection));
+        }
       }
     });
   }

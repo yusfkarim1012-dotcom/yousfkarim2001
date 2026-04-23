@@ -384,10 +384,10 @@ class _MyAppState extends State<MyApp> {
                             return Stack(
                               children: [
                                 child!,
-                                BlocConsumer(
+                                BlocBuilder(
                                   bloc: playerbarBloc,
                                   builder: (context, state) {
-                                    if (state is PlayerBarVisible) {
+                                    if (state is PlayerBarVisible && state.isInAudioSection) {
                                       return const PlayerBar();
                                     }
                                     return const SizedBox.shrink();

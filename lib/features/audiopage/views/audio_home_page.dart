@@ -18,6 +18,7 @@ import 'package:khatmah/GlobalHelpers/hive_helper.dart';
 import 'package:khatmah/GlobalHelpers/printYellow.dart';
 import 'package:khatmah/blocs/bloc/quran_page_player_bloc.dart';
 import 'package:khatmah/features/audiopage/player/player_bar.dart';
+import 'package:khatmah/blocs/bloc/bloc/player_bar_bloc.dart';
 import 'package:khatmah/features/audiopage/views/reciter_all_surahs_page.dart';
 import 'dart:math' as math;
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -44,6 +45,7 @@ class _RecitersPageState extends State<RecitersPage> {
   @override
   void initState() {
     super.initState();
+    playerbarBloc.add(SetSectionVisibilityEvent(true));
     reciters = [];
     dio = Dio();
     getFavoriteList();
@@ -224,6 +226,7 @@ print(jsonData2);
 
   @override
   void dispose() {
+    playerbarBloc.add(SetSectionVisibilityEvent(false));
     // SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual,
     //     overlays: SystemUiOverlay.values); // TODO: implement dispose
     super.dispose();

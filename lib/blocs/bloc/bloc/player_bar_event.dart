@@ -13,3 +13,8 @@ class ExtendBarEvent extends PlayerBarEvent{}
 class MinimizeBarEvent extends PlayerBarEvent{}
 
 class CloseBarEvent extends PlayerBarEvent{}
+
+class SetSectionVisibilityEvent extends PlayerBarEvent{
+  final bool isInAudioSection;
+  SetSectionVisibilityEvent(this.isInAudioSection);
+}

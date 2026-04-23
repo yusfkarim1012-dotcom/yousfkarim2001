@@ -1,5 +1,5 @@
 # env.ps1
-$ProjectRoot = "C:\Users\yusf2000.runnervmxu3fp\.gemini\antigravity\scratch\yousfkarim2001"
+$ProjectRoot = "C:\Users\yusf2000.runnervmqpruh\.gemini\antigravity\scratch"
 $env:JAVA_HOME = "$ProjectRoot\devtools\jdk"
 $env:ANDROID_HOME = "$ProjectRoot\devtools\android-sdk"
 $env:PATH = "$ProjectRoot\devtools\flutter\bin;$ProjectRoot\devtools\android-sdk\platform-tools;$ProjectRoot\devtools\jdk\bin;" + $env:PATH

@@ -36,11 +36,11 @@ class PlayerBlocBloc extends Bloc<PlayerBlocEvent, PlayerBlocState> {
         audioPlayer.stop();
         int nextMediaId = 0;
         List<String> surahNumbers = event.moshaf.surahList.split(',');
-        final appDir = Directory("/storage/emulated/0/Download/Khatmah/");
+        final appDir = Directory(kDownloadPath);
 
         if (surahNumbers.any((element) {
           if (File(
-                  "${appDir.path}${event.reciter.name}-${event.moshaf.id}-${quran.getSurahNameArabic(int.parse(element))}.mp3")
+                  "${appDir.path}${event.reciter.name}/${event.moshaf.id}-${quran.getSurahNameArabic(int.parse(element))}.mp3")
               .existsSync()) {
             return true;
           } else {
@@ -63,11 +63,11 @@ class PlayerBlocBloc extends Bloc<PlayerBlocEvent, PlayerBlocState> {
         }
         List reciterLinks = surahNumbers.map((e) {
           if (File(
-                  "${appDir.path}${event.reciter.name}-${event.moshaf.id}-${quran.getSurahNameArabic(int.parse(e))}.mp3")
+                  "${appDir.path}${event.reciter.name}/${event.moshaf.id}-${quran.getSurahNameArabic(int.parse(e))}.mp3")
               .existsSync()) {
             var link = {
               "link": Uri.file(
-                  "${appDir.path}${event.reciter.name}-${event.moshaf.id}-${quran.getSurahNameArabic(int.parse(e))}.mp3"),
+                  "${appDir.path}${event.reciter.name}/${event.moshaf.id}-${quran.getSurahNameArabic(int.parse(e))}.mp3"),
               "suraNumber": e
             };
             return link;

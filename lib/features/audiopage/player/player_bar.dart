@@ -47,7 +47,6 @@ class _PlayerBarState extends State<PlayerBar> {
       return false;
     } else {
       BlocProvider.of<PlayerBarBloc>(context).add(MinimizeBarEvent());
-
       isMinimized = true;
     }
     return true;
@@ -59,9 +58,10 @@ class _PlayerBarState extends State<PlayerBar> {
     setState(() {});
   }
 
-  final appDir = Directory("/storage/emulated/0/Download/Khatmah/");
+  final appDir = Directory(kDownloadPath);
   bool isPlaylistShown = false;
   bool isMinimized = true;
+
   @override
   Widget build(BuildContext context) {
     return Builder(
@@ -74,7 +74,6 @@ class _PlayerBarState extends State<PlayerBar> {
               return BlocBuilder<PlayerBarBloc, PlayerBarState>(
                 bloc: BlocProvider.of<PlayerBarBloc>(context),
                 builder: (context, statee) {
-                  print(statee);
                   if (statee is PlayerBarHidden) {
                     return Positioned(
                         bottom: 25.h,
@@ -95,25 +94,20 @@ class _PlayerBarState extends State<PlayerBar> {
                                           animate: snapshot.data!.playing,
                                           child: GestureDetector(
                                             onTap: () {
-                                              BlocProvider.of<PlayerBarBloc>(
-                                                      context)
-                                                  .add(ShowBarEvent());
+                                              BlocProvider.of<PlayerBarBloc>(context).add(ShowBarEvent());
                                             },
                                             child: Container(
                                               height: 45.h,
                                               width: 45.w,
-                                              decoration:  BoxDecoration(
+                                              decoration: BoxDecoration(
                                                 shape: BoxShape.circle,
-                                                color:  getValue("darkMode")?quranPagesColorDark:quranPagesColorLight,
+                                                color: getValue("darkMode") ? quranPagesColorDark : quranPagesColorLight,
                                               ),
                                               child: Center(
                                                 child: CircleAvatar(
-                                                  backgroundColor:
-                                                       getValue("darkMode")?quranPagesColorDark:quranPagesColorLight,
-                                                  backgroundImage: const AssetImage(
-                                                      "assets/images/quran.png"),
-                                                  foregroundImage:
-                                                      CachedNetworkImageProvider(
+                                                  backgroundColor: getValue("darkMode") ? quranPagesColorDark : quranPagesColorLight,
+                                                  backgroundImage: const AssetImage("assets/images/quran.png"),
+                                                  foregroundImage: CachedNetworkImageProvider(
                                                     "${getValue("${state.reciter.name} photo url")}",
                                                   ),
                                                 ),
@@ -124,917 +118,413 @@ class _PlayerBarState extends State<PlayerBar> {
                                       ),
                                     );
                                   } else {
-                                    return Container(height: 0,);
+                                    return const SizedBox.shrink();
                                   }
                                 }),
                           ),
                         ));
                   } else if (statee is PlayerBarVisible) {
-                    if (statee.height == 60) {
-                      isMinimized = true;
-                    } else {
-                      isMinimized = false;
-                    }
-                    return Positioned(
-                      bottom: 12.h,
+                    isMinimized = statee.height == 60;
+                    
+                    return AnimatedPositioned(
+                      duration: const Duration(milliseconds: 300),
+                      bottom: isMinimized ? (MediaQuery.of(context).padding.bottom + 10.h) : 0,
+                      left: isMinimized ? 10.w : 0,
+                      right: isMinimized ? 10.w : 0,
+                      top: isMinimized ? (MediaQuery.of(context).size.height - (MediaQuery.of(context).padding.bottom + 10.h + 70.h)) : 0,
                       child: FadeInUp(
+                        duration: const Duration(milliseconds: 500),
                         child: Material(
                           color: Colors.transparent,
                           child: GestureDetector(
                             onTap: () {
-                              // if (statee.height == 60) {
-                              BlocProvider.of<PlayerBarBloc>(context)
-                                  .add(ExtendBarEvent());
-                              // }
+                              if (isMinimized) {
+                                BlocProvider.of<PlayerBarBloc>(context).add(ExtendBarEvent());
+                              }
                             },
                             child: AnimatedContainer(
                               duration: const Duration(milliseconds: 300),
-                              height: statee.height == 60
-                                  ? 60.h
-                                  : (MediaQuery.of(context).size.height),
-                              width: MediaQuery.of(context).size.width,
                               decoration: BoxDecoration(
-                                  color: statee.height == 60
-                                      ? const m.Color.fromARGB(255, 82, 96, 175)
-                                      : Colors.white,
-                                  borderRadius: statee.height == 60
-                                      ? const BorderRadius.only(
-                                          topLeft: Radius.circular(13),
-                                          topRight: Radius.circular(13))
-                                      : BorderRadius.zero),
-                              child: statee.height == 60
-                                  ? Padding(
-                                      padding: EdgeInsets.symmetric(
-                                          horizontal: 14.0.w),
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          StreamBuilder(
-                                              stream: state.audioPlayer
-                                                  .playerStateStream,
-                                              builder: (context, snapshot) {
-                                                if (snapshot.hasData) {
-                                                  return Padding(
-                                                    padding:
-                                                        const EdgeInsets.all(
-                                                            2.0),
-                                                    child: SpinPerfect(
-                                                      infinite: true,
-                                                      duration: const Duration(
-                                                          seconds: 7),
-                                                      animate: snapshot
-                                                          .data!.playing,
-                                                      child: GestureDetector(
-                                                        onTap: () {
-                                                          BlocProvider.of<
-                                                                      PlayerBarBloc>(
-                                                                  context)
-                                                              .add(
-                                                                  ShowBarEvent());
-                                                        },
-                                                        child: Container(
-                                                          height: 50.h,
-                                                          width: 50.w,
-                                                          decoration:
-                                                              const BoxDecoration(
-                                                                  shape: BoxShape
-                                                                      .circle,
-                                                                  color:
-                                                                      darkPrimaryColor),
-                                                          child: Center(
-                                                            child: CircleAvatar(
-                                                              backgroundColor:
-                                                                  darkPrimaryColor,
-                                                              backgroundImage:
-                                                                  const AssetImage(
-                                                                      "assets/images/quran.png"),
-                                                              foregroundImage:
-                                                                  getValue("${state.reciter.name} photo url") !=
-                                                                          null
-                                                                      ? CachedNetworkImageProvider(
-                                                                          "${getValue("${state.reciter.name} photo url")}",
-                                                                        )
-                                                                      : null,
-                                                            ),
-                                                          ),
-                                                        ),
-                                                      ),
-                                                    ),
-                                                  );
-                                                } else {
-                                                  return Container();
-                                                }
-                                              }),
-                                          StreamBuilder(
-                                              stream: state.audioPlayer
-                                                  .playerStateStream,
-                                              builder: (context, snapshot) {
-                                                if (snapshot.hasData) {
-                                                  return GestureDetector(
-                                                    onTap: () {
-                                                      snapshot.data!.playing ==
-                                                              true
-                                                          ? state.audioPlayer
-                                                              .pause()
-                                                          : state.audioPlayer
-                                                              .play();
-                                                      setState(() {});
-                                                    },
-                                                    child: Container(
-                                                        decoration: BoxDecoration(
-                                                            shape:
-                                                                BoxShape.circle,
-                                                            border: Border.all(
-                                                                color: Colors
-                                                                    .white,
-                                                                width: 1.w)),
-                                                        child: Padding(
-                                                          padding:
-                                                              EdgeInsets.all(
-                                                                  4.0.sp),
-                                                          child: Icon(
-                                                            snapshot.data!
-                                                                        .playing ==
-                                                                    true
-                                                                ? Icons.pause
-                                                                : Icons
-                                                                    .play_arrow,
-                                                            color: Colors.white,
-                                                          ),
-                                                        )),
-                                                  );
-                                                } else {
-                                                  return Container();
-                                                }
-                                              }),
-                                          SizedBox(
-                                            width: 20.w,
-                                          ),
-                                          StreamBuilder<SequenceState?>(
-                                              stream: state.audioPlayer
-                                                  .sequenceStateStream,
-                                              builder: (context, snapshot) {
-                                                final statee = snapshot.data;
-                                                if (statee?.sequence.isEmpty ??
-                                                    true) {
-                                                  return const SizedBox();
-                                                }
-                                                final metadata = statee!
-                                                    .currentSource!
-                                                    .tag as MediaItem;
-                                                if (snapshot.hasData) {
-                                                  return Text(
-                                                      "${metadata.title} - " +
-                                                          state.reciter.name,
-                                                      textDirection:
-                                                          m.TextDirection.rtl,
-                                                      style: TextStyle(
-                                                        color: Colors.white,
-                                                        fontSize: 14.sp,
-                                                      ));
-                                                } else {
-                                                  return Container();
-                                                }
-                                              }),
-                                          SizedBox(
-                                            width: 10.w,
-                                          ),
-                                          GestureDetector(
-                                            onTap: () {
-                                              BlocProvider.of<PlayerBarBloc>(
-                                                      context)
-                                                  .add(HideBarEvent());
-                                            },
-                                            child: Container(
-                                              // height: 30,
-                                              decoration: BoxDecoration(
-                                                  shape: BoxShape.circle,
-                                                  border: Border.all(
-                                                      color: Colors.white,
-                                                      width: 1.w)),
-                                              child: Center(
-                                                child: Padding(
-                                                  padding:
-                                                      EdgeInsets.all(4.0.sp),
-                                                  child: const Icon(
-                                                    Icons.remove_red_eye,
-                                                    color: Colors.white,
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                          SizedBox(
-                                            width: 10.w,
-                                          ),
-                                            GestureDetector(
-                                              onTap: () {
-                                                BlocProvider.of<PlayerBarBloc>(
-                                                        context)
-                                                    .add(CloseBarEvent());
-                                                state.audioPlayer.stop();
-                                                setState(() {});
-                                              },
-                                              child: Container(
-                                                // height: 30,
-                                                decoration: BoxDecoration(
-                                                    shape: BoxShape.circle,
-                                                    border: Border.all(
-                                                        color: Colors.white,
-                                                        width: 1.w)),
-                                                child: Center(
-                                                  child: Padding(
-                                                    padding:
-                                                        EdgeInsets.all(4.0.sp),
-                                                    child: const Icon(
-                                                      Icons.close,
-                                                      color: Colors.white,
-                                                    ),
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                            SizedBox(
-                                              width: 10.w,
-                                            ),
-                                        ],
-                                      ),
+                                  gradient: isMinimized
+                                      ? LinearGradient(
+                                          colors: [blueColor, blueColor.withOpacity(0.8)],
+                                          begin: Alignment.topLeft,
+                                          end: Alignment.bottomRight,
+                                        )
+                                      : null,
+                                  color: isMinimized ? null : darkPrimaryColor,
+                                  borderRadius: BorderRadius.circular(isMinimized ? 15.r : 0),
+                                  boxShadow: isMinimized ? [
+                                    BoxShadow(
+                                      color: Colors.black.withOpacity(0.3),
+                                      blurRadius: 10,
+                                      offset: const Offset(0, 5),
                                     )
-                                  : Material(
-                                      color: darkPrimaryColor,
-                                      child: Container(
-                                        decoration: const BoxDecoration(
-                                            image: DecorationImage(
-                                                fit: BoxFit.fill,
-                                                opacity: .5,
-                                                image: AssetImage(
-                                                    "assets/images/framee.png"))),
-                                        child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.center,
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.start,
-                                          // mainAxisAlignment:
-                                          //     MainAxisAlignment.center,
-                                          children: [
-                                            SizedBox(
-                                              height: 35.h,
-                                            ),
-                                            SizedBox(
-                                              width: MediaQuery.of(context)
-                                                  .size
-                                                  .width,
-                                              child: Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceBetween,
-                                                children: [
-                                                  // SizedBox(
-                                                  //   width: 12.w,
-                                                  // ),
-                                                  Padding(
-                                                    padding: EdgeInsets.only(
-                                                        top: 12.0.h,
-                                                        left: 12.w),
-                                                    child: IconButton(
-                                                      onPressed: () {
-                                                        BlocProvider.of<
-                                                                    PlayerBarBloc>(
-                                                                context)
-                                                            .add(
-                                                                MinimizeBarEvent());
-                                                      },
-                                                      icon: Icon(
-                                                          LineariconsFree
-                                                              .chevron_down,
-                                                          size: 25.sp,
-                                                          color: Colors.white),
-                                                    ),
-                                                  ),
-                                                  Padding(
-                                                    padding: EdgeInsets.only(
-                                                        top: 12.0.h,
-                                                        left: 12.w),
-                                                    child: IconButton(
-                                                      onPressed: () {
-                                                        setState(() {
-                                                          isPlaylistShown =
-                                                              !isPlaylistShown;
-                                                        });
-                                                      },
-                                                      icon: Icon(
-                                                          Icons
-                                                              .playlist_play_rounded,
-                                                          size: 25.sp,
-                                                          color: Colors.white),
-                                                    ),
-                                                  ),
-                                                  // SizedBox(
-                                                  //   width: 12.w,
-                                                  // ),
-                                                ],
-                                              ),
-                                            ),
-                                            SizedBox(
-                                              height: 35.h,
-                                            ),
-                                            // if (isPlaylistShown = false)
-                                            Expanded(
-                                              child:
-                                                  StreamBuilder<SequenceState?>(
-                                                stream: state.audioPlayer
-                                                    .sequenceStateStream,
-                                                builder: (context, snapshot) {
-                                                  final statee = snapshot.data;
-                                                  if (statee
-                                                          ?.sequence.isEmpty ??
-                                                      true) {
-                                                    return const SizedBox();
-                                                  }
-                                                  final metadata = statee!
-                                                      .currentSource!
-                                                      .tag as MediaItem;
-                                                  return Column(
-                                                    crossAxisAlignment:
-                                                        CrossAxisAlignment
-                                                            .center,
-                                                    children: [
-                                                      Text(metadata.title,
-                                                          textDirection: m
-                                                              .TextDirection
-                                                              .rtl,
-                                                          style: TextStyle(
-                                                            color: Colors.white,
-                                                            fontSize: 22.sp,
-                                                          )),
-                                                      Text(
-                                                        textDirection:
-                                                            m.TextDirection.rtl,
-                                                        metadata.album!
-                                                            .replaceAll(
-                                                                "القارئ", ""),
-                                                        style: TextStyle(
-                                                            color: Colors.white
-                                                                .withOpacity(
-                                                                    .9)),
-                                                      ),
-                                                      SizedBox(
-                                                        height: 30.h,
-                                                      ),
-                                                      StreamBuilder(
-                                                          stream: state
-                                                              .audioPlayer
-                                                              .playerStateStream,
-                                                          builder: (context,
-                                                              snapshot) {
-                                                            if (snapshot
-                                                                .hasData) {
-                                                              return Padding(
-                                                                padding:
-                                                                    const EdgeInsets
-                                                                        .all(
-                                                                        2.0),
-                                                                child:
-                                                                    SpinPerfect(
-                                                                  infinite:
-                                                                      true,
-                                                                  duration:
-                                                                      const Duration(
-                                                                          seconds:
-                                                                              18),
-                                                                  animate: snapshot
-                                                                      .data!
-                                                                      .playing,
-                                                                  child:
-                                                                      GestureDetector(
-                                                                    onTap: () {
-                                                                      BlocProvider.of<PlayerBarBloc>(
-                                                                              context)
-                                                                          .add(
-                                                                              ShowBarEvent());
-                                                                    },
-                                                                    child: Center(
-                                                                        child: CircleAvatar(
-                                                                            radius: isPlaylistShown == false ? 130.r : 60.r,
-                                                                            foregroundImage: getValue("${metadata.album!.replaceAll("القارئ ", "")} photo url") != null
-                                                                                ? CachedNetworkImageProvider(
-                                                                                    getValue("${metadata.album!.replaceAll("القارئ ", "")} photo url"),
-                                                                                  )
-                                                                                : null,
-                                                                            backgroundImage: CachedNetworkImageProvider(
-                                                                              metadata.artUri.toString(),
-                                                                            ))),
-                                                                  ),
-                                                                ),
-                                                              );
-                                                            } else {
-                                                              return Container();
-                                                            }
-                                                          }),
-                                                    ],
-                                                  );
-                                                },
-                                              ),
-                                            ),
-                                            // if (isPlaylistShown = false)
-                                            ControlButtons(state.audioPlayer),
-                                            // if (isPlaylistShown == false)
-                                            SizedBox(height: 30.0.h),
-                                            // if (isPlaylistShown == true)
-                                            StreamBuilder<Duration>(
-                                              stream: state
-                                                  .audioPlayer.positionStream,
-                                              builder: (context, snapshot) {
-                                                final positionData =
-                                                    snapshot.data;
-                                                if (snapshot.hasError) {
-                                                  return Container();
-                                                }
-                                                if (snapshot.hasData == false) {
-                                                  return Container(
-                                                    child: const Center(
-                                                      child:
-                                                          CircularProgressIndicator(),
-                                                    ),
-                                                  );
-                                                }
-                                                return Row(
-                                                  children: [
-                                                    SizedBox(
-                                                      width: 30.w,
-                                                    ),
-                                                    SizedBox(
-                                                        child: Text(
-                                                            textDirection: m
-                                                                .TextDirection
-                                                                .rtl,
-                                                            formatDuration(
-                                                                snapshot.data!),
-                                                            style: const TextStyle(
-                                                                color: Colors
-                                                                    .white))),
-                                                    Expanded(
-                                                      child: SliderTheme(
-                                                        data: SliderTheme.of(
-                                                                context)
-                                                            .copyWith(
-                                                          activeTrackColor:
-                                                              const Color
-                                                                  .fromARGB(
-                                                                  255,
-                                                                  255,
-                                                                  255,
-                                                                  255), // Customize track color
-                                                          inactiveTrackColor: Colors
-                                                              .grey, // Customize inactive track color
-                                                          thumbColor: Colors
-                                                              .white, // Customize thumb color
-                                                          overlayColor: Colors
-                                                              .blue
-                                                              .withAlpha(
-                                                                  50), // Customize overlay color
-                                                          thumbShape:
-                                                              const RoundSliderThumbShape(
-                                                                  enabledThumbRadius:
-                                                                      10),
-                                                          overlayShape:
-                                                              const RoundSliderOverlayShape(
-                                                                  overlayRadius:
-                                                                      20),
-                                                        ),
-                                                        child: Slider(
-                                                          value: snapshot
-                                                              .data!.inSeconds
-                                                              .toDouble(),
-                                                          min: 0,
-                                                          max: state
-                                                              .audioPlayer
-                                                              .duration!
-                                                              .inSeconds
-                                                              .toDouble(),
-                                                          onChanged: (value) {
-                                                            // Handle slider value change here
-                                                            // Convert the double to an integer for seconds
-                                                            int newSeconds =
-                                                                value.toInt();
-                                                            state.audioPlayer
-                                                                .seek(Duration(
-                                                                    seconds:
-                                                                        newSeconds));
-                                                          },
-                                                        ),
-                                                      ),
-                                                    ),
-                                                    SizedBox(
-                                                        child: Text(
-                                                      formatDuration(state
-                                                          .audioPlayer
-                                                          .duration!),
-                                                      textDirection:
-                                                          m.TextDirection.rtl,
-                                                      style: const TextStyle(
-                                                          color: Colors.white),
-                                                    )),
-                                                    SizedBox(
-                                                      width: 30.w,
-                                                    )
-                                                  ],
-                                                );
-                                              },
-                                            ),
-                                            if (isPlaylistShown == false)
-                                              SizedBox(height: 60.0.h),
-                                            if (isPlaylistShown == false)
-                                              Padding(
-                                                padding: EdgeInsets.symmetric(
-                                                    horizontal: 26.0.w),
-                                                child: Row(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment
-                                                          .spaceBetween,
-                                                  children: [
-                                                    IconButton(
-                                                      onPressed: () {
-                                                        if (favoriteSurahList
-                                                            .contains(
-                                                                "${state.reciter.name}${state.moshaf.name}${state.audioPlayer.currentIndex! + 1}")) {
-                                                          favoriteSurahList.remove(
-                                                              "${state.reciter.name}${state.moshaf.name}${state.audioPlayer.currentIndex! + 1}"
-                                                                  .trim());
-                                                          updateValue(
-                                                              "favoriteSurahList",
-                                                              json.encode(
-                                                                  favoriteSurahList));
-                                                        } else {
-                                                          favoriteSurahList.add(
-                                                              "${state.reciter.name}${state.moshaf.name}${state.audioPlayer.currentIndex! + 1}"
-                                                                  .trim());
-                                                          updateValue(
-                                                              "favoriteSurahList",
-                                                              json.encode(
-                                                                  favoriteSurahList));
-                                                        }
-
-                                                        setState(() {});
-                                                      },
-                                                      icon: Icon(
-                                                          favoriteSurahList.contains(
-                                                                  "${state.reciter.name}${state.moshaf.name}${int.parse(state.surahNumbers[state.audioPlayer.currentIndex!])}"
-                                                                      .trim())
-                                                              ? Icons.favorite
-                                                              : Icons
-                                                                  .favorite_border,
-                                                          size: 24.sp),
-                                                      color: Colors.white,
-                                                    ),
-                                                    IconButton(
-                                                      onPressed: () {
-                                                        //               "${event.moshaf.server}/${e.toString().padLeft(3, "0")}.mp3"
-                                                        // .replace(scheme: 'http');
-
-                                                        if (File(
-                                                                "${appDir.path}${state.reciter.name}-${state.moshaf.id}-${getSurahNameArabic(int.parse(state.surahNumbers[state.audioPlayer.currentIndex!]))}.mp3")
-                                                            .existsSync()) {
-                                                        } else {
-                                                          playerPageBloc.add(DownloadSurah(
-                                                              reciter:
-                                                                  state.reciter,
-                                                              moshaf:
-                                                                  state.moshaf,
-                                                              suraNumber: state
-                                                                      .surahNumbers[
-                                                                  state
-                                                                      .audioPlayer
-                                                                      .currentIndex!],
-                                                              url:
-                                                                  "${state.moshaf.server}/${state.surahNumbers[state.audioPlayer.currentIndex!].padLeft(3, "0")}.mp3"));
-                                                        } // .replace(scheme: 'http')));
-                                                      },
-                                                      icon: Icon(
-                                                          File("${appDir.path}${state.reciter.name}-${state.moshaf.id}-${getSurahNameArabic(int.parse(state.surahNumbers[state.audioPlayer.currentIndex!]))}.mp3")
-                                                                  .existsSync()
-                                                              ? Icons
-                                                                  .download_done
-                                                              : Icons.download,
-                                                          size: 24.sp),
-                                                      color: Colors.white,
-                                                    ),
-                                                  ],
-                                                ),
-                                              ),
-                                            if (isPlaylistShown == false)
-                                              SizedBox(height: 15.0.h),
-                                            if (isPlaylistShown == true)
-                                              SizedBox(height: 20.0.h),
-
-                                            if (isPlaylistShown == true)
-                                              Padding(
-                                                padding: EdgeInsets.symmetric(
-                                                    horizontal: 20.0.w),
-                                                child: Row(
-                                                  children: [
-                                                    StreamBuilder<LoopMode>(
-                                                      stream: state.audioPlayer
-                                                          .loopModeStream,
-                                                      builder:
-                                                          (context, snapshot) {
-                                                        final loopMode =
-                                                            snapshot.data ??
-                                                                LoopMode.off;
-                                                        var icons = [
-                                                          Icon(Icons.repeat,
-                                                              size: 27.sp,
-                                                              color:
-                                                                  Colors.grey),
-                                                          Icon(Icons.repeat,
-                                                              size: 27.sp,
-                                                              color:
-                                                                  Colors.white),
-                                                          Icon(Icons.repeat_one,
-                                                              size: 27.sp,
-                                                              color:
-                                                                  Colors.white),
-                                                        ];
-                                                        const cycleModes = [
-                                                          LoopMode.off,
-                                                          LoopMode.all,
-                                                          LoopMode.one,
-                                                        ];
-                                                        final index = cycleModes
-                                                            .indexOf(loopMode);
-                                                        return IconButton(
-                                                          icon: icons[index],
-                                                          onPressed: () {
-                                                            state.audioPlayer.setLoopMode(cycleModes[
-                                                                (cycleModes.indexOf(
-                                                                            loopMode) +
-                                                                        1) %
-                                                                    cycleModes
-                                                                        .length]);
-                                                          },
-                                                        );
-                                                      },
-                                                    ),
-                                                    Expanded(
-                                                      child: Text(
-                                                        "قائمة التشغيل",
-                                                        textDirection:
-                                                            m.TextDirection.rtl,
-                                                        style: TextStyle(
-                                                          color: Colors.white,
-                                                          fontSize: 17.sp,
-                                                        ),
-                                                        textAlign:
-                                                            TextAlign.center,
-                                                      ),
-                                                    ),
-                                                    StreamBuilder<bool>(
-                                                      stream: state.audioPlayer
-                                                          .shuffleModeEnabledStream,
-                                                      builder:
-                                                          (context, snapshot) {
-                                                        final shuffleModeEnabled =
-                                                            snapshot.data ??
-                                                                false;
-                                                        return IconButton(
-                                                          icon: shuffleModeEnabled
-                                                              ? const Icon(
-                                                                  Icons.shuffle,
-                                                                  color: Colors
-                                                                      .white)
-                                                              : const Icon(
-                                                                  Icons.shuffle,
-                                                                  color: Colors
-                                                                      .grey),
-                                                          onPressed: () async {
-                                                            final enable =
-                                                                !shuffleModeEnabled;
-                                                            if (enable) {
-                                                              await state
-                                                                  .audioPlayer
-                                                                  .shuffle();
-                                                            }
-                                                            await state
-                                                                .audioPlayer
-                                                                .setShuffleModeEnabled(
-                                                                    enable);
-                                                          },
-                                                        );
-                                                      },
-                                                    ),
-                                                  ],
-                                                ),
-                                              ),
-                                            if (isPlaylistShown == true)
-                                              AnimatedContainer(
-                                                duration: const Duration(
-                                                    milliseconds: 600),
-                                                height: isPlaylistShown
-                                                    ? 240.0.h
-                                                    : 50.h,
-                                                child: MaterialApp(
-                                                  //color:  getValue("darkMode")?quranPagesColorDark:quranPagesColorLight,
-                                                  home: StreamBuilder<
-                                                      SequenceState?>(
-                                                    stream: state.audioPlayer
-                                                        .sequenceStateStream,
-                                                    builder:
-                                                        (context, snapshot) {
-                                                      final sequenceState =
-                                                          snapshot.data;
-                                                      final sequence =
-                                                          sequenceState
-                                                                  ?.sequence ??
-                                                              [];
-                                                      return ReorderableListView(
-                                                        onReorder:
-                                                            (int oldIndex,
-                                                                int newIndex) {
-                                                          if (oldIndex <
-                                                              newIndex) {
-                                                            newIndex--;
-                                                          }
-                                                          state.playList.move(
-                                                              oldIndex,
-                                                              newIndex);
-                                                        },
-                                                        children: [
-                                                          for (var i = 0;
-                                                              i <
-                                                                  sequence
-                                                                      .length;
-                                                              i++)
-                                                            Dismissible(
-                                                              key: ValueKey(
-                                                                  sequence[i]),
-                                                              background:
-                                                                  Container(
-                                                                color: Colors
-                                                                    .redAccent,
-                                                                alignment: Alignment
-                                                                    .centerRight,
-                                                                child:
-                                                                    const Padding(
-                                                                  padding: EdgeInsets
-                                                                      .only(
-                                                                          right:
-                                                                              8.0),
-                                                                  child: Icon(
-                                                                      Icons
-                                                                          .delete,
-                                                                      color: Colors
-                                                                          .white),
-                                                                ),
-                                                              ),
-                                                              onDismissed:
-                                                                  (dismissDirection) {
-                                                                state.playList
-                                                                    .removeAt(
-                                                                        i);
-                                                              },
-                                                              child: Material(
-                                                                color: i ==
-                                                                        sequenceState!
-                                                                            .currentIndex
-                                                                    ? const m
-                                                                        .Color.fromARGB(
-                                                                        255,
-                                                                        46,
-                                                                        100,
-                                                                        110)
-                                                                    : darkPrimaryColor
-                                                                        .withOpacity(
-                                                                            .9),
-                                                                child: ListTile(
-                                                                  trailing:
-                                                                      const Icon(
-                                                                    Icons
-                                                                        .reorder,
-                                                                    color: Colors
-                                                                        .white70,
-                                                                  ),
-                                                                  title: Text(
-                                                                    sequence[i]
-                                                                            .tag
-                                                                            .title
-                                                                        as String,
-                                                                    textDirection: m
-                                                                        .TextDirection
-                                                                        .rtl,
-                                                                    style: const TextStyle(
-                                                                        color: Colors
-                                                                            .white),
-                                                                  ),
-                                                                  onTap: () {
-                                                                    state.audioPlayer.seek(
-                                                                        Duration
-                                                                            .zero,
-                                                                        index:
-                                                                            i);
-                                                                  },
-                                                                ),
-                                                              ),
-                                                            ),
-                                                        ],
-                                                      );
-                                                    },
-                                                  ),
-                                                ),
-                                              ),
-
-                                            if (isPlaylistShown == false)
-                                              GestureDetector(
-                                                onTap: (() {
-                                                  setState(() {
-                                                    isPlaylistShown = true;
-                                                  });
-                                                }),
-                                                child: FadeInUp(
-                                                  child: Container(
-                                                    width:
-                                                        MediaQuery.of(context)
-                                                            .size
-                                                            .width,
-                                                    height: 50.h,
-                                                    decoration: BoxDecoration(
-                                                        color: const m
-                                                                .Color.fromARGB(
-                                                                255,
-                                                                82,
-                                                                96,
-                                                                175)
-                                                            .withOpacity(.65)),
-                                                    child: Row(
-                                                      children: [
-                                                        SizedBox(
-                                                          width: 10.w,
-                                                        ),
-                                                        Icon(
-                                                          Icons.menu,
-                                                          size: 28.sp,
-                                                          color: Colors.white,
-                                                        ),
-                                                        SizedBox(
-                                                          width: 10.w,
-                                                        ),
-                                                        Column(
-                                                          mainAxisAlignment:
-                                                              MainAxisAlignment
-                                                                  .center,
-                                                          children: [
-                                                            Text(
-                                                              "${state.audioPlayer.currentIndex! + 1}/${state.audioPlayer.sequence!.length}",
-                                                              textDirection: m
-                                                                  .TextDirection
-                                                                  .rtl,
-                                                              style: TextStyle(
-                                                                  color: Colors
-                                                                      .white,
-                                                                  fontSize:
-                                                                      16.sp),
-                                                            ),
-                                                          ],
-                                                        ),
-                                                        SizedBox(
-                                                          width: 200.w,
-                                                        ),
-                                                        Text(
-                                                          "${state.audioPlayer.sequence![state.audioPlayer.currentIndex!].tag.title}",
-                                                          textDirection: m
-                                                              .TextDirection
-                                                              .rtl,
-                                                          style: TextStyle(
-                                                              color:
-                                                                  Colors.white,
-                                                              fontSize: 18.sp),
-                                                        )
-                                                      ],
-                                                    ),
-                                                  ),
-                                                ),
-                                              )
-                                          ],
-                                        ),
-                                      ),
-                                    ),
+                                  ] : null),
+                              child: isMinimized
+                                  ? _buildMinimizedBar(state)
+                                  : _buildExtendedPlayer(state),
                             ),
                           ),
                         ),
                       ),
                     );
+
                   } else if (statee is PlayerBarClosed) {
-                    print("object2222222");
-                    return Container(height: 0,);
+                    return const SizedBox.shrink();
                   }
-                  return Container(height: 0,);
+                  return const SizedBox.shrink();
                 },
               );
             }
-            return Container(height: 0,);
+            return const SizedBox.shrink();
           },
         ),
       ),
+    );
+  }
+
+  Widget _buildMinimizedBar(PlayerBlocPlaying state) {
+    return StreamBuilder<SequenceState?>(
+      stream: state.audioPlayer.sequenceStateStream,
+      builder: (context, snapshot) {
+        final statee = snapshot.data;
+        if (statee == null || statee.sequence.isEmpty) return const SizedBox();
+        final metadata = statee.currentSource!.tag as MediaItem;
+
+        return Padding(
+          padding: EdgeInsets.symmetric(horizontal: 12.w),
+          child: Row(
+            children: [
+              Container(
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  border: Border.all(color: Colors.white24, width: 1.w),
+                ),
+                child: CircleAvatar(
+                  radius: 22.r,
+                  backgroundImage: const AssetImage("assets/images/quran.png"),
+                  foregroundImage: getValue("${state.reciter.name} photo url") != null
+                      ? CachedNetworkImageProvider(getValue("${state.reciter.name} photo url"))
+                      : null,
+                ),
+              ),
+              SizedBox(width: 12.w),
+              Expanded(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      metadata.title,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(color: Colors.white, fontSize: 14.sp, fontWeight: FontWeight.bold, fontFamily: 'cairo'),
+                    ),
+                    Text(
+                      state.reciter.name,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(color: Colors.white70, fontSize: 11.sp, fontFamily: 'cairo'),
+                    ),
+                  ],
+                ),
+              ),
+              StreamBuilder<PlayerState>(
+                stream: state.audioPlayer.playerStateStream,
+                builder: (context, snapshot) {
+                  final playerState = snapshot.data;
+                  final playing = playerState?.playing;
+                  return IconButton(
+                    icon: Icon(playing == true ? Icons.pause_rounded : Icons.play_arrow_rounded, color: Colors.white, size: 28.sp),
+                    onPressed: () => playing == true ? state.audioPlayer.pause() : state.audioPlayer.play(),
+                  );
+                },
+              ),
+              IconButton(
+                icon: Icon(Icons.close_rounded, color: Colors.white70, size: 20.sp),
+                onPressed: () {
+                  state.audioPlayer.stop();
+                  BlocProvider.of<PlayerBarBloc>(context).add(CloseBarEvent());
+                },
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _buildExtendedPlayer(PlayerBlocPlaying state) {
+    return SafeArea(
+      child: Container(
+        decoration: const BoxDecoration(
+          image: DecorationImage(
+            fit: BoxFit.cover,
+            opacity: 0.15,
+            image: AssetImage("assets/images/framee.png"),
+          ),
+        ),
+        child: Column(
+          children: [
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 5.h),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  IconButton(
+                    onPressed: () => BlocProvider.of<PlayerBarBloc>(context).add(MinimizeBarEvent()),
+                    icon: Icon(LineariconsFree.chevron_down, size: 30.sp, color: Colors.white),
+                  ),
+                  IconButton(
+                    onPressed: () => setState(() => isPlaylistShown = !isPlaylistShown),
+                    icon: Icon(Icons.playlist_play_rounded, size: 35.sp, color: Colors.white),
+                  ),
+                ],
+              ),
+            ),
+            Expanded(
+              child: isPlaylistShown ? _buildPlaylist(state) : _buildMainPlayerContent(state),
+            ),
+            if (!isPlaylistShown)
+              Padding(
+                padding: EdgeInsets.only(bottom: 30.h, left: 50.w, right: 50.w),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    _buildFavoriteButton(state),
+                    _buildDownloadButton(state),
+                  ],
+                ),
+              ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildMainPlayerContent(PlayerBlocPlaying state) {
+    return StreamBuilder<SequenceState?>(
+      stream: state.audioPlayer.sequenceStateStream,
+      builder: (context, snapshot) {
+        final stateData = snapshot.data;
+        if (stateData == null || stateData.sequence.isEmpty) return const SizedBox();
+        final metadata = stateData.currentSource!.tag as MediaItem;
+
+        return Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            SizedBox(height: 20.h),
+            Text(metadata.title, textAlign: TextAlign.center, style: TextStyle(color: Colors.white, fontSize: 24.sp, fontWeight: FontWeight.bold, fontFamily: 'cairo')),
+            Text(state.reciter.name, style: TextStyle(color: Colors.white70, fontSize: 16.sp, fontFamily: 'cairo')),
+            SizedBox(height: 20.h),
+            SizedBox(
+              height: 220.h,
+              width: 220.h,
+              child: Container(
+                padding: EdgeInsets.all(10.sp),
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  border: Border.all(color: Colors.white12, width: 3.w),
+                  boxShadow: const [BoxShadow(color: Colors.black26, blurRadius: 20, spreadRadius: 5)],
+                ),
+                child: ClipOval(
+                  child: Builder(
+                    builder: (ctx) {
+                      try {
+                        String? url = getValue("${state.reciter.name} photo url");
+                        if (url != null && url.isNotEmpty) {
+                          return CachedNetworkImage(
+                            imageUrl: url,
+                            fit: BoxFit.cover,
+                            placeholder: (context, url) => Image.asset("assets/images/quran.png", fit: BoxFit.cover),
+                            errorWidget: (context, url, error) => Image.asset("assets/images/quran.png", fit: BoxFit.cover),
+                          );
+                        } else {
+                          return Image.asset("assets/images/quran.png", fit: BoxFit.cover);
+                        }
+                      } catch (e) {
+                        return Image.asset("assets/images/quran.png", fit: BoxFit.cover);
+                      }
+                    }
+                  ),
+                ),
+              ),
+            ),
+            SizedBox(height: 30.h),
+            ControlButtons(state.audioPlayer),
+            SizedBox(height: 20.h),
+            _buildProgressSlider(state.audioPlayer),
+          ],
+        );
+      },
+    );
+  }
+
+  Widget _buildProgressSlider(AudioPlayer player) {
+    return StreamBuilder<Duration>(
+      stream: player.positionStream,
+      builder: (context, snapshot) {
+        final position = snapshot.data ?? Duration.zero;
+        final duration = player.duration ?? Duration.zero;
+
+        double progress = 0.0;
+        if (duration.inMilliseconds > 0) {
+          progress = position.inMilliseconds / duration.inMilliseconds;
+        }
+        if (progress < 0) progress = 0.0;
+        if (progress > 1) progress = 1.0;
+
+        return SizedBox(
+          height: 100.h,
+          child: Padding(
+            padding: EdgeInsets.symmetric(horizontal: 30.w),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                LayoutBuilder(
+                  builder: (context, constraints) {
+                    return GestureDetector(
+                      behavior: HitTestBehavior.opaque,
+                      onHorizontalDragUpdate: (details) {
+                        double percent = details.localPosition.dx / constraints.maxWidth;
+                        if (percent < 0) percent = 0.0;
+                        if (percent > 1) percent = 1.0;
+                        try {
+                          player.seek(Duration(milliseconds: (duration.inMilliseconds * percent).toInt()));
+                        } catch(e){}
+                      },
+                      onTapDown: (details) {
+                        double percent = details.localPosition.dx / constraints.maxWidth;
+                        if (percent < 0) percent = 0.0;
+                        if (percent > 1) percent = 1.0;
+                        try {
+                          player.seek(Duration(milliseconds: (duration.inMilliseconds * percent).toInt()));
+                        } catch(e){}
+                      },
+                      child: Container(
+                        height: 20.h, // Larger hit area
+                        alignment: Alignment.center,
+                        child: Container(
+                          height: 4.h,
+                          width: double.infinity,
+                          decoration: BoxDecoration(
+                            color: Colors.white24,
+                            borderRadius: BorderRadius.circular(2.h),
+                          ),
+                          child: Align(
+                            alignment: Alignment.centerLeft,
+                            child: FractionallySizedBox(
+                              widthFactor: progress,
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(2.h),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    );
+                  }
+                ),
+                SizedBox(height: 10.h),
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 5.w),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(formatDuration(position), style: TextStyle(color: Colors.white70, fontSize: 12.sp)),
+                      Text(formatDuration(duration), style: TextStyle(color: Colors.white70, fontSize: 12.sp)),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _buildFavoriteButton(PlayerBlocPlaying state) {
+    final surahId = "${state.reciter.name}${state.moshaf.name}${state.audioPlayer.currentIndex! + 1}".trim();
+    final isFav = favoriteSurahList.contains(surahId);
+    return IconButton(
+      onPressed: () {
+        setState(() {
+          if (isFav) favoriteSurahList.remove(surahId);
+          else favoriteSurahList.add(surahId);
+          updateValue("favoriteSurahList", json.encode(favoriteSurahList));
+        });
+      },
+      icon: Icon(isFav ? Icons.favorite : Icons.favorite_border, color: isFav ? Colors.redAccent : Colors.white, size: 32.sp),
+    );
+  }
+
+  Widget _buildDownloadButton(PlayerBlocPlaying state) {
+    final fileName = "${state.moshaf.id}-${getSurahNameArabic(int.parse(state.surahNumbers[state.audioPlayer.currentIndex!]))}.mp3";
+    final file = File("${kDownloadPath}${state.reciter.name}/$fileName");
+    final exists = file.existsSync();
+
+    return IconButton(
+      onPressed: () {
+        if (!exists) {
+          playerPageBloc.add(DownloadSurah(
+            reciter: state.reciter,
+            moshaf: state.moshaf,
+            suraNumber: state.surahNumbers[state.audioPlayer.currentIndex!],
+            url: "${state.moshaf.server}/${state.surahNumbers[state.audioPlayer.currentIndex!].padLeft(3, "0")}.mp3",
+          ));
+          Future.delayed(const Duration(seconds: 2), () => setState(() {}));
+        }
+      },
+      icon: Icon(exists ? Icons.download_done : Icons.download, 
+                 color: exists ? Colors.white.withOpacity(0.4) : Colors.white, 
+                 size: 32.sp),
+    );
+  }
+
+  Widget _buildPlaylist(PlayerBlocPlaying state) {
+    return StreamBuilder<SequenceState?>(
+      stream: state.audioPlayer.sequenceStateStream,
+      builder: (context, snapshot) {
+        final sequenceState = snapshot.data;
+        if (sequenceState == null) return const SizedBox();
+        final sequence = sequenceState.sequence;
+
+        return Column(
+          children: [
+            Padding(
+              padding: EdgeInsets.all(15.sp),
+              child: Text("قائمة التشغيل", style: TextStyle(color: Colors.white, fontSize: 20.sp, fontWeight: FontWeight.bold, fontFamily: 'cairo')),
+            ),
+            Expanded(
+              child: ListView.builder(
+                itemCount: sequence.length,
+                itemBuilder: (context, i) {
+                  final metadata = sequence[i].tag as MediaItem;
+                  final isCurrent = i == sequenceState.currentIndex;
+                  return Container(
+                    margin: EdgeInsets.symmetric(horizontal: 15.w, vertical: 3.h),
+                    decoration: BoxDecoration(
+                      color: isCurrent ? Colors.white12 : Colors.transparent,
+                      borderRadius: BorderRadius.circular(12.r),
+                    ),
+                    child: ListTile(
+                      title: Text(metadata.title, textDirection: m.TextDirection.rtl, style: TextStyle(color: isCurrent ? Colors.white : Colors.white70, fontSize: 16.sp, fontFamily: 'cairo')),
+                      trailing: isCurrent ? Icon(Icons.volume_up, color: Colors.white, size: 20.sp) : null,
+                      onTap: () => state.audioPlayer.seek(Duration.zero, index: i),
+                    ),
+                  );
+                },
+              ),
+            ),
+          ],
+        );
+      },
     );
   }
 }
@@ -1048,123 +538,60 @@ class ControlButtons extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       mainAxisSize: MainAxisSize.min,
+      mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        // IconButton(
-        //   icon: const Icon(Icons.volume_up),
-        //   onPressed: () {
-        //     showSliderDialog(
-        //       context: context,
-        //       title: "Adjust volume",
-        //       divisions: 10,
-        //       min: 0.0,
-        //       max: 1.0,
-        //       stream: player.volumeStream,
-        //       onChanged: player.setVolume,
-        //     );
-        //   },
-        // ),
         StreamBuilder<Duration>(
           stream: player.positionStream,
           builder: (context, snapshot) {
-            final positionData = snapshot.data;
+            final positionData = snapshot.data ?? Duration.zero;
             return IconButton(
-              onPressed: () {
-                player.seek(Duration(seconds: positionData!.inSeconds - 10));
-              },
-              icon: Icon(
-                Icons.fast_rewind,
-                color: Colors.white,
-                size: 32.sp,
-              ),
+              onPressed: () => player.seek(Duration(seconds: positionData.inSeconds - 10)),
+              icon: Icon(Icons.fast_rewind, color: Colors.white, size: 32.sp),
             );
           },
         ),
-        SizedBox(
-          width: 8.w,
-        ),
+        SizedBox(width: 8.w),
         StreamBuilder<SequenceState?>(
           stream: player.sequenceStateStream,
           builder: (context, snapshot) => IconButton(
-            icon: Icon(
-              Icons.skip_previous,
-              color: Colors.white,
-              size: 32.sp,
-            ),
+            icon: Icon(Icons.skip_previous, color: Colors.white, size: 32.sp),
             onPressed: player.hasPrevious ? player.seekToPrevious : null,
           ),
         ),
-        SizedBox(
-          width: 8.w,
-        ),
+        SizedBox(width: 8.w),
         StreamBuilder<PlayerState>(
           stream: player.playerStateStream,
           builder: (context, snapshot) {
             final playerState = snapshot.data;
             final processingState = playerState?.processingState;
             final playing = playerState?.playing;
-            if (processingState == ProcessingState.loading ||
-                processingState == ProcessingState.buffering) {
-              return Container(
-                margin: const EdgeInsets.all(8.0),
-                width: 32.0.w,
-                height: 32.h,
-                child: const CircularProgressIndicator(),
-              );
+            if (processingState == ProcessingState.loading || processingState == ProcessingState.buffering) {
+              return Container(margin: const EdgeInsets.all(8.0), width: 32.0.w, height: 32.h, child: const CircularProgressIndicator(color: Colors.white));
             } else if (playing != true) {
-              return IconButton(
-                icon: const Icon(Icons.play_arrow),
-                iconSize: 32.sp,
-                color: Colors.white,
-                onPressed: player.play,
-              );
+              return IconButton(icon: const Icon(Icons.play_arrow), iconSize: 40.sp, color: Colors.white, onPressed: player.play);
             } else if (processingState != ProcessingState.completed) {
-              return IconButton(
-                icon: const Icon(Icons.pause),
-                iconSize: 32.sp,
-                color: Colors.white,
-                onPressed: player.pause,
-              );
+              return IconButton(icon: const Icon(Icons.pause), iconSize: 40.sp, color: Colors.white, onPressed: player.pause);
             } else {
-              return IconButton(
-                icon: const Icon(Icons.replay),
-                iconSize: 32.sp,
-                color: Colors.white,
-                onPressed: () => player.seek(Duration.zero,
-                    index: player.effectiveIndices!.first),
-              );
+              return IconButton(icon: const Icon(Icons.replay), iconSize: 40.sp, color: Colors.white, onPressed: () => player.seek(Duration.zero, index: player.effectiveIndices!.first));
             }
           },
         ),
-        SizedBox(
-          width: 8.w,
-        ),
+        SizedBox(width: 8.w),
         StreamBuilder<SequenceState?>(
           stream: player.sequenceStateStream,
           builder: (context, snapshot) => IconButton(
-            icon: Icon(
-              Icons.skip_next,
-              color: Colors.white,
-              size: 32.sp,
-            ),
+            icon: Icon(Icons.skip_next, color: Colors.white, size: 32.sp),
             onPressed: player.hasNext ? player.seekToNext : null,
           ),
         ),
-        SizedBox(
-          width: 8.w,
-        ),
+        SizedBox(width: 8.w),
         StreamBuilder<Duration>(
           stream: player.positionStream,
           builder: (context, snapshot) {
-            final positionData = snapshot.data;
+            final positionData = snapshot.data ?? Duration.zero;
             return IconButton(
-              onPressed: () {
-                player.seek(Duration(seconds: positionData!.inSeconds + 10));
-              },
-              icon: Icon(
-                Icons.fast_forward,
-                color: Colors.white,
-                size: 32.sp,
-              ),
+              onPressed: () => player.seek(Duration(seconds: positionData.inSeconds + 10)),
+              icon: Icon(Icons.fast_forward, color: Colors.white, size: 32.sp),
             );
           },
         ),
@@ -1177,8 +604,7 @@ String formatDuration(Duration duration, {bool includeHours = true}) {
   int hours = duration.inHours;
   int minutes = duration.inMinutes.remainder(60);
   int seconds = duration.inSeconds.remainder(60);
-
-  if (includeHours) {
+  if (hours > 0 || includeHours) {
     return '$hours:${minutes.toString().padLeft(2, '0')}:${seconds.toString().padLeft(2, '0')}';
   } else {
     return '$minutes:${seconds.toString().padLeft(2, '0')}';

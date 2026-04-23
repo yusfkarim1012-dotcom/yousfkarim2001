@@ -17,6 +17,7 @@ import 'package:khatmah/GlobalHelpers/constants.dart';
 import 'package:khatmah/GlobalHelpers/hive_helper.dart';
 import 'package:khatmah/blocs/bloc/quran_page_player_bloc.dart';
 import 'package:khatmah/features/audiopage/player/player_bar.dart';
+import 'package:khatmah/blocs/bloc/bloc/player_bar_bloc.dart';
 import 'package:khatmah/features/home.dart';
 
 import 'package:quran/quran.dart' as quran;
@@ -92,7 +93,7 @@ print(widget.jsonData.where((element)=>element["id"].toString()==e.toString()));
 //           "${widget.reciter.name}${widget.mushaf.name}${4- 1}"));
     for (var element in surahs) {
       if (File(
-              "${appDir.path}${widget.reciter.name}-${widget.mushaf.id}-${quran.getSurahNameArabic(int.parse(element["surahNumber"]))}.mp3")
+              "${appDir.path}${widget.reciter.name}/${widget.mushaf.id}-${quran.getSurahNameArabic(int.parse(element["surahNumber"]))}.mp3")
           .existsSync()) {
         favoriteSurahs.add(element);
       }
@@ -145,6 +146,7 @@ print(widget.jsonData.where((element)=>element["id"].toString()==e.toString()));
   // String photoUrl = "";
   @override
   void initState() {
+    playerbarBloc.add(SetSectionVisibilityEvent(true));
     addFavorites();
     addSuraNames();
     super.initState();
@@ -155,7 +157,7 @@ print(widget.jsonData.where((element)=>element["id"].toString()==e.toString()));
 
   var selectedMode = "all";
   var searchQuery = "";
-  final appDir = Directory("/storage/emulated/0/Download/Khatmah/");
+  final appDir = Directory(kDownloadPath);
 
   TextEditingController textEditingController = TextEditingController();
   @override
@@ -667,7 +669,7 @@ print(widget.jsonData.where((element)=>element["id"].toString()==e.toString()));
                                   return IconButton(
                                     onPressed: () {
                                       if (File(
-                                              "${appDir.path}${widget.reciter.name}-${widget.mushaf.id}-${quran.getSurahNameArabic(int.parse(selectedMode == "all" ? surah["surahNumber"] : surah["surahNumber"]))}.mp3")
+                                              "${appDir.path}${widget.reciter.name}/${widget.mushaf.id}-${quran.getSurahNameArabic(int.parse(selectedMode == "all" ? surah["surahNumber"] : surah["surahNumber"]))}.mp3")
                                           .existsSync()) {
                                       } else {
                                         playerPageBloc.add(DownloadSurah(
@@ -681,12 +683,15 @@ print(widget.jsonData.where((element)=>element["id"].toString()==e.toString()));
                                       }
                                     },
                                     icon: Icon(
-                                        File("${appDir.path}${widget.reciter.name}-${widget.mushaf.id}-${quran.getSurahNameArabic(int.parse(selectedMode == "all" ? surah["surahNumber"] : surah["surahNumber"]))}.mp3")
+                                        File("${appDir.path}${widget.reciter.name}/${widget.mushaf.id}-${quran.getSurahNameArabic(int.parse(selectedMode == "all" ? surah["surahNumber"] : surah["surahNumber"]))}.mp3")
                                                 .existsSync()
                                             ? Icons.download_done
                                             : Icons.download,
                                         size: 24.sp),
-                                    color: orangeColor,
+                                    color: File("${appDir.path}${widget.reciter.name}/${widget.mushaf.id}-${quran.getSurahNameArabic(int.parse(selectedMode == "all" ? surah["surahNumber"] : surah["surahNumber"]))}.mp3")
+                                            .existsSync()
+                                        ? orangeColor.withOpacity(0.4)
+                                        : orangeColor,
                                   );
                                 },
                               ),

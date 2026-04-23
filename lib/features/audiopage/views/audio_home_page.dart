@@ -237,11 +237,16 @@ print(jsonData2);
     }
   }
 
-  getRewayaReciters(String id) {
+  getRewayaReciters(String id, String name) {
     filteredReciters = [];
-    for (var element in reciters) {
-      if (element.moshaf.any((element) => element.id.toString() == id)) {
-        filteredReciters.add(element);
+    for (var reciter in reciters) {
+      // Check if any moshaf matches the id (moshaf_type) or the name exactly
+      bool matches = reciter.moshaf.any((m) {
+        return m.moshafType.toString() == id || m.name.toString() == name;
+      });
+      
+      if (matches) {
+        filteredReciters.add(reciter);
       }
     }
     setState(() {});
@@ -613,8 +618,8 @@ print(jsonData2);
                                                               //   // print('Reciter: ${reciter.name}, Has Matching Moshaf: $hasMatchingMoshaf');
                                                               //   return hasMatchingMoshaf;
                                                               // }).toList();
-                                                              getRewayaReciters(
-                                                                  e.id.toString());
+                                                               getRewayaReciters(
+                                                                   e.id.toString(), e.name.toString());
                                                               print(
                                                                   filteredReciters
                                                                       .length);

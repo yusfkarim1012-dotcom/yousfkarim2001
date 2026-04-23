@@ -288,15 +288,20 @@ class _PlayerBarState extends State<PlayerBar> {
               child: isPlaylistShown ? _buildPlaylist(state) : _buildMainPlayerContent(state),
             ),
             if (!isPlaylistShown)
-              Padding(
-                padding: EdgeInsets.only(bottom: 30.h, left: 50.w, right: 50.w),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    _buildFavoriteButton(state),
-                    _buildDownloadButton(state),
-                  ],
-                ),
+              StreamBuilder<SequenceState?>(
+                stream: state.audioPlayer.sequenceStateStream,
+                builder: (context, snapshot) {
+                  return Padding(
+                    padding: EdgeInsets.only(bottom: 30.h, left: 50.w, right: 50.w),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        _buildFavoriteButton(state),
+                        _buildDownloadButton(state),
+                      ],
+                    ),
+                  );
+                },
               ),
           ],
         ),

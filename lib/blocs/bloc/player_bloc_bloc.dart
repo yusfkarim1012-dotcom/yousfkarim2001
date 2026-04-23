@@ -168,7 +168,6 @@ class PlayerBlocBloc extends Bloc<PlayerBlocEvent, PlayerBlocState> {
             await openAppSettings();
           }
           print('Permission Denied');
-          emit(PlayerBlocInitial());
           return;
         }
 
@@ -180,27 +179,54 @@ class PlayerBlocBloc extends Bloc<PlayerBlocEvent, PlayerBlocState> {
         final fullSuraFilePath =
             "${reciterDir.path}/${event.moshaf.id}-${quran.getSurahNameArabic(int.parse(event.suraNumber))}.mp3";
 
-        // Check if the full sura file already exists
         if (File(fullSuraFilePath).existsSync()) {
           print('Full sura audio file already cached: $fullSuraFilePath');
         } else {
           try {
             await dio.download(event.url, fullSuraFilePath, onReceiveProgress: (received, total) {
               if (total != -1) {
-                emit(PlayerBlocDownloading(
-                  suraNumber: event.suraNumber,
-                  progress: received / total,
-                ));
+                if (state is PlayerBlocPlaying) {
+                  final s = state as PlayerBlocPlaying;
+                  emit(PlayerBlocPlaying(
+                    moshaf: s.moshaf,
+                    reciter: s.reciter,
+                    suraNumber: s.suraNumber,
+                    jsonData: s.jsonData,
+                    audioPlayer: s.audioPlayer,
+                    surahNumbers: s.surahNumbers,
+                    playList: s.playList,
+                    downloadProgress: received / total,
+                    downloadingSuraNumber: event.suraNumber,
+                  ));
+                } else {
+                  emit(PlayerBlocDownloading(
+                    suraNumber: event.suraNumber,
+                    progress: received / total,
+                  ));
+                }
               }
             });
-            emit(PlayerBlocInitial()); // Or another appropriate state when finished
+            
+            if (state is PlayerBlocPlaying) {
+              final s = state as PlayerBlocPlaying;
+              emit(PlayerBlocPlaying(
+                moshaf: s.moshaf,
+                reciter: s.reciter,
+                suraNumber: s.suraNumber,
+                jsonData: s.jsonData,
+                audioPlayer: s.audioPlayer,
+                surahNumbers: s.surahNumbers,
+                playList: s.playList,
+                downloadProgress: null,
+                downloadingSuraNumber: null,
+              ));
+            } else {
+              emit(PlayerBlocInitial());
+            }
           } catch (e) {
             print(e);
-            emit(PlayerBlocInitial());
+            if (state is! PlayerBlocPlaying) emit(PlayerBlocInitial());
           }
-          //     "downloadedSurahs",
-          //     json.decode(getValue("downloadedSurahs").add(
-          //         "${event.suraName}-${event.moshafId}-${event.reciterName}")));
         }
       } else if (event is DownloadAllSurahs) {
         final dio = Dio();

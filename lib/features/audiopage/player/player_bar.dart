@@ -465,7 +465,36 @@ class _PlayerBarState extends State<PlayerBar> {
   }
 
   Widget _buildDownloadButton(PlayerBlocPlaying state) {
-    final fileName = "${state.moshaf.id}-${getSurahNameArabic(int.parse(state.surahNumbers[state.audioPlayer.currentIndex!]))}.mp3";
+    final currentSuraNum = state.surahNumbers[state.audioPlayer.currentIndex!];
+    final isDownloadingThis = state.downloadingSuraNumber == currentSuraNum;
+    
+    if (isDownloadingThis && state.downloadProgress != null) {
+       return Container(
+        padding: EdgeInsets.all(4.sp),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            SizedBox(
+              height: 24.h,
+              width: 24.w,
+              child: CircularProgressIndicator(
+                value: state.downloadProgress,
+                color: Colors.white,
+                strokeWidth: 2.w,
+                backgroundColor: Colors.white24,
+              ),
+            ),
+            SizedBox(height: 4.h),
+            Text(
+              "${(state.downloadProgress! * 100).toInt()}%",
+              style: TextStyle(color: Colors.white, fontSize: 10.sp, fontWeight: FontWeight.bold),
+            ),
+          ],
+        ),
+      );
+    }
+
+    final fileName = "${state.moshaf.id}-${getSurahNameArabic(int.parse(currentSuraNum))}.mp3";
     final file = File("${kDownloadPath}${state.reciter.name}/$fileName");
     final exists = file.existsSync();
 
@@ -475,10 +504,9 @@ class _PlayerBarState extends State<PlayerBar> {
           playerPageBloc.add(DownloadSurah(
             reciter: state.reciter,
             moshaf: state.moshaf,
-            suraNumber: state.surahNumbers[state.audioPlayer.currentIndex!],
-            url: "${state.moshaf.server}/${state.surahNumbers[state.audioPlayer.currentIndex!].padLeft(3, "0")}.mp3",
+            suraNumber: currentSuraNum,
+            url: "${state.moshaf.server}/${currentSuraNum.padLeft(3, "0")}.mp3",
           ));
-          Future.delayed(const Duration(seconds: 2), () => setState(() {}));
         }
       },
       icon: Icon(exists ? Icons.download_done : Icons.download, 

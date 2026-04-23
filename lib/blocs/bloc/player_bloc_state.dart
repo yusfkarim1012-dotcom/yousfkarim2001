@@ -15,13 +15,19 @@ class PlayerBlocPlaying extends PlayerBlocState {
   List surahNumbers;var playList;
 
   // bool isHidden;
+  double? downloadProgress;
+  String? downloadingSuraNumber;
+
   PlayerBlocPlaying({
     required this.moshaf,
     required this.reciter,
     required this.suraNumber,
-    // required this.suraName,
-    required this.jsonData,required this.audioPlayer,required this.surahNumbers,required this.playList
-    // required this.isHidden
+    required this.jsonData,
+    required this.audioPlayer,
+    required this.surahNumbers,
+    required this.playList,
+    this.downloadProgress,
+    this.downloadingSuraNumber,
   });
 }
 

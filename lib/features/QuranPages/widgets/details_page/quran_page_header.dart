@@ -29,13 +29,6 @@ class QuranPageHeader extends StatelessWidget {
     final pageData = getPageData(index);
     final surahNumber = pageData[0]["surah"];
     final surahName = jsonData[surahNumber - 1]["name"];
-    final colorIndex = getValue("quranPageolorsIndex") ?? 0;
-    final isDarkMode = getValue("darkMode") == true;
-
-    // Use white color for elements if in dark mode or if the current background color is dark
-    final Color bgColor = backgroundColors[colorIndex];
-    final bool isDarkTheme = bgColor.computeLuminance() < 0.3 || isDarkMode;
-    final Color elementsColor = isDarkTheme ? Colors.white : secondaryColors[colorIndex];
 
     return SizedBox(
       width: screenSize.width,
@@ -51,11 +44,11 @@ class QuranPageHeader extends StatelessWidget {
                     icon: Icon(
                       Icons.arrow_back_ios,
                       size: 24.sp,
-                      color: elementsColor,
+                      color: secondaryColors[getValue("quranPageolorsIndex")],
                     )),
                 Text(surahName,
                     style: TextStyle(
-                        color: elementsColor,
+                        color: secondaryColors[getValue("quranPageolorsIndex")],
                         fontFamily: "Taha",
                         fontSize: 14.sp)),
               ],
@@ -66,7 +59,7 @@ class QuranPageHeader extends StatelessWidget {
             child: Center(
               child: Stack(
                 children: [
-                  _buildPageInfoChunk(index, pageData, colorIndex, isDarkTheme),
+                  _buildPageInfoChunk(index, pageData),
                 ],
               ),
             ),
@@ -81,7 +74,7 @@ class QuranPageHeader extends StatelessWidget {
                     icon: Icon(
                       Icons.settings,
                       size: 24.sp,
-                      color: elementsColor,
+                      color: secondaryColors[getValue("quranPageolorsIndex")],
                     ))
               ],
             ),
@@ -91,21 +84,15 @@ class QuranPageHeader extends StatelessWidget {
     );
   }
 
-  Widget _buildPageInfoChunk(int index, dynamic pageData, int colorIndex, bool isDarkTheme) {
+  Widget _buildPageInfoChunk(int index, dynamic pageData) {
     final result = QuranPageUtils.checkIfPageIncludesQuarterAndQuarterIndex(
         quarterJsonData, pageData, indexes);
-    
-    final Color chunkBgColor = secondaryColors[colorIndex].withOpacity(.5);
-    // If background is dark, use white text for contrast, otherwise use backgroundColors[colorIndex]
-    final Color chunkTextColor = (chunkBgColor.computeLuminance() < 0.4 || isDarkTheme) 
-        ? Colors.white 
-        : backgroundColors[colorIndex];
 
     if (result.includesQuarter) {
       return EasyContainer(
         borderRadius: 12.r,
-        color: chunkBgColor,
-        borderColor: isDarkTheme ? Colors.white24 : primaryColors[colorIndex],
+        color: secondaryColors[getValue("quranPageolorsIndex")].withOpacity(.5),
+        borderColor: primaryColors[getValue("quranPageolorsIndex")],
         showBorder: true,
         height: 20.h,
         width: 160.w,
@@ -118,15 +105,15 @@ class QuranPageHeader extends StatelessWidget {
           style: TextStyle(
             fontFamily: 'aldahabi',
             fontSize: 10.sp,
-            color: chunkTextColor,
+            color: backgroundColors[getValue("quranPageolorsIndex")],
           ),
         ),
       );
     } else {
       return EasyContainer(
         borderRadius: 12.r,
-        color: chunkBgColor,
-        borderColor: isDarkTheme ? Colors.white24 : backgroundColors[colorIndex],
+        color: secondaryColors[getValue("quranPageolorsIndex")].withOpacity(.5),
+        borderColor: backgroundColors[getValue("quranPageolorsIndex")],
         showBorder: true,
         height: 20.h,
         width: 120.w,
@@ -138,7 +125,7 @@ class QuranPageHeader extends StatelessWidget {
             style: TextStyle(
               fontFamily: 'aldahabi',
               fontSize: 12.sp,
-              color: chunkTextColor,
+              color: backgroundColors[getValue("quranPageolorsIndex")],
             ),
           ),
         ),

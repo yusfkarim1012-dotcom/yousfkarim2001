@@ -704,6 +704,8 @@ class _SurahListPageState extends State<SurahListPage> {
                         indicatorSize: TabBarIndicatorSize.tab,
                         indicatorColor: Colors.white,
                         indicatorWeight: 4,
+                        labelColor: Colors.white,
+                        unselectedLabelColor: Colors.white.withOpacity(0.6),
                         tabs: tabs,
                         onTap: (index) {
                           setState(() {
@@ -1290,8 +1292,7 @@ class _SurahListPageState extends State<SurahListPage> {
                                     .first),
                                 style: TextStyle(
                                     color: getValue("darkMode")
-                                        ? const Color.fromARGB(
-                                            234, 255, 255, 255)
+                                        ? Colors.white
                                         : const Color.fromARGB(228, 0, 0, 0)),
                               ),
                               subtitle: Text(
@@ -1308,8 +1309,7 @@ class _SurahListPageState extends State<SurahListPage> {
                                     fontFamily: "UthmanicHafs13",
                                     fontSize: 18.sp,
                                     color: getValue("darkMode")
-                                        ? const Color.fromARGB(
-                                            234, 255, 255, 255)
+                                        ? Colors.white.withOpacity(0.9)
                                         : const Color.fromARGB(228, 0, 0, 0)
                                     // fontWeight: FontWeight.w600
                                     ),
@@ -1403,7 +1403,7 @@ class _SurahListPageState extends State<SurahListPage> {
                                   ["surah"]),
                               style: TextStyle(
                                   color: getValue("darkMode")
-                                      ? const Color.fromARGB(234, 255, 255, 255)
+                                      ? Colors.white
                                       : const Color.fromARGB(228, 0, 0, 0)),
                             ),
                             subtitle: Text(
@@ -1418,7 +1418,7 @@ class _SurahListPageState extends State<SurahListPage> {
                                   fontFamily: "UthmanicHafs13",
                                   fontSize: 18.sp,
                                   color: getValue("darkMode")
-                                      ? const Color.fromARGB(234, 255, 255, 255)
+                                      ? Colors.white.withOpacity(0.9)
                                       : const Color.fromARGB(228, 0, 0, 0)
                                   // fontWeight: FontWeight.w600
                                   ),
@@ -1468,7 +1468,7 @@ class _SurahListPageState extends State<SurahListPage> {
                               fontSize: 18,
                               fontWeight: FontWeight.w600,
                               color: getValue("darkMode")
-                                  ? const Color.fromARGB(234, 255, 255, 255)
+                                  ? Colors.white
                                   : const Color.fromARGB(228, 0, 0, 0)),
                         ),
                       );

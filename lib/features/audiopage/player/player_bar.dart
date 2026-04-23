@@ -540,6 +540,34 @@ class ControlButtons extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
+        StreamBuilder<LoopMode>(
+          stream: player.loopModeStream,
+          builder: (context, snapshot) {
+            final loopMode = snapshot.data ?? LoopMode.off;
+            Icon icon;
+            switch (loopMode) {
+              case LoopMode.off:
+                icon = Icon(Icons.repeat, color: Colors.white.withOpacity(0.3), size: 28.sp);
+                break;
+              case LoopMode.one:
+                icon = Icon(Icons.repeat_one, color: Colors.white, size: 28.sp);
+                break;
+              case LoopMode.all:
+                icon = Icon(Icons.repeat, color: Colors.white, size: 28.sp);
+                break;
+            }
+            return IconButton(
+              icon: icon,
+              onPressed: () {
+                final nextMode = loopMode == LoopMode.off 
+                  ? LoopMode.all 
+                  : (loopMode == LoopMode.all ? LoopMode.one : LoopMode.off);
+                player.setLoopMode(nextMode);
+              },
+            );
+          },
+        ),
+        SizedBox(width: 8.w),
         StreamBuilder<Duration>(
           stream: player.positionStream,
           builder: (context, snapshot) {
@@ -592,6 +620,26 @@ class ControlButtons extends StatelessWidget {
             return IconButton(
               onPressed: () => player.seek(Duration(seconds: positionData.inSeconds + 10)),
               icon: Icon(Icons.fast_forward, color: Colors.white, size: 32.sp),
+            );
+          },
+        ),
+        SizedBox(width: 8.w),
+        StreamBuilder<bool>(
+          stream: player.shuffleModeEnabledStream,
+          builder: (context, snapshot) {
+            final shuffleModeEnabled = snapshot.data ?? false;
+            return IconButton(
+              icon: Icon(
+                Icons.shuffle,
+                color: shuffleModeEnabled ? Colors.white : Colors.white.withOpacity(0.3),
+                size: 28.sp,
+              ),
+              onPressed: () async {
+                if (!shuffleModeEnabled) {
+                  await player.shuffle();
+                }
+                await player.setShuffleModeEnabled(!shuffleModeEnabled);
+              },
             );
           },
         ),

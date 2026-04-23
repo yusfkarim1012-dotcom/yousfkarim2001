@@ -328,14 +328,12 @@ class _PlayerBarState extends State<PlayerBar> {
                                           SizedBox(
                                             width: 10.w,
                                           ),
-                                          if (state.audioPlayer.playing ==
-                                              false)
                                             GestureDetector(
                                               onTap: () {
                                                 BlocProvider.of<PlayerBarBloc>(
                                                         context)
                                                     .add(CloseBarEvent());
-                                                state.audioPlayer.pause();
+                                                state.audioPlayer.stop();
                                                 setState(() {});
                                               },
                                               child: Container(
@@ -357,8 +355,6 @@ class _PlayerBarState extends State<PlayerBar> {
                                                 ),
                                               ),
                                             ),
-                                          if (state.audioPlayer.playing ==
-                                              false)
                                             SizedBox(
                                               width: 10.w,
                                             ),

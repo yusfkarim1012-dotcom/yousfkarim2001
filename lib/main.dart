@@ -53,7 +53,7 @@ void main() async {
   await JustAudioBackground.init(
     androidNotificationChannelId: 'com.yourapp.audio',
     androidNotificationChannelName: 'Quran Player',
-    androidNotificationOngoing: true,
+    androidNotificationOngoing: false,
   );
 
   // we are not checking the status as it is an example app. You should (must) check it in a production app

@@ -777,14 +777,14 @@ class _HomeState extends State<Home>
                                             text: "audios".tr(),
                                             imagePath: "assets/images/quranlogo.png",
                                             onPressed: () {
-                                               Navigator.push(context, CupertinoPageRoute(builder: (builder) => BlocProvider(create: (create) => playerPageBloc, child: RecitersPage(jsonData: widgejsonData))));
+                                               Navigator.push(context, CupertinoPageRoute(builder: (builder) => BlocProvider.value(value: playerPageBloc, child: RecitersPage(jsonData: widgejsonData))));
                                             }
                                           ),
                                           HomeGridItem(
                                             text: "Hadith".tr(),
                                             imagePath: "assets/images/muhammed.png",
                                             onPressed: () {
-                                               Navigator.push(context, CupertinoPageRoute(builder: (builder) => BlocProvider(create: (context) => hadithPageBloc, child: HadithBooksPage(locale: context.locale.languageCode))));
+                                               Navigator.push(context, CupertinoPageRoute(builder: (builder) => BlocProvider.value(value: hadithPageBloc, child: HadithBooksPage(locale: context.locale.languageCode))));
                                             }
                                           ),
                                           // HomeGridItem(

@@ -141,11 +141,11 @@ class _RecitersPageState extends State<RecitersPage> {
 print(jsonData2);
 // print(jsonData3);
 
-      if (jsonData != null) {
+      if (jsonData != null && jsonData2 != null && jsonData3 != null) {
         final data = json.decode(jsonData) as List<dynamic>;
-        final data2 = json.decode(jsonData2!)["riwayat"] as List<dynamic>;
+        final data2 = json.decode(jsonData2)["riwayat"] as List<dynamic>;
 
-        final data3 = json.decode(jsonData3!) as List<dynamic>;
+        final data3 = json.decode(jsonData3) as List<dynamic>;
         print(json.decode(jsonData3));
         reciters = data.map((reciter) => Reciter.fromJson(reciter)).toList();
         reciters
@@ -160,9 +160,16 @@ print(jsonData2);
         setState(() {
           isLoading = false;
         });
+      } else {
+        setState(() {
+          isLoading = false;
+        });
       }
     } catch (error) {
       print('Error while fetching data: $error');
+      setState(() {
+        isLoading = false;
+      });
     }
   }
 
@@ -824,9 +831,8 @@ print(jsonData2);
                                                               MaterialPageRoute(
                                                                   builder:
                                                                       (builder) =>
-                                                                          BlocProvider(
-                                                                            create: (context) =>
-                                                                                playerPageBloc,
+                                                                          BlocProvider.value(
+                                                                            value: playerPageBloc,
                                                                             child:
                                                                                 RecitersSurahListPage(
                                                                               reciter: reciter,
@@ -876,10 +882,7 @@ print(jsonData2);
                                                                     ),
                                                                   ],
                                                                 ),
-                                                                BlocProvider(
-                                                                  create: (context) =>
-                                                                      PlayerBlocBloc(),
-                                                                  child: Row(
+                                                                Row(
                                                                     children: [
                                                                       IconButton(
                                                                           onPressed:
@@ -969,7 +972,6 @@ print(jsonData2);
                                                                       // ),
                                                                     ],
                                                                   ),
-                                                                ),
                                                               ],
                                                             ),
                                                           ],

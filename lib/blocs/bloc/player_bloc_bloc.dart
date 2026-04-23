@@ -47,15 +47,19 @@ class PlayerBlocBloc extends Bloc<PlayerBlocEvent, PlayerBlocState> {
             return false;
           }
         })) {
-          PermissionStatus status = await Permission.storage.request();
-          //PermissionStatus status1 = await Permission.accessMediaLocation.request();
-          PermissionStatus status2 =
-              await Permission.manageExternalStorage.request();
-          print('status $status   -> $status2');
-          if (status.isGranted && status2.isGranted) {
+          PermissionStatus status;
+          if (Platform.isAndroid) {
+            status = await Permission.audio.request();
+            if (!status.isGranted) {
+               status = await Permission.storage.request();
+            }
+          } else {
+            status = await Permission.storage.request();
+          }
+          
+          if (status.isGranted || status.isLimited) {
             print(true);
-          } else if (status.isPermanentlyDenied ||
-              status2.isPermanentlyDenied) {
+          } else if (status.isPermanentlyDenied) {
             await openAppSettings();
           } else if (status.isDenied) {
             print('Permission Denied');
@@ -158,10 +162,9 @@ class PlayerBlocBloc extends Bloc<PlayerBlocEvent, PlayerBlocState> {
         } else {
           status = await Permission.storage.request();
         }
-        PermissionStatus status2 = await Permission.manageExternalStorage.request();
         
-        if (!(status.isGranted || status2.isGranted || status.isLimited)) {
-          if (status.isPermanentlyDenied || status2.isPermanentlyDenied) {
+        if (!(status.isGranted || status.isLimited)) {
+          if (status.isPermanentlyDenied) {
             await openAppSettings();
           }
           print('Permission Denied');
@@ -219,9 +222,7 @@ class PlayerBlocBloc extends Bloc<PlayerBlocEvent, PlayerBlocState> {
           status = await Permission.storage.request();
         }
 
-        PermissionStatus status2 = await Permission.manageExternalStorage.request();
-        
-        if (status.isGranted || status2.isGranted || status.isLimited) {
+        if (status.isGranted || status.isLimited) {
           final reciterDir = Directory("${appDir.path}${event.reciter.name}");
           if (!reciterDir.existsSync()) {
             reciterDir.createSync(recursive: true);
@@ -256,7 +257,7 @@ class PlayerBlocBloc extends Bloc<PlayerBlocEvent, PlayerBlocState> {
         } else {
           print("Permissions denied for download all");
           // Maybe open app settings if permanently denied
-          if (status.isPermanentlyDenied || status2.isPermanentlyDenied) {
+          if (status.isPermanentlyDenied) {
             await openAppSettings();
           }
         }

@@ -303,7 +303,7 @@ class _ScreenShotPreviewPageState extends State<HadithScreenShotPreviewPage> {
                                   children: [
                                     Image(
                                       image: const AssetImage(
-                                          "assets/images/khatmah.jpg"),
+                                          "assets/images/app_icon_new.png"),
                                       height: 25.h,
                                     ),
                                     SizedBox(

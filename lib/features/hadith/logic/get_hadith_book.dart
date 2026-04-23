@@ -25,11 +25,10 @@ downloadBook(bookFileName) async {
 
   PermissionStatus status = await Permission.storage.request();
   //PermissionStatus status1 = await Permission.accessMediaLocation.request();
-  PermissionStatus status2 = await Permission.manageExternalStorage.request();
-  print('status $status   -> $status2');
-  if (status.isGranted && status2.isGranted) {
+  
+  if (status.isGranted) {
     print(true);
-  } else if (status.isPermanentlyDenied || status2.isPermanentlyDenied) {
+  } else if (status.isPermanentlyDenied) {
     await openAppSettings();
   } else if (status.isDenied) {
     print('Permission Denied');

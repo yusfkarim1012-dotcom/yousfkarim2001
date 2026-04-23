@@ -225,7 +225,7 @@ class _SplashScreenState extends State<SplashScreen> {
                         color: Colors.black,fontSize: 22.sp, fontFamily: fontFamilies[Random().nextInt(fontFamilies.length)]),
                   ),
                   Image.asset(
-                    "assets/images/khatmah.jpg",
+                    "assets/images/app_icon_new.png",
                     height: 160.h,
                   ),
                   LottieBuilder.asset(

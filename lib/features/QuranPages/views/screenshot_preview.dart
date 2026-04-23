@@ -425,22 +425,11 @@ if(isQCF==false) {
                         //                                       await Permission
                         //                                           .storage
                         //                                           .request();
-                        //                                   //PermissionStatus status1 = await Permission.accessMediaLocation.request();
-                        //                                   PermissionStatus
-                        //                                       status2 =
-                        //                                       await Permission
-                        //                                           .manageExternalStorage
-                        //                                           .request();
-                        //                                   print(
-                        //                                       'status $status   -> $status2');
+                        //                                   
                         //                                   if (status
-                        //                                           .isGranted &&
-                        //                                       status2
                         //                                           .isGranted) {
                         //                                     print(true);
                         //                                   } else if (status
-                        //                                           .isPermanentlyDenied ||
-                        //                                       status2
                         //                                           .isPermanentlyDenied) {
                         //                                     await openAppSettings();
                         //                                   } else if (status
@@ -772,7 +761,7 @@ if(isQCF==false) {
                                 children: [
                                   Image(
                                     image: const AssetImage(
-                                        "assets/images/khatmah.jpg"),
+                                        "assets/images/app_icon_new.png"),
                                     height: 25.h,
                                   ),
                                   SizedBox(

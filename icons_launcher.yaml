@@ -1,12 +1,12 @@
 icons_launcher:
-  image_path: 'assets/images/khatmah_icon.jpg'
+  image_path: 'assets/images/app_icon_new.png'
   platforms:
     android:
       enable: true
-      image_path: 'assets/images/khatmah_icon.jpg'
+      image_path: 'assets/images/app_icon_new.png'
       adaptive_background_color: '#081a33'
-      adaptive_foreground_image: 'assets/images/khatmah_icon.jpg'
-      adaptive_round_image: 'assets/images/khatmah_icon.jpg'
+      adaptive_foreground_image: 'assets/images/app_icon_new.png'
+      adaptive_round_image: 'assets/images/app_icon_new.png'
     ios:
       enable: true
-      image_path: 'assets/images/khatmah_icon.jpg'
+      image_path: 'assets/images/app_icon_new.png'

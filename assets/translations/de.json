@@ -1,5 +1,6 @@
 {
-  "language": "Dutch",
+  "language": "German",
+  "settings": "Einstellungen",
   "main": "Hauptbildschirm",
   "quran": "Heiliger Quran",
   "audios": "Audios",
@@ -232,5 +233,10 @@
   "dua_for_rain": "Duas for Rain",
   "dua_for_clear_skies": "Duas for Clear Skies",
   "types_of_goodness_etiquette": "Types of Goodness and Etiquette",
-  "congratulating_on_newborn": "Congratulating on a Newborn"
+  "congratulating_on_newborn": "Glückwünsche zum Neugeborenen",
+  "deleteallzikr": "Alle Zikr löschen",
+  "deleteallzikrconfirm": "Sind Sie sicher, dass Sie alle Zikr löschen möchten?",
+  "delete": "Löschen",
+  "quransettings": "Koran-Seiteneinstellungen",
+  "deletezikrconfirm": "Sind Sie sicher, dass Sie diesen Zikr löschen möchten?"
 }

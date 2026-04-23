@@ -1,5 +1,6 @@
 {
   "language": "Türkçe - Turkish",
+  "settings": "Ayarlar",
   "main": "Ana Ekran",
   "quran": "Kutsal Kur'an",
   "audios": "Sesler",
@@ -231,5 +232,10 @@
   "dua_for_rain": "Duas for Rain",
   "dua_for_clear_skies": "Duas for Clear Skies",
   "types_of_goodness_etiquette": "Types of Goodness and Etiquette",
-  "congratulating_on_newborn": "Congratulating on a Newborn"
+  "congratulating_on_newborn": "Yeni doğan tebriği",
+  "deleteallzikr": "Tüm Zikirleri Sil",
+  "deleteallzikrconfirm": "Tüm zikirleri silmek istediğinizden emin misiniz?",
+  "delete": "Sil",
+  "quransettings": "Kuran Sayfa Ayarları",
+  "deletezikrconfirm": "Bu zikri silmek istediğinizden emin misiniz?"
 }

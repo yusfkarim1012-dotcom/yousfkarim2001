@@ -1,5 +1,6 @@
 {
   "language": "Português - Portuguese ",
+  "settings": "Configurações",
   "main": "Tela Principal",
   "quran": "Alcorão Sagrado",
   "audios": "Áudios",
@@ -232,5 +233,10 @@
   "dua_for_rain": "Duas for Rain",
   "dua_for_clear_skies": "Duas for Clear Skies",
   "types_of_goodness_etiquette": "Types of Goodness and Etiquette",
-  "congratulating_on_newborn": "Congratulating on a Newborn"
+  "congratulating_on_newborn": "Parabéns pelo recém-nascido",
+  "deleteallzikr": "Excluir todos os Zikrs",
+  "deleteallzikrconfirm": "Tem certeza de que deseja excluir todos os zikrs?",
+  "delete": "Excluir",
+  "quransettings": "Configurações da página do Alcorão",
+  "deletezikrconfirm": "Tem certeza de que deseja excluir este zikr?"
 }

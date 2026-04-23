@@ -1,5 +1,6 @@
 {
   "language": "русский - Russian ",
+  "settings": "Настройки",
   "main": "Главный экран",
   "quran": "Священный Коран",
   "audios": "Аудио",
@@ -232,5 +233,10 @@
   "dua_for_rain": "Duas for Rain",
   "dua_for_clear_skies": "Duas for Clear Skies",
   "types_of_goodness_etiquette": "Types of Goodness and Etiquette",
-  "congratulating_on_newborn": "Congratulating on a Newborn"
+  "congratulating_on_newborn": "Поздравление с новорожденным",
+  "deleteallzikr": "Удалить все зикры",
+  "deleteallzikrconfirm": "Вы уверены, что хотите удалить все зикры?",
+  "delete": "Удалить",
+  "quransettings": "Настройки страницы Корана",
+  "deletezikrconfirm": "Вы уверены, что хотите удалить этот зикр?"
 }

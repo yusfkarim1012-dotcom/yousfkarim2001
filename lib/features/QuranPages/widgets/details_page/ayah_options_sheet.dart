@@ -118,7 +118,7 @@ class _AyahOptionsSheetState extends State<AyahOptionsSheet> {
           color: backgroundColors[getValue("quranPageolorsIndex")],
           borderRadius: const BorderRadius.only(
               topLeft: Radius.circular(20), topRight: Radius.circular(20))),
-      height: MediaQuery.of(context).size.height * .45,
+      height: MediaQuery.of(context).size.height * .5,
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 18.0, vertical: 12),
         child: Column(
@@ -134,248 +134,247 @@ class _AyahOptionsSheetState extends State<AyahOptionsSheet> {
             ),
             SizedBox(height: 10.h),
             const Divider(),
-            SizedBox(height: 10.h),
-            
-            // Share Button
-            EasyContainer(
-              borderRadius: 8,
-              color: primaryColors[getValue("quranPageolorsIndex")].withOpacity(.05),
-              onTap: () {
-                Navigator.pop(context);
-                showShareAyahDialog(context, widget.surahNumber, widget.verseNumber, widget.index, widget.jsonData);
-              },
-              child: SizedBox(
-                width: MediaQuery.of(context).size.width,
-                child: Row(
-                  children: [
-                    SizedBox(width: 20.w),
-                    Icon(
-                      Icons.share,
-                      color: getValue("quranPageolorsIndex") == 0
-                          ? secondaryColors[getValue("quranPageolorsIndex")]
-                          : highlightColors[getValue("quranPageolorsIndex")],
-                    ),
-                    SizedBox(width: 20.w),
-                    Text("share".tr(),
-                        style: TextStyle(
-                            fontFamily: "cairo",
-                            fontSize: 14.sp,
-                            color: primaryColors[getValue("quranPageolorsIndex")])),
-                    SizedBox(width: 30.w)
-                  ],
-                ),
-              ),
-            ),
-            SizedBox(height: 10.h),
+            Expanded(
+              child: ListView(
+                physics: const BouncingScrollPhysics(),
+                children: [
+                  SizedBox(height: 10.h),
+                  // Play Audio Button (Moved to Top)
+                  EasyContainer(
+                    borderRadius: 8,
+                    color: primaryColors[getValue("quranPageolorsIndex")].withOpacity(.05),
+                    onTap: () async {
+                      final reciter = reciters[getValue("reciterIndex")];
+                      
+                      await QuranAudioHelper.downloadAndCacheSuraAudio(
+                          suraName: quran.getSurahNameEnglish(widget.surahNumber),
+                          totalVerses: quran.getVerseCount(widget.surahNumber),
+                          surahNumber: widget.surahNumber,
+                          reciterIdentifier: reciter.identifier,
+                          onDownloadingStateChanged: (downloading) {
+                              if (mounted) {
+                                setState(() {
+                                   _isDownloading = downloading;
+                                });
+                              }
+                          }
+                      );
+                      
+                      // Close the bottom sheet after download completes
+                      if (mounted) {
+                        Navigator.pop(context);
+                      }
+                      
+                      // Logic to kill existing player if playing
+                      if (qurapPagePlayerBloc.state is QuranPagePlayerPlaying) {
+                          qurapPagePlayerBloc.add(KillPlayerEvent());
+                      }
 
-            // Bookmark Button
-            EasyContainer(
-              borderRadius: 8,
-              color: primaryColors[getValue("quranPageolorsIndex")].withOpacity(.05),
-              onTap: () async {
-                if (isBookmarked) {
-                  widget.onRemoveBookmark(widget.surahNumber, widget.verseNumber);
-                } else {
-                  widget.onAddBookmark(widget.surahNumber, widget.verseNumber);
-                }
-                Navigator.pop(context);
-              },
-              child: SizedBox(
-                width: MediaQuery.of(context).size.width,
-                child: Row(
-                  children: [
-                    SizedBox(width: 20.w),
-                    Icon(
-                      isBookmarked ? Icons.bookmark : Icons.bookmark_border,
-                      color: getValue("quranPageolorsIndex") == 0
-                          ? secondaryColors[getValue("quranPageolorsIndex")]
-                          : highlightColors[getValue("quranPageolorsIndex")],
-                    ),
-                    SizedBox(width: 20.w),
-                    Text(isBookmarked ? "removebookmark".tr() : "addbookmark".tr(),
-                        style: TextStyle(
-                            fontFamily: "cairo",
-                            fontSize: 14.sp,
-                            color: primaryColors[getValue("quranPageolorsIndex")])),
-                    SizedBox(width: 30.w)
-                  ],
-                ),
-              ),
-            ),
-            SizedBox(height: 10.h),
-            
-            // Favorite Button
-            EasyContainer(
-              borderRadius: 8,
-              color: primaryColors[getValue("quranPageolorsIndex")].withOpacity(.05),
-              onTap: () async {
-                widget.onToggleStar(widget.surahNumber, widget.verseNumber);
-                Navigator.pop(context);
-              },
-              child: SizedBox(
-                width: MediaQuery.of(context).size.width,
-                child: Row(
-                  children: [
-                    SizedBox(width: 20.w),
-                    Icon(
-                      widget.isVerseStarred(widget.surahNumber, widget.verseNumber)
-                          ? Icons.star
-                          : Icons.star_border,
-                      color: getValue("quranPageolorsIndex") == 0
-                          ? secondaryColors[getValue("quranPageolorsIndex")]
-                          : highlightColors[getValue("quranPageolorsIndex")],
-                    ),
-                    SizedBox(width: 20.w),
-                    Text(
-                        widget.isVerseStarred(widget.surahNumber, widget.verseNumber)
-                            ? "removefav".tr()
-                            : "addtofav".tr(),
-                        style: TextStyle(
-                            fontFamily: "cairo",
-                            fontSize: 14.sp,
-                            color: primaryColors[getValue("quranPageolorsIndex")])),
-                    SizedBox(width: 30.w)
-                  ],
-                ),
-              ),
-            ),
-            SizedBox(height: 10.h),
-
-            // Tafseer Button
-            EasyContainer(
-              borderRadius: 8,
-              color: primaryColors[getValue("quranPageolorsIndex")].withOpacity(.05),
-              onTap: () {
-                Navigator.pop(context);
-                showMaterialModalBottomSheet(
-                  enableDrag: true,
-                  animationCurve: Curves.easeInOutQuart,
-                  elevation: 0,
-                  bounce: true,
-                  duration: const Duration(milliseconds: 400),
-                  backgroundColor: backgroundColors[getValue("quranPageolorsIndex")],
-                  context: context,
-                  builder: (builder) {
-                    return TafseerAndTranslateSheet(
-                      surahNumber: widget.surahNumber,
-                      verseNumber: widget.verseNumber,
-                      isVerseByVerseSelection: true,
-                    );
-                  },
-                );
-              },
-              child: SizedBox(
-                width: MediaQuery.of(context).size.width,
-                child: Row(
-                  children: [
-                    SizedBox(width: 20.w),
-                    Icon(
-                      Icons.menu_book,
-                      color: getValue("quranPageolorsIndex") == 0
-                          ? secondaryColors[getValue("quranPageolorsIndex")]
-                          : highlightColors[getValue("quranPageolorsIndex")],
-                    ),
-                    SizedBox(width: 20.w),
-                    Text("tafseer".tr(),
-                        style: TextStyle(
-                            fontFamily: "cairo",
-                            fontSize: 14.sp,
-                            color: primaryColors[getValue("quranPageolorsIndex")])),
-                    SizedBox(width: 30.w)
-                  ],
-                ),
-              ),
-            ),
-            SizedBox(height: 10.h),
-            
-            // Play Audio Button
-            EasyContainer(
-              borderRadius: 8,
-              color: primaryColors[getValue("quranPageolorsIndex")].withOpacity(.05),
-              onTap: () async {
-                final reciter = reciters[getValue("reciterIndex")];
-                
-                await QuranAudioHelper.downloadAndCacheSuraAudio(
-                    suraName: quran.getSurahNameEnglish(widget.surahNumber),
-                    totalVerses: quran.getVerseCount(widget.surahNumber),
-                    surahNumber: widget.surahNumber,
-                    reciterIdentifier: reciter.identifier,
-                    onDownloadingStateChanged: (downloading) {
-                        if (mounted) {
-                          setState(() {
-                             _isDownloading = downloading;
-                          });
-                        }
-                    }
-                );
-                
-                // Close the bottom sheet after download completes
-                if (mounted) {
-                  Navigator.pop(context);
-                }
-                
-                // Logic to kill existing player if playing
-                if (qurapPagePlayerBloc.state is QuranPagePlayerPlaying) {
-                    qurapPagePlayerBloc.add(KillPlayerEvent());
-                }
-
-                qurapPagePlayerBloc.add(PlayFromVerse(
-                    widget.verseNumber,
-                    reciter.identifier,
-                    widget.surahNumber,
-                    quran.getSurahNameEnglish(widget.surahNumber)));
-                
-                // Auto scroll logic (simplified)
-                if (getValue("alignmentType") == "verticalview" && 
-                    quran.getPageNumber(widget.surahNumber, widget.verseNumber) > 600) {
-                      // Note: passing itemScrollController would be needed for this.
-                      // Currently omitted or needs a callback for 'onPlayAndScroll'.
-                      // For now, simple play.
-                }
-              },
-              child: SizedBox(
-                width: MediaQuery.of(context).size.width,
-                child: Row(
-                  children: [
-                    SizedBox(width: 20.w),
-                    Icon(
-                      FontAwesome5.book_reader,
-                      color: getValue("quranPageolorsIndex") == 0
-                          ? secondaryColors[getValue("quranPageolorsIndex")]
-                          : highlightColors[getValue("quranPageolorsIndex")],
-                    ),
-                    SizedBox(width: 20.w),
-                    Text("play".tr(),
-                        style: TextStyle(
-                            fontFamily: "cairo",
-                            fontSize: 14.sp,
-                            color: primaryColors[getValue("quranPageolorsIndex")])),
-                    SizedBox(width: 30.w),
-                    DropdownButton<int>(
-                      value: getValue("reciterIndex"),
-                      dropdownColor: backgroundColors[getValue("quranPageolorsIndex")],
-                      onChanged: (int? newIndex) {
-                        updateValue("reciterIndex", newIndex);
-                        setState(() {});
-                      },
-                      items: reciters.map((reciter) {
-                        return DropdownMenuItem<int>(
-                          value: reciters.indexOf(reciter),
-                          child: Text(
-                              rtlLanguages.contains(context.locale.languageCode)
-                                  ? reciter.name
-                                  : reciter.englishName,
+                      qurapPagePlayerBloc.add(PlayFromVerse(
+                          widget.verseNumber,
+                          reciter.identifier,
+                          widget.surahNumber,
+                          quran.getSurahNameEnglish(widget.surahNumber)));
+                    },
+                    child: SizedBox(
+                      width: MediaQuery.of(context).size.width,
+                      child: Row(
+                        children: [
+                          SizedBox(width: 20.w),
+                          Icon(
+                            FontAwesome5.book_reader,
+                            color: getValue("quranPageolorsIndex") == 0
+                                ? secondaryColors[getValue("quranPageolorsIndex")]
+                                : highlightColors[getValue("quranPageolorsIndex")],
+                          ),
+                          SizedBox(width: 20.w),
+                          Text("play".tr(),
                               style: TextStyle(
+                                  fontFamily: "cairo",
+                                  fontSize: 14.sp,
                                   color: primaryColors[getValue("quranPageolorsIndex")])),
-                        );
-                      }).toList(),
+                          const Spacer(),
+                          DropdownButton<int>(
+                            value: getValue("reciterIndex"),
+                            underline: const SizedBox(),
+                            dropdownColor: backgroundColors[getValue("quranPageolorsIndex")],
+                            onChanged: (int? newIndex) {
+                              updateValue("reciterIndex", newIndex);
+                              setState(() {});
+                            },
+                            items: reciters.map((reciter) {
+                              return DropdownMenuItem<int>(
+                                value: reciters.indexOf(reciter),
+                                child: Text(
+                                    rtlLanguages.contains(context.locale.languageCode)
+                                        ? reciter.name
+                                        : reciter.englishName,
+                                    style: TextStyle(
+                                        color: primaryColors[getValue("quranPageolorsIndex")])),
+                              );
+                            }).toList(),
+                          ),
+                          SizedBox(width: 10.w),
+                        ],
+                      ),
                     ),
-                  ],
-                ),
+                  ),
+                  SizedBox(height: 10.h),
+
+                  // Share Button
+                  EasyContainer(
+                    borderRadius: 8,
+                    color: primaryColors[getValue("quranPageolorsIndex")].withOpacity(.05),
+                    onTap: () {
+                      Navigator.pop(context);
+                      showShareAyahDialog(context, widget.surahNumber, widget.verseNumber, widget.index, widget.jsonData);
+                    },
+                    child: SizedBox(
+                      width: MediaQuery.of(context).size.width,
+                      child: Row(
+                        children: [
+                          SizedBox(width: 20.w),
+                          Icon(
+                            Icons.share,
+                            color: getValue("quranPageolorsIndex") == 0
+                                ? secondaryColors[getValue("quranPageolorsIndex")]
+                                : highlightColors[getValue("quranPageolorsIndex")],
+                          ),
+                          SizedBox(width: 20.w),
+                          Text("share".tr(),
+                              style: TextStyle(
+                                  fontFamily: "cairo",
+                                  fontSize: 14.sp,
+                                  color: primaryColors[getValue("quranPageolorsIndex")])),
+                          SizedBox(width: 30.w)
+                        ],
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 10.h),
+
+                  // Bookmark Button
+                  EasyContainer(
+                    borderRadius: 8,
+                    color: primaryColors[getValue("quranPageolorsIndex")].withOpacity(.05),
+                    onTap: () async {
+                      if (isBookmarked) {
+                        widget.onRemoveBookmark(widget.surahNumber, widget.verseNumber);
+                      } else {
+                        widget.onAddBookmark(widget.surahNumber, widget.verseNumber);
+                      }
+                      Navigator.pop(context);
+                    },
+                    child: SizedBox(
+                      width: MediaQuery.of(context).size.width,
+                      child: Row(
+                        children: [
+                          SizedBox(width: 20.w),
+                          Icon(
+                            isBookmarked ? Icons.bookmark : Icons.bookmark_border,
+                            color: getValue("quranPageolorsIndex") == 0
+                                ? secondaryColors[getValue("quranPageolorsIndex")]
+                                : highlightColors[getValue("quranPageolorsIndex")],
+                          ),
+                          SizedBox(width: 20.w),
+                          Text(isBookmarked ? "removebookmark".tr() : "addbookmark".tr(),
+                              style: TextStyle(
+                                  fontFamily: "cairo",
+                                  fontSize: 14.sp,
+                                  color: primaryColors[getValue("quranPageolorsIndex")])),
+                          SizedBox(width: 30.w)
+                        ],
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 10.h),
+                  
+                  // Favorite Button
+                  EasyContainer(
+                    borderRadius: 8,
+                    color: primaryColors[getValue("quranPageolorsIndex")].withOpacity(.05),
+                    onTap: () async {
+                      widget.onToggleStar(widget.surahNumber, widget.verseNumber);
+                      Navigator.pop(context);
+                    },
+                    child: SizedBox(
+                      width: MediaQuery.of(context).size.width,
+                      child: Row(
+                        children: [
+                          SizedBox(width: 20.w),
+                          Icon(
+                            widget.isVerseStarred(widget.surahNumber, widget.verseNumber)
+                                ? Icons.star
+                                : Icons.star_border,
+                            color: getValue("quranPageolorsIndex") == 0
+                                ? secondaryColors[getValue("quranPageolorsIndex")]
+                                : highlightColors[getValue("quranPageolorsIndex")],
+                          ),
+                          SizedBox(width: 20.w),
+                          Text(
+                              widget.isVerseStarred(widget.surahNumber, widget.verseNumber)
+                                  ? "removefav".tr()
+                                  : "addtofav".tr(),
+                              style: TextStyle(
+                                  fontFamily: "cairo",
+                                  fontSize: 14.sp,
+                                  color: primaryColors[getValue("quranPageolorsIndex")])),
+                          SizedBox(width: 30.w)
+                        ],
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 10.h),
+
+                  // Tafseer Button
+                  EasyContainer(
+                    borderRadius: 8,
+                    color: primaryColors[getValue("quranPageolorsIndex")].withOpacity(.05),
+                    onTap: () {
+                      Navigator.pop(context);
+                      showMaterialModalBottomSheet(
+                        enableDrag: true,
+                        animationCurve: Curves.easeInOutQuart,
+                        elevation: 0,
+                        bounce: true,
+                        duration: const Duration(milliseconds: 400),
+                        backgroundColor: backgroundColors[getValue("quranPageolorsIndex")],
+                        context: context,
+                        builder: (builder) {
+                          return TafseerAndTranslateSheet(
+                            surahNumber: widget.surahNumber,
+                            verseNumber: widget.verseNumber,
+                            isVerseByVerseSelection: true,
+                          );
+                        },
+                      );
+                    },
+                    child: SizedBox(
+                      width: MediaQuery.of(context).size.width,
+                      child: Row(
+                        children: [
+                          SizedBox(width: 20.w),
+                          Icon(
+                            Icons.menu_book,
+                            color: getValue("quranPageolorsIndex") == 0
+                                ? secondaryColors[getValue("quranPageolorsIndex")]
+                                : highlightColors[getValue("quranPageolorsIndex")],
+                          ),
+                          SizedBox(width: 20.w),
+                          Text("tafseer".tr(),
+                              style: TextStyle(
+                                  fontFamily: "cairo",
+                                  fontSize: 14.sp,
+                                  color: primaryColors[getValue("quranPageolorsIndex")])),
+                          SizedBox(width: 30.w)
+                        ],
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 20.h),
+                ],
               ),
             ),
-            const SizedBox(height: 30),
-            SizedBox(height: 5.h),
           ],
         ),
       ),

@@ -1,5 +1,6 @@
 {
   "language": "Amharic - አማርኛ ",
+  "settings": "ቅንብሮች",
   "main": "ዋና መገበያ",
   "quran": "ቁራኛ ቅዳሴ",
   "audios": "የድምፅ",
@@ -230,5 +231,10 @@
   "dua_for_rain": "Duas for Rain",
   "dua_for_clear_skies": "Duas for Clear Skies",
   "types_of_goodness_etiquette": "Types of Goodness and Etiquette",
-  "congratulating_on_newborn": "Congratulating on a Newborn"
+  "congratulating_on_newborn": "ለአራስ እንኳን ደስ አለዎት",
+  "deleteallzikr": "ሁሉንም ዝክሮች አጥፋ",
+  "deleteallzikrconfirm": "በእርግጥ ሁሉንም ዝክሮች ማጥፋት ይፈልጋሉ?",
+  "delete": "አጥፋ",
+  "quransettings": "የቁርዓን ገጽ ቅንብሮች",
+  "deletezikrconfirm": "በእርግጥ ይህን ዝክር ማጥፋት ይፈልጋሉ?"
 }

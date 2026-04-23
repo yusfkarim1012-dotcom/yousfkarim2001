@@ -1,5 +1,6 @@
 {
   "language": "arabic",
+  "settings": "الإعدادات",
   "main": "الرئيسية",
   "quran": "القرأن الكريم",
   "audios": "صوتيات",
@@ -233,5 +234,10 @@
   "dua_for_rain": "من أدعية الاستسقاء",
   "dua_for_clear_skies": "من أدعية الاستصحاء",
   "types_of_goodness_etiquette": "من أنواع الخير والآداب الجامعة",
-  "congratulating_on_newborn": "ﺗﻬنئة المولود له وجوابه"
+  "congratulating_on_newborn": "ﺗﻬنئة المولود له وجوابه",
+  "deleteallzikr": "حذف جميع الأذكار",
+  "deleteallzikrconfirm": "هل أنت متأكد من حذف جميع الأذكار؟",
+  "delete": "حذف",
+  "quransettings": "إعدادات صفحة القرآن",
+  "deletezikrconfirm": "هل أنت متأكد من حذف هذا الذكر؟"
 }

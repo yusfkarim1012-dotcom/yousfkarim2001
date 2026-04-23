@@ -1,5 +1,6 @@
 {
   "language": "English",
+  "settings": "Settings",
   "main": "Main Screen",
   "quran": "The Holy Quran",
   "audios": "Audios",
@@ -230,5 +231,10 @@
   "dua_for_rain": "Duas for Rain",
   "dua_for_clear_skies": "Duas for Clear Skies",
   "types_of_goodness_etiquette": "Types of Goodness and Etiquette",
-  "congratulating_on_newborn": "Congratulating on a Newborn"
+  "congratulating_on_newborn": "Congratulating on a Newborn",
+  "deleteallzikr": "Delete All Zikrs",
+  "deleteallzikrconfirm": "Are you sure you want to delete all zikrs?",
+  "delete": "Delete",
+  "quransettings": "Quran Page Settings",
+  "deletezikrconfirm": "Are you sure you want to delete this zikr?"
 }

@@ -1,5 +1,6 @@
 {
   "language": "Melayu - Malay",
+  "settings": "Tetapan",
   "main": "Skrin Utama",
   "quran": "Al-Quran",
   "audios": "Audio",
@@ -232,5 +233,10 @@
   "dua_for_rain": "Duas for Rain",
   "dua_for_clear_skies": "Duas for Clear Skies",
   "types_of_goodness_etiquette": "Types of Goodness and Etiquette",
-  "congratulating_on_newborn": "Congratulating on a Newborn"
+  "congratulating_on_newborn": "Tahniah atas kelahiran baru",
+  "deleteallzikr": "Padam Semua Zikir",
+  "deleteallzikrconfirm": "Adakah anda pasti mahu memadam semua zikir?",
+  "delete": "Padam",
+  "quransettings": "Tetapan Halaman Al-Quran",
+  "deletezikrconfirm": "Adakah anda pasti mahu memadam zikir ini?"
 }

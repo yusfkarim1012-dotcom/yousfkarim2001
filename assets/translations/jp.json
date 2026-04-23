@@ -1,5 +1,6 @@
 {
-  "language": "日本語 - Japanese",
+  "language": "Japanese",
+  "settings": "設定",
   "main": "メイン",
   "quran": "聖クルアン",
   "audios": "音声",
@@ -212,5 +213,10 @@
   "dua_for_rain": "Duas for Rain",
   "dua_for_clear_skies": "Duas for Clear Skies",
   "types_of_goodness_etiquette": "Types of Goodness and Etiquette",
-  "congratulating_on_newborn": "Congratulating on a Newborn"
+  "congratulating_on_newborn": "新生児へのお祝い",
+  "deleteallzikr": "すべてのジクルを削除",
+  "deleteallzikrconfirm": "すべてのジクルを削除してもよろしいですか？",
+  "delete": "削除",
+  "quransettings": "コーランページの設定",
+  "deletezikrconfirm": "このジクルを削除してもよろしいですか？"
 }

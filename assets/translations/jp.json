@@ -218,5 +218,6 @@
   "deleteallzikrconfirm": "すべてのジクルを削除してもよろしいですか？",
   "delete": "削除",
   "quransettings": "コーランページの設定",
-  "deletezikrconfirm": "このジクルを削除してもよろしいですか？"
+  "deletezikrconfirm": "このジクルを削除してもよろしいですか？",
+  "hadithCount": "Hadith Count:"
 }

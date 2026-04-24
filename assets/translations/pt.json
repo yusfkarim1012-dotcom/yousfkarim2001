@@ -238,5 +238,6 @@
   "deleteallzikrconfirm": "Tem certeza de que deseja excluir todos os zikrs?",
   "delete": "Excluir",
   "quransettings": "Configurações da página do Alcorão",
-  "deletezikrconfirm": "Tem certeza de que deseja excluir este zikr?"
+  "deletezikrconfirm": "Tem certeza de que deseja excluir este zikr?",
+  "hadithCount": "Hadith Count:"
 }

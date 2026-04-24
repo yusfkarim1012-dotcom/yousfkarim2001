@@ -239,5 +239,6 @@
   "deleteallzikrconfirm": "هل أنت متأكد من حذف جميع الأذكار؟",
   "delete": "حذف",
   "quransettings": "إعدادات صفحة القرآن",
-  "deletezikrconfirm": "هل أنت متأكد من حذف هذا الذكر؟"
+  "deletezikrconfirm": "هل أنت متأكد من حذف هذا الذكر؟",
+  "hadithCount": "عدد الأحاديث:"
 }

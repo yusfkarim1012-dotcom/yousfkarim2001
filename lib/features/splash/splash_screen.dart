@@ -214,20 +214,33 @@ class _SplashScreenState extends State<SplashScreen> {
         body: SizedBox(
           width: MediaQuery.of(context).size.width,
           child: Stack(children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                LottieBuilder.asset(
+                  "assets/images/splash_top.json",
+                  width: MediaQuery.of(context).size.width * .8,
+                  fit: BoxFit.cover,
+                ),
+              ],
+            ),
             Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Text(
-                    zikrNotifs[Random().nextInt(zikrNotifs.length)],
+                    "بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ",
                     style: TextStyle(
-                        color: Colors.black,fontSize: 22.sp, fontFamily: fontFamilies[Random().nextInt(fontFamilies.length)]),
+                        color: blueColor, fontSize: 32.sp, fontFamily: 'quran'),
+                    textAlign: TextAlign.center,
                   ),
+                  SizedBox(height: 30.h),
                   Image.asset(
                     "assets/images/app_icon_new.png",
                     height: 160.h,
                   ),
+                  SizedBox(height: 20.h),
                   LottieBuilder.asset(
                     "assets/images/loading.json",
                     repeat: true,
@@ -236,15 +249,6 @@ class _SplashScreenState extends State<SplashScreen> {
                 ],
               ),
             ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                LottieBuilder.asset(
-                  "assets/images/splash_top.json",
-                  width: MediaQuery.of(context).size.width * .8,
-                ),
-              ],
-            )
           ]),
         ),
       ),

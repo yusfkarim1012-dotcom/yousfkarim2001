@@ -238,5 +238,6 @@
   "deleteallzikrconfirm": "Sind Sie sicher, dass Sie alle Zikr löschen möchten?",
   "delete": "Löschen",
   "quransettings": "Koran-Seiteneinstellungen",
-  "deletezikrconfirm": "Sind Sie sicher, dass Sie diesen Zikr löschen möchten?"
+  "deletezikrconfirm": "Sind Sie sicher, dass Sie diesen Zikr löschen möchten?",
+  "hadithCount": "Hadith Count:"
 }

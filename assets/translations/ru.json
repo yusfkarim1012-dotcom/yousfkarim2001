@@ -238,5 +238,6 @@
   "deleteallzikrconfirm": "Вы уверены, что хотите удалить все зикры?",
   "delete": "Удалить",
   "quransettings": "Настройки страницы Корана",
-  "deletezikrconfirm": "Вы уверены, что хотите удалить этот зикр?"
+  "deletezikrconfirm": "Вы уверены, что хотите удалить этот зикр?",
+  "hadithCount": "Hadith Count:"
 }

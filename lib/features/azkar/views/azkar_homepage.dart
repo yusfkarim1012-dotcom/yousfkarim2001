@@ -160,6 +160,8 @@ class _AzkarHomePageState extends State<AzkarHomePage> {
                                         color:getValue("darkMode")
               ? Colors.white.withOpacity(.9): blueColor,
                                         fontSize: 18.sp,
+                                        fontFamily: "cairo",
+                                        fontWeight: FontWeight.bold,
                                       ),
                                     ),
                                      Icon(

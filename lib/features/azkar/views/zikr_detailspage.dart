@@ -110,8 +110,10 @@ class _ZikrPageState extends State<ZikrPage> {
                                             style: TextStyle(
                                                 color: Colors.white,
                                                 locale: const Locale("ar"),
-                                                fontSize: 19.sp,
-                                                height: 1.6),
+                                                fontFamily: "cairo",
+                                                fontSize: 22.sp,
+                                                fontWeight: FontWeight.w600,
+                                                height: 1.8),
                                           ),
                                           SizedBox(height: 20.h),
                                           Container(

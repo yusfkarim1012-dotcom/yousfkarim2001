@@ -524,14 +524,8 @@ class _RecitersSurahListPageState extends State<RecitersSurahListPage> {
                 ),
               ),
               actions: [
-                Padding(
-                  padding:  const EdgeInsets.all(8.0),
-                  child: CircleAvatar(
-                    backgroundColor: blueColor,
-                    backgroundImage: CachedNetworkImageProvider(
-                        "${getValue("${widget.reciter.name} photo url")}"),
-                  ),
-                )
+                // Removed reciter photo from top left as requested
+              ],
                 // Transform(
                 //     transform: Matrix4.rotationY(math.pi),
                 //     alignment: Alignment.center,
@@ -543,7 +537,7 @@ class _RecitersSurahListPageState extends State<RecitersSurahListPage> {
                 //           Entypo.logout,
                 //           color: Colors.white,
                 //         )))
-              ],
+              // ],
               systemOverlayStyle: SystemUiOverlayStyle.light,
             ),
             body: Container(

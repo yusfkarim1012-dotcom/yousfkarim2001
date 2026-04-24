@@ -50,6 +50,13 @@ class QuranPagePlayerBloc
         final List<AudioSource> audioSources = [];
         final Map<int, int> verseToIndexMap = {}; // Maps verse number to playlist index
         
+        // Islamic-themed background images for media notification
+        final List<Uri> audioBackgrounds = [
+          Uri.parse('asset:///assets/images/audio_bg_1.png'),
+          Uri.parse('asset:///assets/images/audio_bg_2.png'),
+          Uri.parse('asset:///assets/images/audio_bg_3.png'),
+        ];
+
         for (int verseNum = 1; verseNum <= totalVerses; verseNum++) {
           final verseFilePath = 
               '${appDir.path}/${event.reciterIdentifier}-${event.suraName.replaceAll(" ", "")}-$verseNum.mp3';
@@ -64,8 +71,7 @@ class QuranPagePlayerBloc
                   id: '${event.suraName}-$verseNum',
                   album: reciterMatch["englishName"],
                   title: '${getSurahNameArabic(event.surahNumber)} - ${tr("ayah")} $verseNum',
-                  artUri: Uri.parse(
-                      "https://images.pexels.com/photos/318451/pexels-photo-318451.jpeg"),
+                  artUri: audioBackgrounds[(verseNum - 1) % audioBackgrounds.length],
                 ),
               ),
             );

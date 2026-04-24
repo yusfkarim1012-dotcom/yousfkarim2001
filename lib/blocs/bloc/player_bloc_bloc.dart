@@ -86,8 +86,16 @@ class PlayerBlocBloc extends Bloc<PlayerBlocEvent, PlayerBlocState> {
           }
         }).toList();
 
+        // Islamic-themed background images for media notification
+        final List<Uri> audioBackgrounds = [
+          Uri.parse('asset:///assets/images/audio_bg_1.png'),
+          Uri.parse('asset:///assets/images/audio_bg_2.png'),
+          Uri.parse('asset:///assets/images/audio_bg_3.png'),
+        ];
+
         var playList = reciterLinks.map((e) {
-          // print( e["suraNumber"]);
+          // Cycle through the 3 Islamic images based on index
+          final currentIndex = nextMediaId;
           return AudioSource.uri(
             e["link"],
             tag: MediaItem(
@@ -98,8 +106,7 @@ class PlayerBlocBloc extends Bloc<PlayerBlocEvent, PlayerBlocState> {
                       element["id"].toString() == e["suraNumber"].toString())
                   .first["name"]
                   .toString(),
-              artUri: Uri.parse(
-                  "https://images.pexels.com/photos/318451/pexels-photo-318451.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"),
+              artUri: audioBackgrounds[currentIndex % audioBackgrounds.length],
             ),
           );
         }).toList();

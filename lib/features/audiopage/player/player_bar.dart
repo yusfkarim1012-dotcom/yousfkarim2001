@@ -106,12 +106,17 @@ class _PlayerBarState extends State<PlayerBar> {
                                                 color: getValue("darkMode") ? quranPagesColorDark : quranPagesColorLight,
                                               ),
                                               child: Center(
-                                                child: CircleAvatar(
-                                                  backgroundColor: getValue("darkMode") ? quranPagesColorDark : quranPagesColorLight,
-                                                  backgroundImage: const AssetImage("assets/images/quran.png"),
-                                                  foregroundImage: CachedNetworkImageProvider(
-                                                    "${getValue("${state.reciter.name} photo url")}",
-                                                  ),
+                                                child: StreamBuilder<SequenceState?>(
+                                                  stream: state.audioPlayer.sequenceStateStream,
+                                                  builder: (context, seqSnapshot) {
+                                                    final sequenceState = seqSnapshot.data;
+                                                    final metadata = sequenceState?.currentSource?.tag as MediaItem?;
+                                                    final imagePath = metadata?.artUri?.toString().replaceFirst('asset:///', '') ?? "assets/images/quran.png";
+                                                    return CircleAvatar(
+                                                      backgroundColor: getValue("darkMode") ? quranPagesColorDark : quranPagesColorLight,
+                                                      backgroundImage: AssetImage(imagePath),
+                                                    );
+                                                  }
                                                 ),
                                               ),
                                             ),
@@ -204,10 +209,7 @@ class _PlayerBarState extends State<PlayerBar> {
                 ),
                 child: CircleAvatar(
                   radius: 22.r,
-                  backgroundImage: const AssetImage("assets/images/quran.png"),
-                  foregroundImage: getValue("${state.reciter.name} photo url") != null
-                      ? CachedNetworkImageProvider(getValue("${state.reciter.name} photo url"))
-                      : null,
+                  backgroundImage: AssetImage(metadata.artUri?.toString().replaceFirst('asset:///', '') ?? "assets/images/quran.png"),
                 ),
               ),
               SizedBox(width: 12.w),
@@ -335,24 +337,9 @@ class _PlayerBarState extends State<PlayerBar> {
                   boxShadow: const [BoxShadow(color: Colors.black26, blurRadius: 20, spreadRadius: 5)],
                 ),
                 child: ClipOval(
-                  child: Builder(
-                    builder: (ctx) {
-                      try {
-                        String? url = getValue("${state.reciter.name} photo url");
-                        if (url != null && url.isNotEmpty) {
-                          return CachedNetworkImage(
-                            imageUrl: url,
-                            fit: BoxFit.cover,
-                            placeholder: (context, url) => Image.asset("assets/images/quran.png", fit: BoxFit.cover),
-                            errorWidget: (context, url, error) => Image.asset("assets/images/quran.png", fit: BoxFit.cover),
-                          );
-                        } else {
-                          return Image.asset("assets/images/quran.png", fit: BoxFit.cover);
-                        }
-                      } catch (e) {
-                        return Image.asset("assets/images/quran.png", fit: BoxFit.cover);
-                      }
-                    }
+                  child: Image.asset(
+                    metadata.artUri?.toString().replaceFirst('asset:///', '') ?? "assets/images/quran.png",
+                    fit: BoxFit.cover,
                   ),
                 ),
               ),
@@ -594,8 +581,8 @@ class ControlButtons extends StatelessWidget {
               icon: icon,
               onPressed: () {
                 final nextMode = loopMode == LoopMode.off 
-                  ? LoopMode.all 
-                  : (loopMode == LoopMode.all ? LoopMode.one : LoopMode.off);
+                  ? LoopMode.one 
+                  : (loopMode == LoopMode.one ? LoopMode.all : LoopMode.off);
                 player.setLoopMode(nextMode);
               },
             );

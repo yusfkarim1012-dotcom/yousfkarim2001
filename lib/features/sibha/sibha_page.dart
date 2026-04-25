@@ -20,13 +20,12 @@ class SibhaPage extends StatefulWidget {
 class _SibhaPageState extends State<SibhaPage> with SingleTickerProviderStateMixin {
   // All 6 tally counter skin images
   final List<String> _skinImages = [
-    "assets/images/brick_skin.jpg", // New default brick skin
+    "assets/images/20.png",  // brick/fiery (moved to first as requested)
+    "assets/images/18.png",  // roses
     "assets/images/3.png",   // pink/blue floral
     "assets/images/4.png",   // wood
     "assets/images/7.png",   // marble
     "assets/images/9.png",   // green islamic
-    "assets/images/18.png",  // roses
-    "assets/images/20.png",  // flowers
   ];
 
   int _currentSkinIndex = 0;
@@ -277,9 +276,9 @@ class _SibhaPageState extends State<SibhaPage> with SingleTickerProviderStateMix
     final int currentCount = getValue("${getValue("tasbeehLastIndex")}number") ?? 0;
 
     return Container(
-      decoration: const BoxDecoration(
+      decoration: BoxDecoration(
         image: DecorationImage(
-          image: AssetImage("assets/images/background.png"),
+          image: AssetImage(isDark ? "assets/images/prayerbackgroundnight.png" : "assets/images/background.png"),
           fit: BoxFit.cover,
         ),
       ),
@@ -290,11 +289,11 @@ class _SibhaPageState extends State<SibhaPage> with SingleTickerProviderStateMix
             appBar: AppBar(
               elevation: 0,
               backgroundColor: Colors.transparent,
-              iconTheme: const IconThemeData(color: Colors.black87),
+              iconTheme: IconThemeData(color: isDark ? Colors.white : Colors.black87),
               actions: [
                 IconButton(
                   onPressed: deleteAllCustomTasbeehs,
-                  icon: const Icon(Icons.delete_sweep, color: Colors.black87),
+                  icon: Icon(Icons.delete_sweep, color: isDark ? Colors.white : Colors.black87),
                 ),
                 IconButton(
                   onPressed: () {
@@ -304,11 +303,11 @@ class _SibhaPageState extends State<SibhaPage> with SingleTickerProviderStateMix
                               function: addCustomTasbeeh,
                             ));
                   },
-                  icon: const Icon(Icons.add, color: Colors.black87),
+                  icon: Icon(Icons.add, color: isDark ? Colors.white : Colors.black87),
                 ),
                 IconButton(
                   onPressed: _showSkinPicker,
-                  icon: const Icon(Icons.palette_outlined, color: Colors.black87),
+                  icon: Icon(Icons.palette_outlined, color: isDark ? Colors.white : Colors.black87),
                   tooltip: "changeStyle".tr(),
                 ),
               ],
@@ -316,7 +315,7 @@ class _SibhaPageState extends State<SibhaPage> with SingleTickerProviderStateMix
                 "sibha".tr(),
                 style: TextStyle(
                   fontFamily: 'cairo',
-                  color: Colors.black87,
+                  color: isDark ? Colors.white : Colors.black87,
                   fontSize: 20.sp,
                   fontWeight: FontWeight.bold,
                 ),
@@ -344,7 +343,7 @@ class _SibhaPageState extends State<SibhaPage> with SingleTickerProviderStateMix
                             child: Container(
                               padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 12.h),
                               decoration: BoxDecoration(
-                                color: Colors.white.withOpacity(0.9),
+                                color: isDark ? Colors.black.withOpacity(0.5) : Colors.white.withOpacity(0.9),
                                 borderRadius: BorderRadius.circular(15.r),
                                 border: Border.all(
                                   color: const Color(0xffD4AF37), // Islamic Gold
@@ -378,7 +377,7 @@ class _SibhaPageState extends State<SibhaPage> with SingleTickerProviderStateMix
                                             tasbeehList[i].arabic,
                                             textAlign: TextAlign.center,
                                             style: TextStyle(
-                                              color: Colors.black87,
+                                              color: isDark ? Colors.white : Colors.black87,
                                               fontFamily: "Taha",
                                               fontSize: 24.sp,
                                               height: 1.4,
@@ -392,7 +391,7 @@ class _SibhaPageState extends State<SibhaPage> with SingleTickerProviderStateMix
                                                 tasbeehList[i].pronunciation,
                                                 textAlign: TextAlign.center,
                                                 style: TextStyle(
-                                                  color: Colors.black54,
+                                                  color: isDark ? Colors.white70 : Colors.black54,
                                                   fontFamily: "roboto",
                                                   fontSize: 11.sp,
                                                   fontStyle: FontStyle.italic,
@@ -424,6 +423,7 @@ class _SibhaPageState extends State<SibhaPage> with SingleTickerProviderStateMix
                   children: [
                     _buildNavButton(
                       icon: Icons.arrow_back_ios_new_rounded,
+                      isDark: isDark,
                       onTap: () {
                         if ((getValue("tasbeehLastIndex") ?? 0) != 0) {
                           tasbeehScrollController.animateToPage(
@@ -436,6 +436,7 @@ class _SibhaPageState extends State<SibhaPage> with SingleTickerProviderStateMix
                     SizedBox(width: 30.w),
                     _buildNavButton(
                       icon: Icons.arrow_forward_ios_rounded,
+                      isDark: isDark,
                       onTap: () {
                         if ((getValue("tasbeehLastIndex") ?? 0) != tasbeehList.length - 1) {
                           tasbeehScrollController.animateToPage(
@@ -576,19 +577,19 @@ class _SibhaPageState extends State<SibhaPage> with SingleTickerProviderStateMix
     );
   }
 
-  Widget _buildNavButton({required IconData icon, required VoidCallback onTap}) {
+  Widget _buildNavButton({required IconData icon, required bool isDark, required VoidCallback onTap}) {
     return InkWell(
       onTap: onTap,
       borderRadius: BorderRadius.circular(25.r),
       child: Container(
         padding: EdgeInsets.all(10.w),
-        decoration: const BoxDecoration(
-          color: Colors.black12,
+        decoration: BoxDecoration(
+          color: isDark ? Colors.white12 : Colors.black12,
           shape: BoxShape.circle,
         ),
         child: Icon(
           icon,
-          color: Colors.black87,
+          color: isDark ? Colors.white : Colors.black87,
           size: 20.sp,
         ),
       ),

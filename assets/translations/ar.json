@@ -61,7 +61,7 @@
   "searchBysura": "ابحث عن سورة",
   "all": "الكل",
   "favorites": "المفضلة",
-  "downloaded": "المحمله",
+  "downloaded": "القراء المحملون",
   "sibha": "السبحة",
   "choosetranslation": "اختر الكتاب",
   "not_found": "لا يوجد",
@@ -98,7 +98,6 @@
   "removebookmark": "حذف العلامة المرجعية",
   "addtofav": "إضافة إلى المفضلة",
   "removefav": "حذف من المفضلة",
-  "downloaded": "القراء المحملون",
   "soura": "سورة",
   "ayah": "آية",
   "morning_azkar": "أذكار الصباح",
@@ -240,5 +239,6 @@
   "delete": "حذف",
   "quransettings": "إعدادات صفحة القرآن",
   "deletezikrconfirm": "هل أنت متأكد من حذف هذا الذكر؟",
-  "hadithCount": "عدد الأحاديث:"
+  "hadithCount": "عدد الأحاديث:",
+  "changeStyle": "تغيير الشكل"
 }

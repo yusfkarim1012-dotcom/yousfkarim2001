@@ -61,7 +61,7 @@
   "searchBysura": "Search by Surah",
   "all": "All",
   "favorites": "Favorites",
-  "downloaded": "Downloaded",
+  "downloaded": "Downloaded Reciters",
   "sibha": "Rosary",
   "choosetranslation": "Choose the Book",
   "not_found": "Not Found",
@@ -95,7 +95,6 @@
   "removebookmark": "Remove Bookmark",
   "addtofav": "Add to Favorites",
   "removefav": "Remove from Favorites",
-  "downloaded": "Downloaded Reciters",
   "soura": "Surah",
   "ayah": "Ayah",
   "morning_azkar": "Morning Remembrances",
@@ -237,5 +236,6 @@
   "delete": "Delete",
   "quransettings": "Quran Page Settings",
   "deletezikrconfirm": "Are you sure you want to delete this zikr?",
-  "hadithCount": "Hadith Count:"
+  "hadithCount": "Hadith Count:",
+  "changeStyle": "Change Style"
 }

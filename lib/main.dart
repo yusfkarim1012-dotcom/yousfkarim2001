@@ -36,6 +36,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:quran/quran.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:khatmah/features/sibha/tasbih_overlay.dart';
 // import 'package:flutter_sliding_box/flutter_sliding_box.dart';
 import 'package:superellipse_shape/superellipse_shape.dart';
 import 'package:workmanager/workmanager.dart';
@@ -94,10 +95,51 @@ void main() async {
 
 @pragma("vm:entry-point")
 void overlayMain() {
-  WidgetsFlutterBinding.ensureInitialized();  
-  runApp(
-    const TrueCallerOverlay(),
-  );
+  WidgetsFlutterBinding.ensureInitialized();
+  runApp(const OverlayRouter());
+}
+
+/// Router that decides which overlay to show based on SharedPreferences.
+/// IMPORTANT: Do NOT use TrueCallerOverlay here — it depends on ScreenUtil,
+/// AssetImage, and Hive which are NOT available in the overlay engine.
+class OverlayRouter extends StatefulWidget {
+  const OverlayRouter({super.key});
+  @override
+  State<OverlayRouter> createState() => _OverlayRouterState();
+}
+
+class _OverlayRouterState extends State<OverlayRouter> {
+  bool _loaded = false;
+  String _mode = 'tasbih';
+
+  @override
+  void initState() {
+    super.initState();
+    _loadMode();
+  }
+
+  Future<void> _loadMode() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final mode = prefs.getString("overlay_mode") ?? "tasbih";
+      if (mounted) setState(() { _mode = mode; _loaded = true; });
+    } catch (_) {
+      if (mounted) setState(() { _mode = "tasbih"; _loaded = true; });
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (!_loaded) {
+      // Transparent placeholder while loading — no asset, no Hive, no ScreenUtil
+      return const Directionality(
+        textDirection: TextDirection.ltr,
+        child: Material(color: Colors.transparent, child: SizedBox.expand()),
+      );
+    }
+    // Only TasbihOverlayWidget is safe to use in the overlay engine
+    return const TasbihOverlayWidget();
+  }
 }
 
 @pragma(
@@ -121,6 +163,9 @@ void callbackDispatcher() {
       // print(ayahNotfications[index].trim().length *3);
       // print(ayahNotfications[index].trim().length *3);
 
+      final prefsZikr = await SharedPreferences.getInstance();
+      await prefsZikr.setString('overlay_mode', 'zikr');
+
       await FlutterOverlayWindow.showOverlay(
         enableDrag: true,
         overlayTitle: "Zikr Notification",
@@ -137,15 +182,9 @@ void callbackDispatcher() {
         FlutterOverlayWindow.closeOverlay();
         // return;
       }
-      //300/700 ان الله وملائكته
-      //سبحان الله      //  height: 150,
-      // width: 240,
-      // final SharedPreferences prefs = await SharedPreferences.getInstance();
 
-      // int? index = prefs.getInt("zikrNotificationindex") ?? 0;
-// Calculate the text size
-      // print(ayahNotfications[index].trim().length *3);
-      // print(ayahNotfications[index].trim().length *3);
+      final prefsZikrTest = await SharedPreferences.getInstance();
+      await prefsZikrTest.setString('overlay_mode', 'zikr');
 
        await FlutterOverlayWindow.showOverlay(
         enableDrag: true,

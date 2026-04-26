@@ -5,10 +5,13 @@ import 'dart:ui';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_overlay_window/flutter_overlay_window.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:khatmah/GlobalHelpers/hive_helper.dart';
 import 'package:khatmah/features/sibha/models/tasbeh.dart';
 import 'package:khatmah/features/sibha/widgets/add_tasbeeh_dialog.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SibhaPage extends StatefulWidget {
   const SibhaPage({super.key});
@@ -52,6 +55,8 @@ class _SibhaPageState extends State<SibhaPage> with SingleTickerProviderStateMix
   late Animation<double> _scaleAnimation;
   PageController tasbeehScrollController = PageController(initialPage: 0);
 
+  bool _isOverlayActive = false;
+
   @override
   void initState() {
     _currentSkinIndex = getValue("sibhaSkinIndex") ?? 0;
@@ -65,7 +70,92 @@ class _SibhaPageState extends State<SibhaPage> with SingleTickerProviderStateMix
     _scaleAnimation = Tween<double>(begin: 1.0, end: 0.93).animate(
       CurvedAnimation(parent: _tapController, curve: Curves.easeInOut),
     );
+    _syncFromOverlay(); // sync count back from overlay if it was active
+    _checkOverlayStatus();
     super.initState();
+  }
+
+  /// Check if overlay is currently active and update the icon state
+  Future<void> _checkOverlayStatus() async {
+    final active = await FlutterOverlayWindow.isActive();
+    if (mounted) {
+      setState(() {
+        _isOverlayActive = active;
+      });
+    }
+  }
+
+  /// Sync the counter value back from SharedPreferences (written by overlay)
+  Future<void> _syncFromOverlay() async {
+    final prefs = await SharedPreferences.getInstance();
+    final overlayCount = prefs.getInt('overlay_tasbih_count');
+    if (overlayCount != null && overlayCount > 0) {
+      final lastIndex = getValue("tasbeehLastIndex") ?? 0;
+      updateValue("${lastIndex}number", overlayCount);
+      if (mounted) setState(() {});
+    }
+  }
+
+  /// Toggle the floating Tasbih overlay on/off
+  Future<void> _toggleOverlay() async {
+    try {
+      // 1. Check & request permission
+      final bool hasPermission = await FlutterOverlayWindow.isPermissionGranted();
+      if (!hasPermission) {
+        final bool? granted = await FlutterOverlayWindow.requestPermission();
+        if (granted != true) {
+          Fluttertoast.showToast(
+            msg: "يرجى السماح بالعرض فوق التطبيقات",
+            backgroundColor: Colors.red,
+          );
+          return;
+        }
+      }
+
+      // 2. If overlay is already active, close it and sync data back
+      final bool isActive = await FlutterOverlayWindow.isActive();
+      if (isActive) {
+        await FlutterOverlayWindow.closeOverlay();
+        await Future.delayed(const Duration(milliseconds: 200));
+        await _syncFromOverlay();
+        if (mounted) setState(() => _isOverlayActive = false);
+        return;
+      }
+
+      // 3. Write current state to SharedPreferences for the overlay to read
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setString('overlay_mode', 'tasbih');
+
+      final lastIndex = getValue("tasbeehLastIndex") ?? 0;
+      final currentCount = getValue("${lastIndex}number") ?? 0;
+      await prefs.setInt('overlay_tasbih_count', currentCount);
+
+      if (lastIndex < tasbeehList.length) {
+        await prefs.setString('overlay_tasbih_zikr', tasbeehList[lastIndex].arabic);
+      }
+
+      // 4. Show the overlay
+      await FlutterOverlayWindow.showOverlay(
+        enableDrag: true,
+        overlayTitle: "Tasbih",
+        overlayContent: 'Tasbih Counter',
+        flag: OverlayFlag.defaultFlag,
+        visibility: NotificationVisibility.visibilityPublic,
+        positionGravity: PositionGravity.auto,
+        height: 280,
+        width: 200,
+      );
+
+      if (mounted) setState(() => _isOverlayActive = true);
+
+    } catch (e, stack) {
+      Fluttertoast.showToast(
+        msg: "خەبات: $e",
+        toastLength: Toast.LENGTH_LONG,
+        backgroundColor: Colors.red,
+      );
+      debugPrint("OVERLAY ERROR: $e\n$stack");
+    }
   }
 
   void loadTasbeehs() {
@@ -291,6 +381,18 @@ class _SibhaPageState extends State<SibhaPage> with SingleTickerProviderStateMix
               backgroundColor: Colors.transparent,
               iconTheme: IconThemeData(color: isDark ? Colors.white : Colors.black87),
               actions: [
+                IconButton(
+                  onPressed: _toggleOverlay,
+                  icon: Icon(
+                    _isOverlayActive
+                        ? Icons.picture_in_picture_alt
+                        : Icons.picture_in_picture_alt_outlined,
+                    color: _isOverlayActive
+                        ? const Color(0xffD4AF37)
+                        : (isDark ? Colors.white : Colors.black87),
+                  ),
+                  tooltip: "Floating Tasbih",
+                ),
                 IconButton(
                   onPressed: deleteAllCustomTasbeehs,
                   icon: Icon(Icons.delete_sweep, color: isDark ? Colors.white : Colors.black87),

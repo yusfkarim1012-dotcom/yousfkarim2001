@@ -1,4 +1,4 @@
-{
+﻿{
   "language": "Amharic - አማርኛ ",
   "settings": "ቅንብሮች",
   "main": "ዋና መገበያ",
@@ -238,4 +238,6 @@
   "quransettings": "የቁርዓን ገጽ ቅንብሮች",
   "deletezikrconfirm": "በእርግጥ ይህን ዝክር ማጥፋት ይፈልጋሉ?",
   "hadithCount": "Hadith Count:"
+,
+  "float_tasbih_btn": "ከፕሮግራሙ ውጭ ተስቢሕ ክፈት"
 }

@@ -1,4 +1,4 @@
-{
+﻿{
   "language": "English",
   "settings": "Settings",
   "main": "Main Screen",
@@ -238,4 +238,6 @@
   "deletezikrconfirm": "Are you sure you want to delete this zikr?",
   "hadithCount": "Hadith Count:",
   "changeStyle": "Change Style"
+,
+  "float_tasbih_btn": "Open Tasbih Outside the App"
 }

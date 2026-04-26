@@ -1,4 +1,4 @@
-{
+﻿{
   "language": "arabic",
   "settings": "الإعدادات",
   "main": "الرئيسية",
@@ -241,4 +241,6 @@
   "deletezikrconfirm": "هل أنت متأكد من حذف هذا الذكر؟",
   "hadithCount": "عدد الأحاديث:",
   "changeStyle": "تغيير الشكل"
+,
+  "float_tasbih_btn": "فتح المسبحة خارج التطبيق"
 }

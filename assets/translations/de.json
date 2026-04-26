@@ -1,4 +1,4 @@
-{
+﻿{
   "language": "German",
   "settings": "Einstellungen",
   "main": "Hauptbildschirm",
@@ -240,4 +240,6 @@
   "quransettings": "Koran-Seiteneinstellungen",
   "deletezikrconfirm": "Sind Sie sicher, dass Sie diesen Zikr löschen möchten?",
   "hadithCount": "Hadith Count:"
+,
+  "float_tasbih_btn": "Tasbih außerhalb der App öffnen"
 }

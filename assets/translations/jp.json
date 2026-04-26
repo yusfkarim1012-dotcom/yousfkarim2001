@@ -1,4 +1,4 @@
-{
+﻿{
   "language": "Japanese",
   "settings": "設定",
   "main": "メイン",
@@ -220,4 +220,6 @@
   "quransettings": "コーランページの設定",
   "deletezikrconfirm": "このジクルを削除してもよろしいですか？",
   "hadithCount": "Hadith Count:"
+,
+  "float_tasbih_btn": "アプリ外でタスビーフを開く"
 }

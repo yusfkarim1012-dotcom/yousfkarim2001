@@ -1,4 +1,4 @@
-{
+﻿{
   "language": "Kurdish",
   "settings": "ڕێکخستنەکان",
   "main": "ڕووکاری سەرەکی",
@@ -233,4 +233,6 @@
   "congratulating_on_newborn": "Congratulating on a Newborn",
   "hadithCount": "ژمارەی فەرموودەکان:",
   "changeStyle": "گۆڕینی شێوە"
+,
+  "float_tasbih_btn": "کردنەوەی مسبحە لەدەرەوەی تەتبیق"
 }

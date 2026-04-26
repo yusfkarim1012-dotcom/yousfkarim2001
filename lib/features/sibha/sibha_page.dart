@@ -1,6 +1,9 @@
 import 'dart:convert';
+import 'dart:io';
 import 'dart:math';
 import 'dart:ui';
+
+import 'package:flutter/services.dart' show rootBundle;
 
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
@@ -134,6 +137,17 @@ class _SibhaPageState extends State<SibhaPage> with SingleTickerProviderStateMix
         await prefs.setString('overlay_tasbih_zikr', tasbeehList[lastIndex].arabic);
       }
 
+      // Save current skin image to a cache file so overlay can load it with Image.file
+      try {
+        final ByteData imgData = await rootBundle.load(_skinImages[_currentSkinIndex]);
+        final Directory tmpDir = Directory.systemTemp;
+        final File skinFile = File('${tmpDir.path}/overlay_skin.png');
+        await skinFile.writeAsBytes(imgData.buffer.asUint8List());
+        await prefs.setString('overlay_skin_path', skinFile.path);
+      } catch (_) {
+        await prefs.remove('overlay_skin_path');
+      }
+
       // 4. Show the overlay
       await FlutterOverlayWindow.showOverlay(
         enableDrag: true,
@@ -141,9 +155,9 @@ class _SibhaPageState extends State<SibhaPage> with SingleTickerProviderStateMix
         overlayContent: 'Tasbih Counter',
         flag: OverlayFlag.defaultFlag,
         visibility: NotificationVisibility.visibilityPublic,
-        positionGravity: PositionGravity.auto,
-        height: 280,
-        width: 200,
+        positionGravity: PositionGravity.none, // free drag anywhere on screen
+        height: 400,
+        width: 280,
       );
 
       if (mounted) setState(() => _isOverlayActive = true);
@@ -381,7 +395,7 @@ class _SibhaPageState extends State<SibhaPage> with SingleTickerProviderStateMix
               backgroundColor: Colors.transparent,
               iconTheme: IconThemeData(color: isDark ? Colors.white : Colors.black87),
               actions: [
-                IconButton(
+                TextButton.icon(
                   onPressed: _toggleOverlay,
                   icon: Icon(
                     _isOverlayActive
@@ -390,8 +404,17 @@ class _SibhaPageState extends State<SibhaPage> with SingleTickerProviderStateMix
                     color: _isOverlayActive
                         ? const Color(0xffD4AF37)
                         : (isDark ? Colors.white : Colors.black87),
+                    size: 18,
                   ),
-                  tooltip: "Floating Tasbih",
+                  label: Text(
+                    'float_tasbih_btn'.tr(),
+                    style: TextStyle(
+                      fontSize: 10,
+                      color: _isOverlayActive
+                          ? const Color(0xffD4AF37)
+                          : (isDark ? Colors.white : Colors.black87),
+                    ),
+                  ),
                 ),
                 IconButton(
                   onPressed: deleteAllCustomTasbeehs,

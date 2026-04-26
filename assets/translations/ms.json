@@ -1,4 +1,4 @@
-{
+﻿{
   "language": "Melayu - Malay",
   "settings": "Tetapan",
   "main": "Skrin Utama",
@@ -240,4 +240,6 @@
   "quransettings": "Tetapan Halaman Al-Quran",
   "deletezikrconfirm": "Adakah anda pasti mahu memadam zikir ini?",
   "hadithCount": "Hadith Count:"
+,
+  "float_tasbih_btn": "Buka Tasbih di Luar Aplikasi"
 }

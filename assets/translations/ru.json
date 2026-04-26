@@ -1,4 +1,4 @@
-{
+﻿{
   "language": "русский - Russian ",
   "settings": "Настройки",
   "main": "Главный экран",
@@ -240,4 +240,6 @@
   "quransettings": "Настройки страницы Корана",
   "deletezikrconfirm": "Вы уверены, что хотите удалить этот зикр?",
   "hadithCount": "Hadith Count:"
+,
+  "float_tasbih_btn": "Открыть Тасбих вне приложения"
 }

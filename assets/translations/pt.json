@@ -1,4 +1,4 @@
-{
+﻿{
   "language": "Português - Portuguese ",
   "settings": "Configurações",
   "main": "Tela Principal",
@@ -240,4 +240,6 @@
   "quransettings": "Configurações da página do Alcorão",
   "deletezikrconfirm": "Tem certeza de que deseja excluir este zikr?",
   "hadithCount": "Hadith Count:"
+,
+  "float_tasbih_btn": "Abrir Tasbih Fora do Aplicativo"
 }

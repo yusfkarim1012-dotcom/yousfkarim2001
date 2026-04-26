@@ -1,4 +1,4 @@
-{
+﻿{
   "language": "Türkçe - Turkish",
   "settings": "Ayarlar",
   "main": "Ana Ekran",
@@ -239,4 +239,6 @@
   "quransettings": "Kuran Sayfa Ayarları",
   "deletezikrconfirm": "Bu zikri silmek istediğinizden emin misiniz?",
   "hadithCount": "Hadis Sayısı:"
+,
+  "float_tasbih_btn": "Tasbih'i Uygulama Dışında Aç"
 }

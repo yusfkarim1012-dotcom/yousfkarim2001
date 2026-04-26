@@ -1,4 +1,4 @@
-﻿{
+{
   "language": "arabic",
   "settings": "الإعدادات",
   "main": "الرئيسية",
@@ -240,7 +240,10 @@
   "quransettings": "إعدادات صفحة القرآن",
   "deletezikrconfirm": "هل أنت متأكد من حذف هذا الذكر؟",
   "hadithCount": "عدد الأحاديث:",
-  "changeStyle": "تغيير الشكل"
-,
-  "float_tasbih_btn": "فتح المسبحة خارج التطبيق"
+  "changeStyle": "تغيير الشكل",
+  "float_tasbih_btn": "فتح المسبحة خارج التطبيق",
+  "small": "صغير",
+  "medium": "متوسط",
+  "large": "كبير",
+  "overlay_size": "حجم المسبحة الخارجية"
 }

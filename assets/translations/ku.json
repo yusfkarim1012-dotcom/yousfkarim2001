@@ -1,4 +1,4 @@
-﻿{
+{
   "language": "Kurdish",
   "settings": "ڕێکخستنەکان",
   "main": "ڕووکاری سەرەکی",
@@ -232,7 +232,10 @@
   "types_of_goodness_etiquette": "Types of Goodness and Etiquette",
   "congratulating_on_newborn": "Congratulating on a Newborn",
   "hadithCount": "ژمارەی فەرموودەکان:",
-  "changeStyle": "گۆڕینی شێوە"
-,
-  "float_tasbih_btn": "کردنەوەی مسبحە لەدەرەوەی تەتبیق"
+  "changeStyle": "گۆڕینی شێوە",
+  "float_tasbih_btn": "کردنەوەی مسبحە لەدەرەوەی تەتبیق",
+  "small": "بچووک",
+  "medium": "مامناوەند",
+  "large": "گەورە",
+  "overlay_size": "قەبارەی مسبحەی دەرەوە"
 }

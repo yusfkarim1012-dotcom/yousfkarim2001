@@ -1,4 +1,4 @@
-﻿{
+{
   "language": "Amharic - አማርኛ ",
   "settings": "ቅንብሮች",
   "main": "ዋና መገበያ",
@@ -61,7 +61,7 @@
   "searchBysura": "የሱሪ ቅዳሴ ፍጠር",
   "all": "ሁሉ",
   "favorites": "የተዘጋ ቀኖች",
-  "downloaded": "ተወዳዳሪ",
+  "downloaded": "የወረዱ ቃሪዎች",
   "sibha": "ሶምኖ",
   "choosetranslation": "መጽሐፍ ይምረጡ",
   "not_found": "አልተገኘም",
@@ -97,7 +97,6 @@
   "removebookmark": "ዕልባት አስወግድ",
   "addtofav": "ወደ ተወዳጆች አክል",
   "removefav": "ከተወዳጆች አስወግድ",
-  "downloaded": "የወረዱ ቃሪዎች",
   "morning_azkar": "የጠዋት ዚክሮች",
   "evening_azkar": "የማታ ዚክሮች",
   "azkar_adhan": "Azkar of Adhan",
@@ -237,7 +236,10 @@
   "delete": "አጥፋ",
   "quransettings": "የቁርዓን ገጽ ቅንብሮች",
   "deletezikrconfirm": "በእርግጥ ይህን ዝክር ማጥፋት ይፈልጋሉ?",
-  "hadithCount": "Hadith Count:"
-,
-  "float_tasbih_btn": "ከፕሮግራሙ ውጭ ተስቢሕ ክፈት"
+  "hadithCount": "Hadith Count:",
+  "float_tasbih_btn": "ከፕሮግራሙ ውጭ ተስቢሕ ክፈት",
+  "small": "ትንሽ",
+  "medium": "መካከለኛ",
+  "large": "ትልቅ",
+  "overlay_size": "ተንሳፋፊ ታስቢህ መጠን"
 }

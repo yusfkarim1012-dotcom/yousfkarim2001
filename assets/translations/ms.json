@@ -1,4 +1,4 @@
-﻿{
+{
   "language": "Melayu - Malay",
   "settings": "Tetapan",
   "main": "Skrin Utama",
@@ -61,7 +61,7 @@
   "searchBysura": "Cari Berdasarkan Surah",
   "all": "Semua",
   "favorites": "Kegemaran",
-  "downloaded": "Dimuat turun",
+  "downloaded": "Qari yang Dimuatturun",
   "sibha": "Tasbih",
   "choosetranslation": "Pilih Buku",
   "not_found": "Tidak Ditemukan",
@@ -97,7 +97,6 @@
   "removebookmark": "Padam Penanda",
   "addtofav": "Tambah ke Kegemaran",
   "removefav": "Padam dari Kegemaran",
-  "downloaded": "Qari yang Dimuatturun",
   "soura": "Surah",
   "ayah": "Ayat",
   "morning_azkar": "Zikir Pagi",
@@ -239,7 +238,10 @@
   "delete": "Padam",
   "quransettings": "Tetapan Halaman Al-Quran",
   "deletezikrconfirm": "Adakah anda pasti mahu memadam zikir ini?",
-  "hadithCount": "Hadith Count:"
-,
-  "float_tasbih_btn": "Buka Tasbih di Luar Aplikasi"
+  "hadithCount": "Hadith Count:",
+  "float_tasbih_btn": "Buka Tasbih di Luar Aplikasi",
+  "small": "Kecil",
+  "medium": "Sederhana",
+  "large": "Besar",
+  "overlay_size": "Saiz Tasbih Overlay"
 }

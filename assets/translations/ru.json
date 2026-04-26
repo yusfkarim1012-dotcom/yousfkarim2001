@@ -1,4 +1,4 @@
-﻿{
+{
   "language": "русский - Russian ",
   "settings": "Настройки",
   "main": "Главный экран",
@@ -61,7 +61,7 @@
   "searchBysura": "Поиск по суре",
   "all": "Все",
   "favorites": "Избранное",
-  "downloaded": "Скачанные",
+  "downloaded": "Скачанные чтецы",
   "sibha": "Розарий",
   "choosetranslation": "Выберите Книгу",
   "not_found": "Не найдено",
@@ -97,7 +97,6 @@
   "removebookmark": "Удалить закладку",
   "addtofav": "Добавить в избранное",
   "removefav": "Удалить из избранного",
-  "downloaded": "Скачанные чтецы",
   "soura": "Сура",
   "ayah": "Аят",
   "morning_azkar": "Утренние поминания",
@@ -239,7 +238,10 @@
   "delete": "Удалить",
   "quransettings": "Настройки страницы Корана",
   "deletezikrconfirm": "Вы уверены, что хотите удалить этот зикр?",
-  "hadithCount": "Hadith Count:"
-,
-  "float_tasbih_btn": "Открыть Тасбих вне приложения"
+  "hadithCount": "Hadith Count:",
+  "float_tasbih_btn": "Открыть Тасбих вне приложения",
+  "small": "Маленький",
+  "medium": "Средний",
+  "large": "Большой",
+  "overlay_size": "Размер плавающего тасбиха"
 }

@@ -1,4 +1,4 @@
-﻿{
+{
   "language": "Português - Portuguese ",
   "settings": "Configurações",
   "main": "Tela Principal",
@@ -61,7 +61,7 @@
   "searchBysura": "Procurar por Surata",
   "all": "Todos",
   "favorites": "Favoritos",
-  "downloaded": "Baixados",
+  "downloaded": "Recitadores Baixados",
   "sibha": "Rosário",
   "choosetranslation": "Escolha o Livro",
   "not_found": "Não Encontrado",
@@ -97,7 +97,6 @@
   "removebookmark": "Remover Marcador",
   "addtofav": "Adicionar aos Favoritos",
   "removefav": "Remover dos Favoritos",
-  "downloaded": "Recitadores Baixados",
   "soura": "Sura",
   "ayah": "Versículo",
   "morning_azkar": "Lembranças da Manhã",
@@ -239,7 +238,10 @@
   "delete": "Excluir",
   "quransettings": "Configurações da página do Alcorão",
   "deletezikrconfirm": "Tem certeza de que deseja excluir este zikr?",
-  "hadithCount": "Hadith Count:"
-,
-  "float_tasbih_btn": "Abrir Tasbih Fora do Aplicativo"
+  "hadithCount": "Hadith Count:",
+  "float_tasbih_btn": "Abrir Tasbih Fora do Aplicativo",
+  "small": "Pequeno",
+  "medium": "Médio",
+  "large": "Grande",
+  "overlay_size": "Tamanho do Tasbih Flutuante"
 }

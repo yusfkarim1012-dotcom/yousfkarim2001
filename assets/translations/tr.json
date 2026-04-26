@@ -1,4 +1,4 @@
-﻿{
+{
   "language": "Türkçe - Turkish",
   "settings": "Ayarlar",
   "main": "Ana Ekran",
@@ -61,7 +61,7 @@
   "searchBysura": "Sura Ara",
   "all": "Hepsi",
   "favorites": "Favoriler",
-  "downloaded": "İndirilenler",
+  "downloaded": "İndirilen Kariler",
   "sibha": "Tesbih",
   "choosetranslation": "Kitabı Seç",
   "not_found": "Bulunamadı",
@@ -96,7 +96,6 @@
   "removebookmark": "Yer İşaretini Sil",
   "addtofav": "Favorilere Ekle",
   "removefav": "Favorilerden Çıkar",
-  "downloaded": "İndirilen Kariler",
   "soura": "Sure",
   "ayah": "Ayet",
   "morning_azkar": "Sabah Zikirleri",
@@ -238,7 +237,10 @@
   "delete": "Sil",
   "quransettings": "Kuran Sayfa Ayarları",
   "deletezikrconfirm": "Bu zikri silmek istediğinizden emin misiniz?",
-  "hadithCount": "Hadis Sayısı:"
-,
-  "float_tasbih_btn": "Tasbih'i Uygulama Dışında Aç"
+  "hadithCount": "Hadis Sayısı:",
+  "float_tasbih_btn": "Tasbih'i Uygulama Dışında Aç",
+  "small": "Küçük",
+  "medium": "Orta",
+  "large": "Büyük",
+  "overlay_size": "Yüzen Tesbih Boyutu"
 }

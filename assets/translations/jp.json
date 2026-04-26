@@ -1,4 +1,4 @@
-﻿{
+{
   "language": "Japanese",
   "settings": "設定",
   "main": "メイン",
@@ -64,13 +64,12 @@
   "removebookmark": "ブックマークを削除",
   "addtofav": "お気に入りに追加",
   "removefav": "お気に入りから削除",
-  "downloaded": "ダウンロード済みの読誦者",
+  "downloaded": "ダウンロード済み",
   "allReciters": "すべての朗唱者",
   "searchreciters": "朗唱者を検索",
   "searchBysura": "スーラで検索",
   "all": "すべて",
   "favorites": "お気に入り",
-  "downloaded": "ダウンロード済み",
   "choosetranslation": "本を選んでください",
   "not_found": "見つかりません",
   "livetv": "イスラム教のチャンネル",
@@ -219,7 +218,10 @@
   "delete": "削除",
   "quransettings": "コーランページの設定",
   "deletezikrconfirm": "このジクルを削除してもよろしいですか？",
-  "hadithCount": "Hadith Count:"
-,
-  "float_tasbih_btn": "アプリ外でタスビーフを開く"
+  "hadithCount": "Hadith Count:",
+  "float_tasbih_btn": "アプリ外でタスビーフを開く",
+  "small": "小さい",
+  "medium": "中",
+  "large": "大きい",
+  "overlay_size": "フローティングタスビのサイズ"
 }

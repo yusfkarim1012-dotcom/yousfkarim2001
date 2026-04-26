@@ -246,6 +246,10 @@ flutter:
       fonts:
         - asset: assets/fonts/roboto.ttf
 
+    - family: "DSEG7Classic"
+      fonts:
+        - asset: assets/fonts/DSEG7Classic-Bold.ttf
+
     - family: QCF_P001
       fonts:
         - asset: assets\fonts\v2woff\p1.woff

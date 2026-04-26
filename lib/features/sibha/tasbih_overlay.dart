@@ -21,6 +21,24 @@ class _TasbihOverlayWidgetState extends State<TasbihOverlayWidget> {
   void initState() {
     super.initState();
     _load();
+    FlutterOverlayWindow.overlayListener.listen((event) {
+      if (event is Map) {
+        if (event['type'] == 'update_count') {
+          if (mounted) setState(() => _count = event['count']);
+        } else if (event['type'] == 'update_skin') {
+          final f = File(event['skinPath']);
+          if (f.existsSync()) {
+            if (mounted) {
+              // Evict old image from cache before setting new one to force refresh
+              if (_skinFile != null) {
+                FileImage(_skinFile!).evict();
+              }
+              setState(() => _skinFile = f);
+            }
+          }
+        }
+      }
+    });
   }
 
   Future<void> _load() async {
@@ -45,10 +63,22 @@ class _TasbihOverlayWidgetState extends State<TasbihOverlayWidget> {
     } catch (_) {}
   }
 
-  void _tap() { setState(() => _count++); _save(); }
-  void _reset() { setState(() => _count = 0); _save(); }
+  void _tap() { 
+    setState(() => _count++); 
+    _save(); 
+    FlutterOverlayWindow.shareData({"type": "update_count", "count": _count});
+  }
+  void _reset() { 
+    setState(() => _count = 0); 
+    _save(); 
+    FlutterOverlayWindow.shareData({"type": "update_count", "count": _count});
+  }
   Future<void> _close() async {
-    try { await _save(); await FlutterOverlayWindow.closeOverlay(); } catch (_) {}
+    try { 
+      await _save(); 
+      FlutterOverlayWindow.shareData({"type": "overlay_closed"}); // Don't await this, might block if app is dead
+      await FlutterOverlayWindow.closeOverlay(); 
+    } catch (_) {}
   }
 
   @override
@@ -61,23 +91,28 @@ class _TasbihOverlayWidgetState extends State<TasbihOverlayWidget> {
           final w = constraints.maxWidth;
           final h = constraints.maxHeight;
 
+          // Remove closeBtnAreaH definition since it's hardcoded now
+
           return Stack(
             children: [
-              // ── Background Skin Image ─────────────────────────────
-              Positioned.fill(
+              // ── Background Skin Image ───────
+              Positioned(
+                top: 20, // Give some space at the top for the close button
+                left: 0,
+                right: 0,
+                bottom: 0,
                 child: _skinFile != null
                     ? Image.file(_skinFile!, fit: BoxFit.fill,
                         errorBuilder: (_, __, ___) => _fallback())
                     : _fallback(),
               ),
 
-              // ── LCD Display (Grayish dark realistic color) ────────
-              // Accurately positioned over the black LCD screen of the skin
+              // ── LCD Display ────────────────────────────────────────
               Positioned(
-                top: h * 0.18,
+                top: 20 + (h - 20) * 0.18,
                 left: w * 0.22,
                 right: w * 0.22,
-                height: h * 0.18,
+                height: (h - 20) * 0.18,
                 child: Container(
                   alignment: Alignment.centerRight,
                   padding: const EdgeInsets.only(right: 15),
@@ -86,25 +121,23 @@ class _TasbihOverlayWidgetState extends State<TasbihOverlayWidget> {
                     child: Text(
                       '$_count',
                       style: const TextStyle(
-                        color: Color(0xFF3B403B), // Realistic LCD gray/black
-                        fontSize: 80,
-                        fontWeight: FontWeight.bold,
-                        fontFamily: 'monospace',
+                        color: Color(0xFF2C312C),
+                        fontSize: 82,
+                        fontFamily: 'DSEG7Classic',
                         decoration: TextDecoration.none,
-                        letterSpacing: 2,
+                        letterSpacing: 3,
                       ),
                     ),
                   ),
                 ),
               ),
 
-              // ── Small Silver RESET Button Tap Zone ────────────────
-              // Accurately positioned over the small silver circle
+              // ── Small RESET Button Tap Zone ────────────────────────
               Positioned(
-                top: h * 0.49,
+                top: 20 + (h - 20) * 0.49,
                 right: w * 0.18,
                 width: w * 0.18,
-                height: w * 0.18, // Make it perfectly circular
+                height: w * 0.18,
                 child: GestureDetector(
                   behavior: HitTestBehavior.opaque,
                   onTapDown: (_) => setState(() => _resetHighlight = true),
@@ -125,13 +158,12 @@ class _TasbihOverlayWidgetState extends State<TasbihOverlayWidget> {
                 ),
               ),
 
-              // ── Large COUNT Button Tap Zone ───────────────────────
-              // Accurately positioned over the large silver knob
+              // ── Large COUNT Button Tap Zone ────────────────────────
               Positioned(
-                top: h * 0.62,
+                top: 20 + (h - 20) * 0.62,
                 left: w * 0.25,
                 right: w * 0.25,
-                height: h * 0.26,
+                height: (h - 20) * 0.26,
                 child: GestureDetector(
                   behavior: HitTestBehavior.opaque,
                   onTapDown: (_) => setState(() => _countHighlight = true),
@@ -152,16 +184,43 @@ class _TasbihOverlayWidgetState extends State<TasbihOverlayWidget> {
                 ),
               ),
 
-              // ── Close button — transparent overlay corner ─────────
+              // ── × Close Button ──
               Positioned(
                 top: 0,
-                right: 0,
-                width: w * 0.25,
-                height: h * 0.15,
+                right: 15, // stick it a bit to the side
                 child: GestureDetector(
-                  behavior: HitTestBehavior.opaque,
                   onTap: _close,
-                  child: const SizedBox.expand(),
+                  child: Container(
+                    width: 22, // smaller
+                    height: 22, // smaller
+                    decoration: BoxDecoration(
+                      color: Colors.black.withOpacity(0.6), // simple semi-transparent background so it's visible
+                      shape: BoxShape.circle,
+                      border: Border.all(
+                        color: Colors.white.withOpacity(0.8),
+                        width: 1.5,
+                      ),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.3),
+                          blurRadius: 4,
+                          spreadRadius: 1,
+                        )
+                      ],
+                    ),
+                    child: const Center(
+                      child: Text(
+                        '×',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 16,
+                          height: 1.1,
+                          decoration: TextDecoration.none,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ),
                 ),
               ),
             ],
@@ -171,12 +230,7 @@ class _TasbihOverlayWidgetState extends State<TasbihOverlayWidget> {
     );
   }
 
-  Widget _fallback() => Container(
-    decoration: const BoxDecoration(
-      gradient: LinearGradient(
-        begin: Alignment.topCenter, end: Alignment.bottomCenter,
-        colors: [Color(0xFF1a3a5c), Color(0xFF0a1a2e)],
-      ),
-    ),
-  );
+  Widget _fallback() {
+    return Image.asset("assets/images/20.png", fit: BoxFit.fill);
+  }
 }

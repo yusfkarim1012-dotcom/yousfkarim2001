@@ -6,6 +6,7 @@ import 'dart:ui';
 import 'package:flutter/services.dart' show rootBundle;
 
 import 'package:easy_localization/easy_localization.dart';
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_overlay_window/flutter_overlay_window.dart';
@@ -23,7 +24,7 @@ class SibhaPage extends StatefulWidget {
   State<SibhaPage> createState() => _SibhaPageState();
 }
 
-class _SibhaPageState extends State<SibhaPage> with SingleTickerProviderStateMixin {
+class _SibhaPageState extends State<SibhaPage> with TickerProviderStateMixin, WidgetsBindingObserver {
   // All 6 tally counter skin images
   final List<String> _skinImages = [
     "assets/images/20.png",  // brick/fiery (moved to first as requested)
@@ -59,23 +60,64 @@ class _SibhaPageState extends State<SibhaPage> with SingleTickerProviderStateMix
   PageController tasbeehScrollController = PageController(initialPage: 0);
 
   bool _isOverlayActive = false;
+  int _overlaySizeIndex = 2; // 0 = Small, 1 = Medium, 2 = Large
+
+  StreamSubscription? _overlaySubscription;
 
   @override
   void initState() {
-    _currentSkinIndex = getValue("sibhaSkinIndex") ?? 0;
-    if (_currentSkinIndex >= _skinImages.length) _currentSkinIndex = 0;
-    tasbeehScrollController = PageController(initialPage: getValue("tasbeehLastIndex") ?? 0);
-    loadTasbeehs();
-    _tapController = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 100),
-    );
-    _scaleAnimation = Tween<double>(begin: 1.0, end: 0.93).animate(
-      CurvedAnimation(parent: _tapController, curve: Curves.easeInOut),
-    );
-    _syncFromOverlay(); // sync count back from overlay if it was active
-    _checkOverlayStatus();
     super.initState();
+    try {
+      _overlaySizeIndex = getValue("overlaySizeIndex") ?? 2;
+      _currentSkinIndex = getValue("sibhaSkinIndex") ?? 0;
+      if (_currentSkinIndex >= _skinImages.length) _currentSkinIndex = 0;
+      tasbeehScrollController = PageController(initialPage: getValue("tasbeehLastIndex") ?? 0);
+      loadTasbeehs();
+      _tapController = AnimationController(
+        vsync: this,
+        duration: const Duration(milliseconds: 100),
+      );
+      _scaleAnimation = Tween<double>(begin: 1.0, end: 0.93).animate(
+        CurvedAnimation(parent: _tapController, curve: Curves.easeInOut),
+      );
+      _syncFromOverlay(); // sync count back from overlay if it was active
+      _checkOverlayStatus();
+      
+      _overlaySubscription = FlutterOverlayWindow.overlayListener.listen((event) {
+        if (event is Map) {
+          if (event['type'] == 'update_count') {
+            final lastIndex = getValue("tasbeehLastIndex") ?? 0;
+            updateValue("${lastIndex}number", event['count']);
+            if (mounted) setState(() {});
+          } else if (event['type'] == 'overlay_closed') {
+            _syncFromOverlay();
+            if (mounted) setState(() => _isOverlayActive = false);
+          }
+        }
+      }, onError: (e) {
+        debugPrint("Overlay stream error: $e");
+      });
+      WidgetsBinding.instance.addObserver(this);
+    } catch (e, stack) {
+      debugPrint("InitState Error: $e\n$stack");
+    }
+  }
+
+  @override
+  void dispose() {
+    _overlaySubscription?.cancel();
+    WidgetsBinding.instance.removeObserver(this);
+    _tapController.dispose();
+    tasbeehScrollController.dispose();
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) {
+      _checkOverlayStatus();
+      _syncFromOverlay();
+    }
   }
 
   /// Check if overlay is currently active and update the icon state
@@ -137,16 +179,13 @@ class _SibhaPageState extends State<SibhaPage> with SingleTickerProviderStateMix
         await prefs.setString('overlay_tasbih_zikr', tasbeehList[lastIndex].arabic);
       }
 
-      // Save current skin image to a cache file so overlay can load it with Image.file
-      try {
-        final ByteData imgData = await rootBundle.load(_skinImages[_currentSkinIndex]);
-        final Directory tmpDir = Directory.systemTemp;
-        final File skinFile = File('${tmpDir.path}/overlay_skin.png');
-        await skinFile.writeAsBytes(imgData.buffer.asUint8List());
-        await prefs.setString('overlay_skin_path', skinFile.path);
-      } catch (_) {
-        await prefs.remove('overlay_skin_path');
-      }
+      await _saveSkinForOverlay();
+
+      int h = 700;
+      int w = 450;
+      if (_overlaySizeIndex == 0) { h = 500; w = 320; }
+      else if (_overlaySizeIndex == 1) { h = 620; w = 400; }
+      else if (_overlaySizeIndex == 2) { h = 700; w = 450; }
 
       // 4. Show the overlay
       await FlutterOverlayWindow.showOverlay(
@@ -156,8 +195,8 @@ class _SibhaPageState extends State<SibhaPage> with SingleTickerProviderStateMix
         flag: OverlayFlag.defaultFlag,
         visibility: NotificationVisibility.visibilityPublic,
         positionGravity: PositionGravity.none, // free drag anywhere on screen
-        height: 460,
-        width: 320,
+        height: h,
+        width: w,
       );
 
       if (mounted) setState(() => _isOverlayActive = true);
@@ -169,6 +208,27 @@ class _SibhaPageState extends State<SibhaPage> with SingleTickerProviderStateMix
         backgroundColor: Colors.red,
       );
       debugPrint("OVERLAY ERROR: $e\n$stack");
+    }
+  }
+
+  Future<void> _saveSkinForOverlay() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final ByteData imgData = await rootBundle.load(_skinImages[_currentSkinIndex]);
+      final Directory tmpDir = Directory.systemTemp;
+      final File skinFile = File('${tmpDir.path}/overlay_skin_${_currentSkinIndex}.png');
+      await skinFile.writeAsBytes(imgData.buffer.asUint8List());
+      await prefs.setString('overlay_skin_path', skinFile.path);
+      
+      if (_isOverlayActive) {
+        await FlutterOverlayWindow.shareData({
+          "type": "update_skin",
+          "skinPath": skinFile.path,
+        });
+      }
+    } catch (_) {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.remove('overlay_skin_path');
     }
   }
 
@@ -203,7 +263,11 @@ class _SibhaPageState extends State<SibhaPage> with SingleTickerProviderStateMix
 
     List deletedIds = getValue("deletedTasbeehIds") ?? [];
     tasbeehList = initialList.where((t) => !deletedIds.contains(t.id)).toList();
-    setState(() {});
+    if (mounted) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) setState(() {});
+      });
+    }
   }
 
   addCustomTasbeeh(arabic) async {
@@ -293,15 +357,22 @@ class _SibhaPageState extends State<SibhaPage> with SingleTickerProviderStateMix
   void _onTasbeehTap() {
     HapticFeedback.lightImpact();
     _tapController.forward().then((_) => _tapController.reverse());
-    updateValue(
-        "${getValue("tasbeehLastIndex")}number",
-        (getValue("${getValue("tasbeehLastIndex")}number") ?? 0) + 1);
+    int currentCount = (getValue("${getValue("tasbeehLastIndex")}number") ?? 0) + 1;
+    updateValue("${getValue("tasbeehLastIndex")}number", currentCount);
+    
+    if (_isOverlayActive) {
+      FlutterOverlayWindow.shareData({"type": "update_count", "count": currentCount});
+    }
     setState(() {});
   }
 
   void _resetCount() {
     HapticFeedback.mediumImpact();
     updateValue("${getValue("tasbeehLastIndex")}number", 0);
+    
+    if (_isOverlayActive) {
+      FlutterOverlayWindow.shareData({"type": "update_count", "count": 0});
+    }
     setState(() {});
   }
 
@@ -339,11 +410,12 @@ class _SibhaPageState extends State<SibhaPage> with SingleTickerProviderStateMix
                 itemBuilder: (context, index) {
                   final isSelected = index == _currentSkinIndex;
                   return GestureDetector(
-                    onTap: () {
+                    onTap: () async {
                       setState(() {
                         _currentSkinIndex = index;
                         updateValue("sibhaSkinIndex", index);
                       });
+                      await _saveSkinForOverlay();
                       Navigator.pop(context);
                     },
                     child: Container(
@@ -372,6 +444,92 @@ class _SibhaPageState extends State<SibhaPage> with SingleTickerProviderStateMix
     );
   }
 
+  void _showSizePicker() {
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.transparent,
+      builder: (context) {
+        return StatefulBuilder(builder: (context, setModalState) {
+          return Container(
+            padding: EdgeInsets.all(16.w),
+            decoration: BoxDecoration(
+              color: const Color(0xff1a1a2e),
+              borderRadius: BorderRadius.vertical(top: Radius.circular(25.r)),
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Container(
+                  width: 40.w, height: 4.h,
+                  margin: EdgeInsets.only(bottom: 16.h),
+                  decoration: BoxDecoration(
+                    color: Colors.white30,
+                    borderRadius: BorderRadius.circular(2.r),
+                  ),
+                ),
+                Text(
+                  "overlay_size".tr(),
+                  style: TextStyle(color: Colors.white, fontSize: 18.sp, fontFamily: "cairo", fontWeight: FontWeight.bold),
+                ),
+                SizedBox(height: 16.h),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    _buildSizeOption(setModalState, 0, "small".tr()),
+                    _buildSizeOption(setModalState, 1, "medium".tr()),
+                    _buildSizeOption(setModalState, 2, "large".tr()),
+                  ],
+                ),
+                SizedBox(height: 20.h),
+              ],
+            ),
+          );
+        });
+      },
+    );
+  }
+
+  Widget _buildSizeOption(StateSetter setModalState, int index, String label) {
+    bool isSelected = _overlaySizeIndex == index;
+    return GestureDetector(
+      onTap: () {
+        setState(() {
+          _overlaySizeIndex = index;
+          updateValue("overlaySizeIndex", index);
+        });
+        setModalState(() {});
+        Navigator.pop(context);
+        
+        // If overlay is already active, close it and open it again to apply new size
+        if (_isOverlayActive) {
+          _toggleOverlay(); // close
+          Future.delayed(const Duration(milliseconds: 300), () {
+            _toggleOverlay(); // reopen
+          });
+        }
+      },
+      child: Container(
+        padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 12.h),
+        decoration: BoxDecoration(
+          color: isSelected ? const Color(0xffD4AF37) : Colors.white12,
+          borderRadius: BorderRadius.circular(15.r),
+          border: Border.all(
+            color: isSelected ? const Color(0xffD4AF37) : Colors.white24,
+            width: 1,
+          ),
+        ),
+        child: Text(
+          label,
+          style: TextStyle(
+            color: isSelected ? Colors.black87 : Colors.white,
+            fontFamily: "cairo",
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final screenSize = MediaQuery.of(context).size;
@@ -394,48 +552,6 @@ class _SibhaPageState extends State<SibhaPage> with SingleTickerProviderStateMix
               elevation: 0,
               backgroundColor: Colors.transparent,
               iconTheme: IconThemeData(color: isDark ? Colors.white : Colors.black87),
-              actions: [
-                TextButton.icon(
-                  onPressed: _toggleOverlay,
-                  icon: Icon(
-                    _isOverlayActive
-                        ? Icons.picture_in_picture_alt
-                        : Icons.picture_in_picture_alt_outlined,
-                    color: _isOverlayActive
-                        ? const Color(0xffD4AF37)
-                        : (isDark ? Colors.white : Colors.black87),
-                    size: 18,
-                  ),
-                  label: Text(
-                    'float_tasbih_btn'.tr(),
-                    style: TextStyle(
-                      fontSize: 10,
-                      color: _isOverlayActive
-                          ? const Color(0xffD4AF37)
-                          : (isDark ? Colors.white : Colors.black87),
-                    ),
-                  ),
-                ),
-                IconButton(
-                  onPressed: deleteAllCustomTasbeehs,
-                  icon: Icon(Icons.delete_sweep, color: isDark ? Colors.white : Colors.black87),
-                ),
-                IconButton(
-                  onPressed: () {
-                    showDialog(
-                        context: context,
-                        builder: (c) => AddTasbeehDialog(
-                              function: addCustomTasbeeh,
-                            ));
-                  },
-                  icon: Icon(Icons.add, color: isDark ? Colors.white : Colors.black87),
-                ),
-                IconButton(
-                  onPressed: _showSkinPicker,
-                  icon: Icon(Icons.palette_outlined, color: isDark ? Colors.white : Colors.black87),
-                  tooltip: "changeStyle".tr(),
-                ),
-              ],
               title: Text(
                 "sibha".tr(),
                 style: TextStyle(
@@ -449,6 +565,100 @@ class _SibhaPageState extends State<SibhaPage> with SingleTickerProviderStateMix
             ),
             body: Column(
               children: [
+                SizedBox(height: 5.h),
+                // ─── Top Action Buttons ───
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 10.w),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      GestureDetector(
+                        onTap: _toggleOverlay,
+                        child: AnimatedContainer(
+                          duration: const Duration(milliseconds: 250),
+                          padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.h),
+                          decoration: BoxDecoration(
+                            gradient: LinearGradient(
+                              colors: _isOverlayActive
+                                  ? [const Color(0xffD4AF37), const Color(0xffB8860B)]
+                                  : isDark
+                                      ? [Colors.black54, Colors.black38]
+                                      : [Colors.black12, Colors.black.withOpacity(0.08)],
+                              begin: Alignment.topLeft,
+                              end: Alignment.bottomRight,
+                            ),
+                            borderRadius: BorderRadius.circular(20.r),
+                            border: Border.all(
+                              color: _isOverlayActive
+                                  ? const Color(0xffD4AF37).withOpacity(0.7)
+                                  : (isDark ? Colors.white24 : Colors.black26),
+                              width: 1,
+                            ),
+                            boxShadow: _isOverlayActive
+                                ? [BoxShadow(
+                                    color: const Color(0xffD4AF37).withOpacity(0.35),
+                                    blurRadius: 8,
+                                    spreadRadius: 1,
+                                  )]
+                                : [],
+                          ),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Text(
+                                '📿',
+                                style: TextStyle(fontSize: 16.sp),
+                              ),
+                              SizedBox(width: 6.w),
+                              Text(
+                                'float_tasbih_btn'.tr(),
+                                style: TextStyle(
+                                  fontSize: 12.sp,
+                                  fontFamily: 'cairo',
+                                  fontWeight: FontWeight.bold,
+                                  color: _isOverlayActive
+                                      ? Colors.white
+                                      : (isDark ? Colors.white : Colors.black87),
+                                  shadows: _isOverlayActive
+                                      ? [const Shadow(color: Colors.black45, blurRadius: 3, offset: Offset(0, 1))]
+                                      : (isDark ? [const Shadow(color: Colors.black87, blurRadius: 2, offset: Offset(0, 1))] : []),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      Row(
+                        children: [
+                          IconButton(
+                            onPressed: _showSkinPicker,
+                            icon: Icon(Icons.palette_outlined, color: isDark ? Colors.white : Colors.black87),
+                            tooltip: "changeStyle".tr(),
+                          ),
+                          IconButton(
+                            onPressed: _showSizePicker,
+                            icon: Icon(Icons.aspect_ratio_rounded, color: isDark ? Colors.white : Colors.black87),
+                            tooltip: "قەبارە",
+                          ),
+                          IconButton(
+                            onPressed: () {
+                              showDialog(
+                                  context: context,
+                                  builder: (c) => AddTasbeehDialog(
+                                        function: addCustomTasbeeh,
+                                      ));
+                            },
+                            icon: Icon(Icons.add, color: isDark ? Colors.white : Colors.black87),
+                          ),
+                          IconButton(
+                            onPressed: deleteAllCustomTasbeehs,
+                            icon: Icon(Icons.delete_sweep, color: isDark ? Colors.white : Colors.black87),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
                 SizedBox(height: 10.h),
                 // ─── Zikr Card (PageView) ───
                 SizedBox(
@@ -610,9 +820,8 @@ class _SibhaPageState extends State<SibhaPage> with SingleTickerProviderStateMix
                                         "$currentCount",
                                         style: TextStyle(
                                           color: const Color(0xDA1E1E1E),
-                                          fontSize: 70.sp,
-                                          fontWeight: FontWeight.w900,
-                                          fontFamily: "roboto",
+                                          fontSize: 62.sp,
+                                          fontFamily: "DSEG7Classic",
                                         ),
                                       ),
                                     ),

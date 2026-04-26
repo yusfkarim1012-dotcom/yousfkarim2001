@@ -1,4 +1,4 @@
-﻿{
+{
   "language": "English",
   "settings": "Settings",
   "main": "Main Screen",
@@ -237,7 +237,10 @@
   "quransettings": "Quran Page Settings",
   "deletezikrconfirm": "Are you sure you want to delete this zikr?",
   "hadithCount": "Hadith Count:",
-  "changeStyle": "Change Style"
-,
-  "float_tasbih_btn": "Open Tasbih Outside the App"
+  "changeStyle": "Change Style",
+  "float_tasbih_btn": "Open Tasbih Outside the App",
+  "small": "Small",
+  "medium": "Medium",
+  "large": "Large",
+  "overlay_size": "Overlay Tasbih Size"
 }

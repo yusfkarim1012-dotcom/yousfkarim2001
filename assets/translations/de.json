@@ -1,4 +1,4 @@
-﻿{
+{
   "language": "German",
   "settings": "Einstellungen",
   "main": "Hauptbildschirm",
@@ -61,7 +61,7 @@
   "searchBysura": "Suche nach Surah",
   "all": "Alle",
   "favorites": "Favoriten",
-  "downloaded": "Heruntergeladen",
+  "downloaded": "Heruntergeladene Rezitatoren",
   "sibha": "Rosenkranz",
   "choosetranslation": "Wähle das Buch",
   "not_found": "Nicht gefunden",
@@ -97,7 +97,6 @@
   "removebookmark": "Lesezeichen entfernen",
   "addtofav": "Zu Favoriten hinzufügen",
   "removefav": "Aus Favoriten entfernen",
-  "downloaded": "Heruntergeladene Rezitatoren",
   "soura": "Sure",
   "ayah": "Vers",
   "morning_azkar": "Morgengebete",
@@ -239,7 +238,10 @@
   "delete": "Löschen",
   "quransettings": "Koran-Seiteneinstellungen",
   "deletezikrconfirm": "Sind Sie sicher, dass Sie diesen Zikr löschen möchten?",
-  "hadithCount": "Hadith Count:"
-,
-  "float_tasbih_btn": "Tasbih außerhalb der App öffnen"
+  "hadithCount": "Hadith Count:",
+  "float_tasbih_btn": "Tasbih außerhalb der App öffnen",
+  "small": "Klein",
+  "medium": "Mittel",
+  "large": "Groß",
+  "overlay_size": "Overlay-Tasbih-Größe"
 }

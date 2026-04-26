@@ -3,12 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_overlay_window/flutter_overlay_window.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-/// Floating Tasbih overlay — designed to align with skin image 20.png
-/// Layout zones (% of height 380px):
-///   0-8%   : close button (top-right)
-///   8-30%  : LCD display (shows count over the dark screen of the skin)
-///  30-52%  : COUNT (left) and RESET (right) invisible tap zones
-///  52-98%  : large metallic knob — tap anywhere = count
+/// Floating Tasbih overlay
 class TasbihOverlayWidget extends StatefulWidget {
   const TasbihOverlayWidget({super.key});
 
@@ -20,6 +15,7 @@ class _TasbihOverlayWidgetState extends State<TasbihOverlayWidget> {
   int _count = 0;
   File? _skinFile;
   bool _countHighlight = false;
+  bool _resetHighlight = false;
 
   @override
   void initState() {
@@ -67,67 +63,75 @@ class _TasbihOverlayWidgetState extends State<TasbihOverlayWidget> {
 
           return Stack(
             children: [
-
-              // ── Skin image background ─────────────────────────────
+              // ── Background Skin Image ─────────────────────────────
               Positioned.fill(
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(22),
-                  child: _skinFile != null
-                      ? Image.file(_skinFile!, fit: BoxFit.fill,
-                          errorBuilder: (_, __, ___) => _fallback())
-                      : _fallback(),
-                ),
+                child: _skinFile != null
+                    ? Image.file(_skinFile!, fit: BoxFit.fill,
+                        errorBuilder: (_, __, ___) => _fallback())
+                    : _fallback(),
               ),
 
-              // ── LCD display — overlays the dark screen area of skin
-              // Skin's display is roughly at 8–30% of height, center
+              // ── LCD Display (Grayish dark realistic color) ────────
+              // Accurately positioned over the black LCD screen of the skin
               Positioned(
-                top: h * 0.08,
-                left: w * 0.18,
-                right: w * 0.18,
-                height: h * 0.22,
-                child: Center(
+                top: h * 0.18,
+                left: w * 0.22,
+                right: w * 0.22,
+                height: h * 0.18,
+                child: Container(
+                  alignment: Alignment.centerRight,
+                  padding: const EdgeInsets.only(right: 15),
                   child: FittedBox(
                     fit: BoxFit.contain,
                     child: Text(
                       '$_count',
                       style: const TextStyle(
-                        color: Color(0xFF39FF14), // bright neon green LCD
+                        color: Color(0xFF3B403B), // Realistic LCD gray/black
                         fontSize: 80,
                         fontWeight: FontWeight.bold,
                         fontFamily: 'monospace',
                         decoration: TextDecoration.none,
-                        letterSpacing: 6,
-                        shadows: [
-                          Shadow(color: Color(0xFF00FF00), blurRadius: 16),
-                          Shadow(color: Color(0xFF00FF00), blurRadius: 6),
-                        ],
+                        letterSpacing: 2,
                       ),
                     ),
                   ),
                 ),
               ),
 
-              // ── RESET tap zone — aligns with "RESET" label in skin
-              // Skin shows COUNT(left) RESET(right) at ~30–52% height
+              // ── Small Silver RESET Button Tap Zone ────────────────
+              // Accurately positioned over the small silver circle
               Positioned(
-                top: h * 0.30,
-                right: 0,
-                width: w * 0.50,
-                height: h * 0.22,
+                top: h * 0.49,
+                right: w * 0.18,
+                width: w * 0.18,
+                height: w * 0.18, // Make it perfectly circular
                 child: GestureDetector(
                   behavior: HitTestBehavior.opaque,
-                  onTap: _reset,
-                  child: const SizedBox.expand(), // invisible hit zone
+                  onTapDown: (_) => setState(() => _resetHighlight = true),
+                  onTapUp: (_) {
+                    setState(() => _resetHighlight = false);
+                    _reset();
+                  },
+                  onTapCancel: () => setState(() => _resetHighlight = false),
+                  child: AnimatedContainer(
+                    duration: const Duration(milliseconds: 60),
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: _resetHighlight
+                          ? Colors.white.withOpacity(0.3)
+                          : Colors.transparent,
+                    ),
+                  ),
                 ),
               ),
 
-              // ── Large COUNT tap zone — the metallic knob (52–100%)
+              // ── Large COUNT Button Tap Zone ───────────────────────
+              // Accurately positioned over the large silver knob
               Positioned(
-                top: h * 0.52,
-                left: 0,
-                right: 0,
-                height: h * 0.46,
+                top: h * 0.62,
+                left: w * 0.25,
+                right: w * 0.25,
+                height: h * 0.26,
                 child: GestureDetector(
                   behavior: HitTestBehavior.opaque,
                   onTapDown: (_) => setState(() => _countHighlight = true),
@@ -139,31 +143,25 @@ class _TasbihOverlayWidgetState extends State<TasbihOverlayWidget> {
                   child: AnimatedContainer(
                     duration: const Duration(milliseconds: 60),
                     decoration: BoxDecoration(
+                      shape: BoxShape.circle,
                       color: _countHighlight
-                          ? Colors.white.withOpacity(0.15)
+                          ? Colors.white.withOpacity(0.3)
                           : Colors.transparent,
-                      borderRadius: BorderRadius.circular(h * 0.25),
                     ),
                   ),
                 ),
               ),
 
-              // ── Close button — small X at very top-right ─────────
+              // ── Close button — transparent overlay corner ─────────
               Positioned(
-                top: 4,
-                right: 4,
+                top: 0,
+                right: 0,
+                width: w * 0.25,
+                height: h * 0.15,
                 child: GestureDetector(
                   behavior: HitTestBehavior.opaque,
                   onTap: _close,
-                  child: Container(
-                    width: 26,
-                    height: 26,
-                    decoration: BoxDecoration(
-                      color: Colors.black.withOpacity(0.65),
-                      shape: BoxShape.circle,
-                    ),
-                    child: const Icon(Icons.close, color: Colors.white, size: 15),
-                  ),
+                  child: const SizedBox.expand(),
                 ),
               ),
             ],
@@ -174,9 +172,8 @@ class _TasbihOverlayWidgetState extends State<TasbihOverlayWidget> {
   }
 
   Widget _fallback() => Container(
-    decoration: BoxDecoration(
-      borderRadius: BorderRadius.circular(22),
-      gradient: const LinearGradient(
+    decoration: const BoxDecoration(
+      gradient: LinearGradient(
         begin: Alignment.topCenter, end: Alignment.bottomCenter,
         colors: [Color(0xFF1a3a5c), Color(0xFF0a1a2e)],
       ),

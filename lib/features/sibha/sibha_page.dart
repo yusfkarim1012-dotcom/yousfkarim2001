@@ -156,8 +156,8 @@ class _SibhaPageState extends State<SibhaPage> with SingleTickerProviderStateMix
         flag: OverlayFlag.defaultFlag,
         visibility: NotificationVisibility.visibilityPublic,
         positionGravity: PositionGravity.none, // free drag anywhere on screen
-        height: 400,
-        width: 280,
+        height: 460,
+        width: 320,
       );
 
       if (mounted) setState(() => _isOverlayActive = true);

@@ -9,7 +9,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:superellipse_shape/superellipse_shape.dart';
 import 'package:iconsax/iconsax.dart';
 
-// --- Home Header ---
+// --- Home Header (no title, just controls) ---
 class HomeHeader extends StatelessWidget {
   final Size screenSize;
   final VoidCallback onDarkModeToggle;
@@ -24,71 +24,62 @@ class HomeHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    bool isDark = getValue("darkMode");
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 10.h),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
+      padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-               IconButton(
-                  onPressed: onDarkModeToggle,
-                  icon: Icon(
-                    Icons.dark_mode_outlined,
-                    color: getValue("darkMode") ? Colors.white70 : goldColor,
-                  )),
-              DropdownButton<Locale>(
-                value: context.locale,
-                underline: Container(), // Remove underline
-                icon: Icon(Icons.language, color: getValue("darkMode") ? Colors.white70 : goldColor),
-                onChanged: (Locale? newValue) {
-                  if (newValue != null) onLanguageChanged(newValue);
-                },
-                items: [
-                  const Locale("ar"),
-                  const Locale('en'),
-                  const Locale('de'),
-                  const Locale("am"),
-                  const Locale("ms"),
-                  const Locale("pt"),
-                  const Locale("tr"),
-                  const Locale("ru")
-                ].map<DropdownMenuItem<Locale>>((Locale locale) {
-                  Map<String, String> languageNames = {
-                    "ar": "العربية",
-                    "en": "English",
-                    "de": "Deutsch",
-                    "am": "አማርኛ",
-                    "ms": "Melayu",
-                    "pt": "Português",
-                    "tr": "Türkçe",
-                    "ru": "Русский"
-                  };
-                  return DropdownMenuItem<Locale>(
-                    value: locale,
-                    child: Text(
-                      languageNames[locale.languageCode] ?? locale.languageCode.toUpperCase(),
-                      style: TextStyle(
-                          color: getValue("darkMode") ? orangeColor : blueColor),
-                    ),
-                  );
-                }).toList(),
-              ),
-             
-            ],
+          IconButton(
+            onPressed: onDarkModeToggle,
+            icon: Icon(
+              isDark ? Icons.light_mode_rounded : Icons.dark_mode_rounded,
+              color: isDark ? const Color(0xffF0E0C0) : const Color(0xff8B6914),
+              size: 26,
+            ),
           ),
-          SizedBox(height: 10.h),
-          Text(
-            'main'.tr(),
-            textAlign: rtlLanguages.contains(context.locale.languageCode)
-                ? TextAlign.right
-                : TextAlign.left,
-            style: TextStyle(
-                color: getValue("darkMode") ? Colors.white : goldColor,
-                fontFamily: "cairo",
-                fontWeight: FontWeight.bold,
-                fontSize: 32.sp),
+          DropdownButton<Locale>(
+            value: context.locale,
+            underline: const SizedBox(),
+            icon: Icon(Icons.language_rounded,
+                color: isDark ? const Color(0xffF0E0C0) : const Color(0xff8B6914), size: 24),
+            dropdownColor: isDark ? const Color(0xff2A2520) : const Color(0xffFFFDF7),
+            onChanged: (Locale? newValue) {
+              if (newValue != null) onLanguageChanged(newValue);
+            },
+            items: [
+              const Locale("ar"),
+              const Locale('en'),
+              const Locale('de'),
+              const Locale("am"),
+              const Locale("ms"),
+              const Locale("pt"),
+              const Locale("tr"),
+              const Locale("ru")
+            ].map<DropdownMenuItem<Locale>>((Locale locale) {
+              Map<String, String> languageNames = {
+                "ar": "العربية",
+                "en": "English",
+                "de": "Deutsch",
+                "am": "አማርኛ",
+                "ms": "Melayu",
+                "pt": "Português",
+                "tr": "Türkçe",
+                "ru": "Русский"
+              };
+              return DropdownMenuItem<Locale>(
+                value: locale,
+                child: Text(
+                  languageNames[locale.languageCode] ??
+                      locale.languageCode.toUpperCase(),
+                  style: TextStyle(
+                    color: isDark ? const Color(0xffF0E0C0) : const Color(0xff5C4A1E),
+                    fontFamily: "cairo",
+                    fontSize: 14.sp,
+                  ),
+                ),
+              );
+            }).toList(),
           ),
         ],
       ),
@@ -113,21 +104,30 @@ class DailyContentCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    bool isDark = getValue("darkMode");
     return GestureDetector(
       onTap: onTap,
       child: Container(
         margin: EdgeInsets.symmetric(horizontal: 16.w),
         padding: EdgeInsets.all(18.0.w),
         decoration: BoxDecoration(
-          color: getValue("darkMode")
-                        ? const Color(0xff443F42).withOpacity(.9)
-                        : const Color(0xffFEFEFE),
-          borderRadius: BorderRadius.circular(24.0.r),
-           boxShadow: [
+          color: isDark
+              ? const Color(0xff2A2520).withOpacity(.95)
+              : Colors.white.withOpacity(0.85),
+          borderRadius: BorderRadius.circular(20.0.r),
+          border: Border.all(
+            color: isDark
+                ? const Color(0xffC5A053).withOpacity(0.25)
+                : const Color(0xffD4C4A0).withOpacity(0.5),
+            width: 1.0,
+          ),
+          boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.05),
-              blurRadius: 10,
-              offset: const Offset(0, 4),
+              color: isDark
+                  ? Colors.black26
+                  : Colors.brown.withOpacity(0.08),
+              blurRadius: 15,
+              offset: const Offset(0, 5),
             ),
           ],
         ),
@@ -136,14 +136,16 @@ class DailyContentCard extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Icon(Iconsax.book_1, color: orangeColor),
+                Icon(Iconsax.book_1, color: const Color(0xffC5A053)),
                 Text(
-                  title, 
+                  title,
                   style: TextStyle(
-                    fontFamily: "cairo",
-                    fontSize: 14.sp,
-                    color: getValue("darkMode") ? Colors.white70 : blueColor
-                  ),
+                      fontFamily: "cairo",
+                      fontSize: 14.sp,
+                      fontWeight: FontWeight.w600,
+                      color: isDark
+                          ? const Color(0xffF0E0C0)
+                          : const Color(0xff5C4A1E)),
                 ),
               ],
             ),
@@ -154,19 +156,18 @@ class DailyContentCard extends StatelessWidget {
               style: TextStyle(
                 fontFamily: "UthmanicHafs13",
                 fontSize: 18.sp,
-                color: getValue("darkMode") ? Colors.white : Colors.black87,
+                color: isDark ? Colors.white : const Color(0xff2C1810),
                 height: 1.5,
               ),
             ),
-             SizedBox(height: 12.h),
-             Text(
+            SizedBox(height: 12.h),
+            Text(
               subtitle,
               style: TextStyle(
-                fontSize: 12.sp,
-                color: orangeColor,
-                fontFamily: "cairo"
-              ),
-             )
+                  fontSize: 12.sp,
+                  color: const Color(0xffC5A053),
+                  fontFamily: "cairo"),
+            )
           ],
         ),
       ),
@@ -174,64 +175,73 @@ class DailyContentCard extends StatelessWidget {
   }
 }
 
-// --- Superellipse Button (Reused) ---
-// Moved here to be reusable strictly in the grid context
+// --- Home Grid Item ---
 class HomeGridItem extends StatelessWidget {
   final String text;
   final VoidCallback onPressed;
   final String imagePath;
 
-  const HomeGridItem({
-    Key? key,
-    required this.text,
-    required this.onPressed,
-    required this.imagePath
-  }) : super(key: key);
+  const HomeGridItem(
+      {Key? key,
+      required this.text,
+      required this.onPressed,
+      required this.imagePath})
+      : super(key: key);
 
-   @override
+  @override
   Widget build(BuildContext context) {
-    bool isDarkMode = getValue("darkMode");
+    bool isDark = getValue("darkMode");
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 6.0.w, vertical: 6.h),
+      padding: EdgeInsets.symmetric(horizontal: 5.0.w, vertical: 5.h),
       child: Material(
-        color: isDarkMode
-            ? const Color(0xff443F42).withOpacity(.9) // Keeping original dark palette logic
-            : const Color(0xffFEFEFE),
+        color: isDark
+            ? const Color(0xff2A2520).withOpacity(.95)
+            : Colors.white.withOpacity(0.85),
         shape: SuperellipseShape(
-          borderRadius: BorderRadius.circular(20.0.r), // Changed from 24 to 20
+          borderRadius: BorderRadius.circular(28.0.r),
+          side: BorderSide(
+            color: isDark
+                ? const Color(0xffC5A053).withOpacity(0.2)
+                : const Color(0xffD4C4A0).withOpacity(0.4),
+            width: 1.0,
+          ),
         ),
-        elevation: 3, // Increased elevation
-        shadowColor: Colors.black26,
+        elevation: isDark ? 2 : 4,
+        shadowColor: isDark
+            ? Colors.black38
+            : Colors.brown.withOpacity(0.15),
         child: InkWell(
           onTap: onPressed,
-          splashColor: orangeColor.withOpacity(0.2), // Increased opacity
-          borderRadius: BorderRadius.circular(20.0.r),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              if (imagePath.contains("svg"))
-                SvgPicture.asset(
-                  imagePath,
-                  height: 32.h,
-                )
-              else
-                Image.asset(
-                  imagePath,
-                  height: 32.h,
+          customBorder: SuperellipseShape(
+            borderRadius: BorderRadius.circular(28.0.r),
+          ),
+          splashColor: const Color(0xffC5A053).withOpacity(0.1),
+          highlightColor: const Color(0xffC5A053).withOpacity(0.05),
+          child: Padding(
+            padding: EdgeInsets.symmetric(vertical: 10.h, horizontal: 8.w),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                if (imagePath.contains("svg"))
+                  SvgPicture.asset(imagePath, height: 40.h)
+                else
+                  Image.asset(imagePath, height: 40.h),
+                SizedBox(height: 10.h),
+                Text(
+                  text,
+                  textAlign: TextAlign.center,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                      color: isDark
+                          ? const Color(0xffF0E0C0)
+                          : const Color(0xff5C4A1E),
+                      fontSize: 12.sp,
+                      fontWeight: FontWeight.w700,
+                      fontFamily: "cairo"),
                 ),
-              SizedBox(height: 12.h),
-              Text(
-                text,
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                    color: isDarkMode
-                        ? Colors.white70
-                        : orangeColor,
-                    fontSize: 12.sp,
-                    fontWeight: FontWeight.w600,
-                    fontFamily: "cairo"),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),

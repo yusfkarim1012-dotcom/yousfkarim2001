@@ -628,18 +628,18 @@ class _HomeState extends State<Home>
                     builder: (builder) => Container(
                         height: screenSize.height,
                     decoration: BoxDecoration(
-                        color: index == 1
+                         color: index == 1
                             ? getValue("darkMode")
-                                ? quranPagesColorDark
-                                : quranPagesColorLight
+                                ? const Color(0xff1C1815)
+                                : const Color(0xffFFF8EE)
                             : darkPrimaryColor,
                         image: index == 1
                             ? DecorationImage(
                                 image:
-                                    const AssetImage("assets/images/bckg.png"),
-                                // fit: BoxFit.fitHeight,
+                                    const AssetImage("assets/images/islamic_top_bg.png"),
+                                fit: BoxFit.fitWidth,
                                 alignment: Alignment.topCenter,
-                                opacity: getValue("darkMode") ? .1 : .5)
+                                opacity: getValue("darkMode") ? .15 : .85)
                             : DecorationImage(
                                 image: AssetImage((DateTime.now().hour < 17 &&
                                         DateTime.now().hour > 6)
@@ -653,13 +653,13 @@ class _HomeState extends State<Home>
                                 opacity: .2)),
                     child: Container(
                       height: screenSize.height,
-                      decoration: const BoxDecoration(
+                      decoration: BoxDecoration(
                           color: Colors.transparent,
                           image: DecorationImage(
-                              image: AssetImage("assets/images/back2.png"),
-                              // fit: BoxFit.fitHeight,
+                              image: const AssetImage("assets/images/islamic_bottom_bg.png"),
+                              fit: BoxFit.fitWidth,
                               alignment: Alignment.bottomCenter,
-                              opacity: .3)),
+                              opacity: getValue("darkMode") ? .15 : .6)),
                       child: Scaffold(
                         appBar: AppBar(
                           toolbarHeight: 0,
@@ -675,9 +675,9 @@ class _HomeState extends State<Home>
                           decoration: BoxDecoration(
                               image: DecorationImage(
                                   image: const AssetImage(
-                                      "assets/images/try2.png"),
-                                  alignment: Alignment.bottomCenter,
-                                  opacity: index == 1 ? .2 : 0)),
+                                      "assets/images/islamic_pattern_bg.png"),
+                                  repeat: ImageRepeat.repeat,
+                                  opacity: index == 1 ? (getValue("darkMode") ? .05 : .15) : 0)),
                           child: Column(
                             children: [
                                HomeHeader(
@@ -703,41 +703,79 @@ class _HomeState extends State<Home>
                                      // Date Display
                                      Padding(
                                       padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 10.h),
-                                      child: Row(
-                                        mainAxisAlignment: MainAxisAlignment.center,
-                                        children: [
-                                          Builder(
-                                            builder: (context) {
-                                              try {
-                                                return Text(
-                                                  _today.toFormat("dd - MMMM - yyyy"),
-                                                  style: TextStyle(
-                                                      color: getValue("darkMode") ? Colors.white70 : goldColor,
-                                                      fontSize: 14.sp),
-                                                );
-                                              } catch (e) {
-                                                return Container();
+                                      child: Container(
+                                        padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
+                                        decoration: BoxDecoration(
+                                          color: getValue("darkMode")
+                                              ? const Color(0xff2A2520).withOpacity(0.8)
+                                              : Colors.white.withOpacity(0.85),
+                                          borderRadius: BorderRadius.circular(20.r),
+                                          boxShadow: [
+                                            BoxShadow(
+                                              color: getValue("darkMode")
+                                                  ? Colors.black26
+                                                  : const Color(0xff8B6914).withOpacity(0.1),
+                                              blurRadius: 8,
+                                              offset: const Offset(0, 2),
+                                            ),
+                                          ],
+                                          border: Border.all(
+                                            color: getValue("darkMode")
+                                                ? const Color(0xffC5A053).withOpacity(0.3)
+                                                : const Color(0xffD4C4A0).withOpacity(0.5),
+                                            width: 1,
+                                          )
+                                        ),
+                                        child: Row(
+                                          mainAxisAlignment: MainAxisAlignment.center,
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: [
+                                            Builder(
+                                              builder: (context) {
+                                                try {
+                                                  return Text(
+                                                    _today.toFormat("dd - MMMM - yyyy"),
+                                                    style: TextStyle(
+                                                        color: getValue("darkMode") ? const Color(0xffF0E0C0) : const Color(0xff755C26),
+                                                         fontSize: 13.sp,
+                                                         fontWeight: FontWeight.w600,
+                                                         fontFamily: "cairo"),
+                                                  );
+                                                } catch (e) {
+                                                  return Container();
+                                                }
                                               }
-                                            }
-                                          ),
-                                          SizedBox(width: 10.w),
-                                          Builder(
-                                            builder: (context) {
-                                              String formattedDate;
-                                              try {
-                                                formattedDate = DateFormat.yMMMEd(context.locale.languageCode).format(DateTime.now());
-                                              } catch (e) {
-                                                formattedDate = DateFormat.yMMMEd("en").format(DateTime.now());
-                                              }
-                                              return Text(
-                                                formattedDate,
+                                            ),
+                                            Padding(
+                                              padding: EdgeInsets.symmetric(horizontal: 8.w),
+                                              child: Text(
+                                                " | ",
                                                 style: TextStyle(
-                                                    color: getValue("darkMode") ? Colors.white70 : goldColor,
-                                                    fontSize: 14.sp),
-                                              );
-                                            }
-                                          ),
-                                        ],
+                                                  color: getValue("darkMode") ? const Color(0xffC5A053).withOpacity(0.5) : const Color(0xffD4C4A0),
+                                                  fontSize: 14.sp,
+                                                ),
+                                              ),
+                                            ),
+                                            Builder(
+                                              builder: (context) {
+                                                String formattedDate;
+                                                try {
+                                                  formattedDate = DateFormat.yMMMEd(context.locale.languageCode).format(DateTime.now());
+                                                } catch (e) {
+                                                  formattedDate = DateFormat.yMMMEd("en").format(DateTime.now());
+                                                }
+                                                return Text(
+                                                  formattedDate,
+                                                  style: TextStyle(
+                                                      color: getValue("darkMode") ? const Color(0xffF0E0C0) : const Color(0xff755C26),
+                                                      fontSize: 13.sp,
+                                                      fontWeight: FontWeight.w600,
+                                                      fontFamily: "cairo"),
+                                                );
+                                              }
+                                            ),
+                                          ],
+                                        ),
                                       ),
                                      ),
 

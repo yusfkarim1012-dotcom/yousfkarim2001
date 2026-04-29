@@ -2,6 +2,7 @@
 # This script automatically downloads and configures the development environment for the Khatmah project.
 
 $ErrorActionPreference = "Stop"
+$ProgressPreference = 'SilentlyContinue'
 
 $ProjectRoot = Get-Location
 $DevToolsDir = Join-Path $ProjectRoot "devtools"
@@ -23,7 +24,7 @@ if (!(Test-Path $DevToolsDir)) {
 if (!(Test-Path $JdkDir)) {
     echo "[...] Downloading Portable JDK 17..."
     $JdkZip = Join-Path $DevToolsDir "jdk.zip"
-    Invoke-WebRequest -Uri "https://aka.ms/download-jdk/microsoft-jdk-17-windows-x64.zip" -OutFile $JdkZip
+    curl.exe -L -o $JdkZip "https://aka.ms/download-jdk/microsoft-jdk-17-windows-x64.zip"
     
     echo "[...] Extracting JDK..."
     # Using tar for better performance and reliability
@@ -58,7 +59,7 @@ if (!(Test-Path $AndroidSdkDir)) {
     echo "[...] Downloading Android Command Line Tools..."
     New-Item -ItemType Directory -Path $AndroidSdkDir | Out-Null
     $CmdLineZip = Join-Path $DevToolsDir "cmdline-tools.zip"
-    Invoke-WebRequest -Uri "https://dl.google.com/android/repository/commandlinetools-win-11076708_latest.zip" -OutFile $CmdLineZip
+    curl.exe -L -o $CmdLineZip "https://dl.google.com/android/repository/commandlinetools-win-11076708_latest.zip"
     
     echo "[...] Extracting Command Line Tools..."
     $ToolsDest = Join-Path $AndroidSdkDir "cmdline-tools"

@@ -29,6 +29,7 @@ import 'package:khatmah/GlobalHelpers/constants.dart';
 import 'package:khatmah/GlobalHelpers/initializeData.dart';
 import 'package:khatmah/features/QuranPages/helpers/convertNumberToAr.dart';
 import 'package:khatmah/features/QuranPages/views/quran_sura_list.dart';
+import 'package:khatmah/features/QuranPages/views/quranDetailsPage.dart';
 import 'package:khatmah/features/QuranPages/views/screenshot_preview.dart';
 import 'package:khatmah/features/allah_names/allah_names_page.dart';
 import 'package:khatmah/features/audiopage/player/player_bar.dart';
@@ -51,7 +52,7 @@ import 'package:khatmah/features/support/support_page.dart';
 // import 'package:periodic_alarm/periodic_alarm.dart';
 // import 'package:periodic_alarm/services/alarm_notification.dart';
 // import 'package:periodic_alarm/services/alarm_storage.dart';
-import 'package:quran/quran.dart';
+import 'package:quran/quran.dart' as quran;
 import 'package:share_plus/share_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:geocoding/geocoding.dart';
@@ -113,9 +114,7 @@ class _HomeState extends State<Home>
   bool alarm = false;
   bool alarm1 = false;
   int? id;
-  late int suranumber = Random().nextInt(114) + 1;
   late int indexOfHadith = Random().nextInt(hadithes.length);
-  late int verseNumber = Random().nextInt(getVerseCount(suranumber)) + 1;
   Future<void> loadJsonAsset() async {
     final String jsonString =
         await rootBundle.loadString('assets/json/surahs.json');
@@ -779,17 +778,108 @@ class _HomeState extends State<Home>
                                       ),
                                      ),
 
-                                     // Random Verse Card
-                                     DailyContentCard(
-                                       title: "quran".tr(), 
-                                       content: getVerse(suranumber, verseNumber),
-                                       subtitle: "\n${getSurahNameArabic(suranumber)} - ${convertToArabicNumber(verseNumber.toString())}",
-                                       onTap: () {
-                                          setState(() {
-                                            suranumber = Random().nextInt(114) + 1;
-                                            verseNumber = Random().nextInt(getVerseCount(suranumber)) + 1;
-                                          });
-                                       },
+                                     // Last Read & Last Bookmark Section
+                                     Builder(
+                                       builder: (context) {
+                                         // Last Read Data
+                                         int lastReadPage = getValue("lastRead") == "non" ? 1 : getValue("lastRead");
+                                         var pageData = quran.getPageData(lastReadPage);
+                                         int surahNum = pageData[0]["surah"];
+                                         String surahName = rtlLanguages.contains(context.locale.languageCode) 
+                                             ? quran.getSurahNameArabic(surahNum) 
+                                             : quran.getSurahName(surahNum);
+                                         int juzNum = quran.getJuzNumber(surahNum, pageData[0]["start"]);
+
+                                         // Last Bookmark Data
+                                         List bookmarksList = json.decode(getValue("bookmarks"));
+                                         var lastBookmark = bookmarksList.isNotEmpty ? bookmarksList.last : null;
+
+                                         if (lastBookmark != null) {
+                                           // Show side by side
+                                           int bSurahNum = int.parse((lastBookmark["suraNumber"] ?? 1).toString());
+                                           int bVerseNum = int.parse((lastBookmark["verseNumber"] ?? 1).toString());
+                                           int bPageNum = quran.getPageNumber(bSurahNum, bVerseNum);
+                                           String bSurahName = rtlLanguages.contains(context.locale.languageCode) 
+                                               ? quran.getSurahNameArabic(bSurahNum) 
+                                               : quran.getSurahName(bSurahNum);
+
+                                           return Padding(
+                                             padding: EdgeInsets.symmetric(horizontal: 12.w),
+                                             child: Row(
+                                               children: [
+                                                 Expanded(
+                                                   child: LastReadCard(
+                                                     surahName: surahName,
+                                                     pageNumber: lastReadPage,
+                                                     juzNumber: juzNum,
+                                                     isHalfWidth: true,
+                                                     onTap: () {
+                                                        Navigator.push(
+                                                          context, 
+                                                          CupertinoPageRoute(
+                                                            builder: (builder) => QuranDetailsPage(
+                                                              pageNumber: lastReadPage,
+                                                              jsonData: widgejsonData,
+                                                              shouldHighlightText: false,
+                                                              highlightVerse: "",
+                                                              quarterJsonData: quarterjsonData,
+                                                              shouldHighlightSura: false,
+                                                            )
+                                                          )
+                                                        ).then((value) => setState(() {}));
+                                                     },
+                                                   ),
+                                                 ),
+                                                 Expanded(
+                                                   child: BookmarkCard(
+                                                     surahName: bSurahName,
+                                                     bookmarkName: lastBookmark["name"] ?? "",
+                                                     verseNumber: bVerseNum,
+                                                     isHalfWidth: true,
+                                                     onTap: () {
+                                                        Navigator.push(
+                                                          context, 
+                                                          CupertinoPageRoute(
+                                                            builder: (builder) => QuranDetailsPage(
+                                                              pageNumber: bPageNum,
+                                                              jsonData: widgejsonData,
+                                                              shouldHighlightText: true,
+                                                              highlightVerse: quran.getVerse(bSurahNum, bVerseNum),
+                                                              quarterJsonData: quarterjsonData,
+                                                              shouldHighlightSura: false,
+                                                            )
+                                                          )
+                                                        ).then((value) => setState(() {}));
+                                                     },
+                                                   ),
+                                                 ),
+                                               ],
+                                             ),
+                                           );
+                                         } else {
+                                           // Show only Last Read full width
+                                           return LastReadCard(
+                                             surahName: surahName,
+                                             pageNumber: lastReadPage,
+                                             juzNumber: juzNum,
+                                             onTap: () {
+                                                Navigator.push(
+                                                  context, 
+                                                  CupertinoPageRoute(
+                                                    builder: (builder) => QuranDetailsPage(
+                                                      pageNumber: lastReadPage,
+                                                      jsonData: widgejsonData,
+                                                      shouldHighlightText: false,
+                                                      highlightVerse: "",
+                                                      quarterJsonData: quarterjsonData,
+                                                      shouldHighlightSura: false,
+                                                    )
+                                                  )
+                                                ).then((value) => setState(() {}));
+                                             },
+                                           );
+                                         }
+                                       }
                                      ),
                                   ],
                                   

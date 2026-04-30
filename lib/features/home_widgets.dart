@@ -80,7 +80,6 @@ class HomeHeader extends StatelessWidget {
                   const Locale("pt"),
                   const Locale("tr"),
                   const Locale("ru"),
-                  const Locale("ku"),
                   const Locale("jp")
                 ].map<DropdownMenuItem<Locale>>((Locale locale) {
                   Map<String, String> languageNames = {
@@ -92,7 +91,6 @@ class HomeHeader extends StatelessWidget {
                     "pt": "Português",
                     "tr": "Türkçe",
                     "ru": "Русский",
-                    "ku": "کوردی",
                     "jp": "日本語"
                   };
                   return DropdownMenuItem<Locale>(

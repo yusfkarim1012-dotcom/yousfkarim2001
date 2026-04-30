@@ -86,7 +86,6 @@ void main() async {
         Locale("pt"),
         Locale("tr"),
         Locale("ru"),
-        Locale("ku"),
         Locale("jp"),
       ],
       path:

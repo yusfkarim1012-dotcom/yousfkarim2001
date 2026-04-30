@@ -24,14 +24,28 @@ class _AzkarHomePageState extends State<AzkarHomePage> {
   int index = 0;
   List tempAzkar = azkar;
   searchFunction(searchwords) {
-    tempAzkar = azkar
-        .where((element) =>
-            removeDiacritics(element["category"]).contains(searchwords))
-        .toList();
-
-    // hadithes = filteredHadithes;
     if (searchwords == "") {
       tempAzkar = azkar;
+    } else {
+      String query = removeDiacritics(searchwords).toLowerCase();
+      tempAzkar = azkar.where((element) {
+        // 1. Search in translated category name
+        String translatedCategory = element["category"].toString().tr();
+        if (removeDiacritics(translatedCategory).toLowerCase().contains(query)) {
+          return true;
+        }
+
+        // 2. Search in the actual Zikr texts within this category
+        if (element["array"] != null && element["array"] is List) {
+          for (var item in element["array"]) {
+            String text = item["text"]?.toString() ?? "";
+            if (removeDiacritics(text).toLowerCase().contains(query)) {
+              return true;
+            }
+          }
+        }
+        return false;
+      }).toList();
     }
 
     setState(() {});

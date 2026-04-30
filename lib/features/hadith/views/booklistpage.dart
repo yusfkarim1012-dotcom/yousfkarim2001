@@ -94,7 +94,7 @@ class _HadithListState extends State<HadithList> {
   searchFunction(searchwords) {
     filteredHadithes = tempHadithes
         .where(
-            (element) => removeDiacritics(element.title).contains(searchwords))
+            (element) => removeDiacritics(element.title).toLowerCase().contains(removeDiacritics(searchwords).toLowerCase()))
         .toList();
 
     hadithes = filteredHadithes;

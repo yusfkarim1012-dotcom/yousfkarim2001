@@ -37,9 +37,9 @@ class _HadithListState extends State<HadithList> {
     hadithes = [];
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     final jsonData =
-        prefs.getString("hadithlist-v2-${widget.id}-${widget.locale}");
-    if (widget.id == "100000"&&prefs.getString("hadithlist-v2-100000-${widget.locale}")!=null) {
-      final jsonData = prefs.getString("hadithlist-v2-100000-${widget.locale}");
+        prefs.getString("hadithlist-v2-${widget.id}-${getEffectiveHadeethLocale(widget.locale)}");
+    if (widget.id == "100000"&&prefs.getString("hadithlist-v2-100000-${getEffectiveHadeethLocale(widget.locale)}")!=null) {
+      final jsonData = prefs.getString("hadithlist-v2-100000-${getEffectiveHadeethLocale(widget.locale)}");
       final data = json.decode(jsonData!) as List<dynamic>;
       for (var hadith in data) {
         if (hadithes
@@ -70,7 +70,7 @@ class _HadithListState extends State<HadithList> {
       });
     } else {
       Response response = await Dio().get(
-          "https://hadeethenc.com/api/v1/hadeeths/list/?language=${widget.locale}&category_id=${widget.id}&per_page=699999");
+          "https://hadeethenc.com/api/v1/hadeeths/list/?language=${getEffectiveHadeethLocale(widget.locale)}&category_id=${widget.id}&per_page=699999");
       print("response.datlength");
       print(response.data["data"].length);
       await response.data["data"]

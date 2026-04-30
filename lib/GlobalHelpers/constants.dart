@@ -333,4 +333,14 @@ var languagesLetters = [
   }
 ];
 
-const List<String> rtlLanguages = ['ar'];
+String getEffectiveHadeethLocale(String locale) {
+  const supported = [
+    'ar', 'en', 'fr', 'es', 'tr', 'ur', 'id', 'ru', 'pt', 'zh', 'bn', 'vi',
+    'si', 'ta', 'ps', 'sw', 'ha', 'yo', 'tg', 'kk', 'sq', 'km', 'ky', 'de',
+    'fil', 'as', 'my', 'te', 'ml', 'gu', 'mr', 'kn', 'pa', 'or', 'hi'
+  ];
+  if (supported.contains(locale)) return locale;
+  return 'ar'; // Default to Arabic for unsupported languages like Kurdish
+}
+
+const List<String> rtlLanguages = ['ar', 'ku'];

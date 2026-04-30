@@ -28,7 +28,7 @@ class _HadithDetailsPageState extends State<HadithDetailsPage> {
   var hadithOtherLanguage;
   getHadithData() async {
     Response responsee = await Dio().get(
-        "https://hadeethenc.com/api/v1/hadeeths/one/?language=${widget.locale}&id=${widget.id}");
+        "https://hadeethenc.com/api/v1/hadeeths/one/?language=${getEffectiveHadeethLocale(widget.locale)}&id=${widget.id}");
     print("response.data");
     Response response = await Dio().get(
         "https://hadeethenc.com/api/v1/hadeeths/one/?language=ar&id=${widget.id}");

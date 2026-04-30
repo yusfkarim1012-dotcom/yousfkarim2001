@@ -15,6 +15,8 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:khatmah/GlobalHelpers/hive_helper.dart';
 import 'package:khatmah/features/sibha/models/tasbeh.dart';
 import 'package:khatmah/features/sibha/widgets/add_tasbeeh_dialog.dart';
+import 'package:khatmah/features/widgets/custom_app_bar.dart';
+import 'package:khatmah/features/widgets/islamic_background.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SibhaPage extends StatefulWidget {
@@ -537,31 +539,13 @@ class _SibhaPageState extends State<SibhaPage> with TickerProviderStateMixin, Wi
     
     final int currentCount = getValue("${getValue("tasbeehLastIndex")}number") ?? 0;
 
-    return Container(
-      decoration: BoxDecoration(
-        image: DecorationImage(
-          image: AssetImage(isDark ? "assets/images/prayerbackgroundnight.png" : "assets/images/background.png"),
-          fit: BoxFit.cover,
-        ),
-      ),
+    return IslamicBackground(
       child: Stack(
         children: [
           Scaffold(
             backgroundColor: Colors.transparent,
-            appBar: AppBar(
-              elevation: 0,
-              backgroundColor: Colors.transparent,
-              iconTheme: IconThemeData(color: isDark ? Colors.white : Colors.black87),
-              title: Text(
-                "sibha".tr(),
-                style: TextStyle(
-                  fontFamily: 'cairo',
-                  color: isDark ? Colors.white : Colors.black87,
-                  fontSize: 20.sp,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              centerTitle: true,
+            appBar: CustomAppBar(
+              title: "sibha".tr(),
             ),
             body: Column(
               children: [

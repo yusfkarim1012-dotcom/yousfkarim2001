@@ -13,6 +13,8 @@ import 'package:khatmah/GlobalHelpers/constants.dart';
 import 'package:khatmah/GlobalHelpers/hive_helper.dart';
 import 'package:khatmah/features/hadith/models/category.dart';
 import 'package:khatmah/features/hadith/views/booklistpage.dart';
+import 'package:khatmah/features/widgets/custom_app_bar.dart';
+import 'package:khatmah/features/widgets/islamic_background.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class HadithBooksPage extends StatefulWidget {
@@ -68,21 +70,12 @@ class _HadithBooksPageState extends State<HadithBooksPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor:             getValue("darkMode") ?quranPagesColorDark: quranPagesColorLight,
+    return IslamicBackground(
+      child: Scaffold(
+      backgroundColor: Colors.transparent,
 
-      appBar: AppBar(
-        backgroundColor:getValue("darkMode") ?darkModeSecondaryColor:quranPagesColorLight,
-        elevation: 0,
-        iconTheme:  IconThemeData(            color:getValue("darkMode") ?Colors.white.withOpacity(.87): Colors.black87,
-),
-        title: Text(
-          "Hadith".tr(),
-          style:  TextStyle(
-            color:getValue("darkMode") ?Colors.white.withOpacity(.87): Colors.black87,
-            fontFamily: "cairo",
-          ),
-        ),
+      appBar: CustomAppBar(
+        title: "Hadith".tr(),
       ),
       body: isLoading
           ?  Center(
@@ -131,16 +124,18 @@ class _HadithBooksPageState extends State<HadithBooksPage> {
                               Text(
                                 categories[index].title,
                                 style: TextStyle(
-                                  color: getValue("darkMode")?Colors.white: Colors.black,
-                                  fontSize: 14.sp,
+                                  color: getValue("darkMode")?Colors.white: Colors.black87,
+                                  fontSize: 18.sp,
+                                  fontWeight: FontWeight.bold,
                                 ),
                               ),
+                              SizedBox(height: 4.h),
                               Text(
                                 "${'hadithCount'.tr()} ${categories[index].hadeethsCount}",
                                 style: TextStyle(
                                     fontFamily: "cairo",
-                                    color: getValue("darkMode")?orangeColor.withOpacity(.9): const Color(0xffA28858)
-                                        .withOpacity(.9)),
+                                    fontWeight: FontWeight.w600,
+                                    color: getValue("darkMode")?orangeColor.withOpacity(.9): const Color(0xff755F30)),
                               )
                             ],
                           ),
@@ -165,6 +160,7 @@ class _HadithBooksPageState extends State<HadithBooksPage> {
                 );
               },
             ),
+    ),
     );
   }
 }

@@ -9,6 +9,8 @@ import 'package:lottie/lottie.dart';
 // import 'package:flutter_radio_player/flutter_radio_player.dart';
 import 'package:khatmah/GlobalHelpers/constants.dart';
 import 'package:khatmah/GlobalHelpers/hive_helper.dart';
+import 'package:khatmah/features/widgets/custom_back_button.dart';
+import 'package:khatmah/features/widgets/islamic_background.dart';
 import 'package:radio_player/radio_player.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -114,9 +116,9 @@ class _RadioPageState extends State<RadioPage> {
   TextEditingController textEditingController = TextEditingController();
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor:
-          getValue("darkMode") ? quranPagesColorDark : quranPagesColorLight,
+    return IslamicBackground(
+      child: Scaffold(
+      backgroundColor: Colors.transparent,
       appBar: AppBar(
         elevation: 0,
         actions: [
@@ -130,7 +132,7 @@ class _RadioPageState extends State<RadioPage> {
                   isSearching = !isSearching;
                 });
               },
-              icon: Icon(isSearching ? Icons.close : Icons.search)),
+              icon: Icon(isSearching ? Icons.close : Icons.search, color: getValue("darkMode")? Colors.white : Colors.black87)),
 
           if (isSearching == false)
             IconButton(
@@ -149,16 +151,14 @@ class _RadioPageState extends State<RadioPage> {
                 },
                 icon: Icon(
                   isShowingStarred ? Icons.star : Icons.star_border,
-                  color: Colors.white,
+                  color: getValue("darkMode") ? Colors.white : Colors.black87,
                 ))
         ],
         centerTitle: true,
-        // leading: Padding(
-
-        backgroundColor:
-            getValue("darkMode") ? darkModeSecondaryColor : blueColor,
+        backgroundColor: Colors.transparent,
         automaticallyImplyLeading: true,
-        iconTheme: const IconThemeData(color: Colors.white),
+        leading: const CustomBackButton(),
+        iconTheme: IconThemeData(color: getValue("darkMode")? Colors.white : Colors.black87),
         title: isSearching
             ? TextField(
                 style: TextStyle(
@@ -179,8 +179,10 @@ class _RadioPageState extends State<RadioPage> {
               )
             : Text(
                 "radios".tr(),
-                style: const TextStyle(
+                style: TextStyle(
                   fontFamily: "cairo",
+                  color: getValue("darkMode")? Colors.white : Colors.black87,
+                  fontWeight: FontWeight.bold,
                 ),
               ),
       ),
@@ -271,6 +273,7 @@ class _RadioPageState extends State<RadioPage> {
                   ),
                 );
               }),
+      ),
     );
   }
 }

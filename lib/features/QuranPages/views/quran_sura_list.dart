@@ -17,7 +17,9 @@ import 'package:khatmah/blocs/bloc/quran_page_player_bloc.dart';
 import 'package:khatmah/GlobalHelpers/constants.dart';
 import 'package:khatmah/GlobalHelpers/hive_helper.dart';
 import 'package:khatmah/features/QuranPages/views/quranDetailsPage.dart';
+import 'package:khatmah/features/widgets/custom_app_bar.dart';
 import 'package:khatmah/features/widgets/hizb_quarter_circle.dart';
+import 'package:khatmah/features/widgets/islamic_background.dart';
 import 'package:khatmah/models/surah.dart';
 
 import 'package:path_provider/path_provider.dart';
@@ -264,20 +266,10 @@ class _SurahListPageState extends State<SurahListPage> {
       length: tabs.length,
       child: KeyboardDismissOnTap(
         dismissOnCapturedTaps: true,
-        child: Container(
-          decoration: BoxDecoration(
-              // image: DecorationImage(
-              //     image: AssetImage("assets/images/homebackground.png"),
-              //     alignment: Alignment.topCenter,
-              //     opacity: .256),
-              color: getValue("darkMode")
-                  ? quranPagesColorDark
-                  : quranPagesColorLight),
+        child: IslamicBackground(
           child: Scaffold(
               resizeToAvoidBottomInset: false,
-              backgroundColor: getValue("darkMode")
-                  ? quranPagesColorDark
-                  : quranPagesColorLight,
+              backgroundColor: Colors.transparent,
               endDrawer: SafeArea(
                 child: Container(
                   height: MediaQuery.of(context).size.height,
@@ -655,7 +647,8 @@ class _SurahListPageState extends State<SurahListPage> {
               key: scaffoldKey,
               appBar: PreferredSize(
                 preferredSize: Size(MediaQuery.of(context).size.width.w, 80.h),
-                child: AppBar(
+                child: CustomAppBar(
+                  title: "alQuran".tr(),
                   actions: [
                     Padding(
                       padding: EdgeInsets.symmetric(
@@ -665,26 +658,13 @@ class _SurahListPageState extends State<SurahListPage> {
                             onPressed: () {
                               Scaffold.of(context).openEndDrawer();
                             },
-                            icon: const Icon(
+                            icon: Icon(
                               Iconsax.bookmark,
-                              color: backgroundColor,
+                              color: getValue("darkMode") ? const Color(0xffF0E0C0) : const Color(0xff5C4A1E),
                             ));
                       }),
                     )
                   ],
-                  leading: Padding(
-                    padding:
-                        EdgeInsets.symmetric(horizontal: 8.0.w, vertical: 8.h),
-                    child: IconButton(
-                        icon: Icon(
-                          Icons.arrow_back_ios,
-                          size: 20.sp,
-                          color: Colors.white,
-                        ),
-                        onPressed: () {
-                          Navigator.pop(context);
-                        }),
-                  ),
                   bottom: PreferredSize(
                     preferredSize: Size(
                       MediaQuery.of(context).size.width,
@@ -714,21 +694,6 @@ class _SurahListPageState extends State<SurahListPage> {
                           // if(index==1)getJuzNumber();
                         },
                       ),
-                    ),
-                  ),
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.only(
-                          bottomLeft: Radius.circular(16.r),
-                          bottomRight: Radius.circular(16.r))),
-                  elevation: 0,
-                  centerTitle: true,
-                  backgroundColor:
-                      getValue("darkMode") ? darkModeSecondaryColor : blueColor,
-                  title: Text(
-                    "alQuran".tr(),
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 20.sp,
                     ),
                   ),
                 ),
@@ -1479,9 +1444,10 @@ class _SurahListPageState extends State<SurahListPage> {
                         const SizedBox(height: 10),
                   ),
                 ],
-              )),
+              ),
+            ),
+          ),
         ),
-      ),
     );
   }
 }

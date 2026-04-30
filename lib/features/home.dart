@@ -62,6 +62,7 @@ import 'package:superellipse_shape/superellipse_shape.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:after_layout/after_layout.dart';
 import 'package:workmanager/workmanager.dart';
+import 'package:khatmah/features/widgets/animated_islamic_decorations.dart';
 // import 'package:periodic_alarm/src/android_alarm.dart';
 
 final qurapPagePlayerBloc = QuranPagePlayerBloc();
@@ -597,6 +598,22 @@ class _HomeState extends State<Home>
     ["Maghrib", "المغرب"],
     ["Isha", "العشاء"]
   ];
+
+  void _fastPush(Widget page) {
+    Navigator.push(
+      context,
+      PageRouteBuilder(
+        pageBuilder: (context, animation, secondaryAnimation) => page,
+        transitionsBuilder: (context, animation, secondaryAnimation, child) {
+          return FadeTransition(
+            opacity: animation,
+            child: child,
+          );
+        },
+        transitionDuration: const Duration(milliseconds: 200),
+      ),
+    ).then((value) => setState(() {}));
+  }
   getLocationData() {}
   String currentCity = "";
 
@@ -636,7 +653,7 @@ class _HomeState extends State<Home>
                             ? DecorationImage(
                                 image:
                                     const AssetImage("assets/images/islamic_top_bg.png"),
-                                fit: BoxFit.fitWidth,
+                                fit: BoxFit.cover,
                                 alignment: Alignment.topCenter,
                                 opacity: getValue("darkMode") ? .15 : .85)
                             : DecorationImage(
@@ -656,10 +673,20 @@ class _HomeState extends State<Home>
                           color: Colors.transparent,
                           image: DecorationImage(
                               image: const AssetImage("assets/images/islamic_bottom_bg.png"),
-                              fit: BoxFit.fitWidth,
+                              fit: BoxFit.cover,
                               alignment: Alignment.bottomCenter,
                               opacity: getValue("darkMode") ? .15 : .6)),
-                      child: Scaffold(
+                      child: Stack(children: [
+                          if (index == 1)
+                            const Positioned(
+                              top: 0,
+                              left: 0,
+                              right: 0,
+                              child: IgnorePointer(
+                                child: AnimatedIslamicDecorations(),
+                              ),
+                            ),
+                        Scaffold(
                         appBar: AppBar(
                           toolbarHeight: 0,
                           elevation: 0,
@@ -814,19 +841,14 @@ class _HomeState extends State<Home>
                                                      juzNumber: juzNum,
                                                      isHalfWidth: true,
                                                      onTap: () {
-                                                        Navigator.push(
-                                                          context, 
-                                                          CupertinoPageRoute(
-                                                            builder: (builder) => QuranDetailsPage(
+                                                        _fastPush(QuranDetailsPage(
                                                               pageNumber: lastReadPage,
                                                               jsonData: widgejsonData,
                                                               shouldHighlightText: false,
                                                               highlightVerse: "",
                                                               quarterJsonData: quarterjsonData,
                                                               shouldHighlightSura: false,
-                                                            )
-                                                          )
-                                                        ).then((value) => setState(() {}));
+                                                            ));
                                                      },
                                                    ),
                                                  ),
@@ -837,19 +859,14 @@ class _HomeState extends State<Home>
                                                      verseNumber: bVerseNum,
                                                      isHalfWidth: true,
                                                      onTap: () {
-                                                        Navigator.push(
-                                                          context, 
-                                                          CupertinoPageRoute(
-                                                            builder: (builder) => QuranDetailsPage(
+                                                        _fastPush(QuranDetailsPage(
                                                               pageNumber: bPageNum,
                                                               jsonData: widgejsonData,
                                                               shouldHighlightText: true,
                                                               highlightVerse: quran.getVerse(bSurahNum, bVerseNum),
                                                               quarterJsonData: quarterjsonData,
                                                               shouldHighlightSura: false,
-                                                            )
-                                                          )
-                                                        ).then((value) => setState(() {}));
+                                                            ));
                                                      },
                                                    ),
                                                  ),
@@ -863,19 +880,14 @@ class _HomeState extends State<Home>
                                              pageNumber: lastReadPage,
                                              juzNumber: juzNum,
                                              onTap: () {
-                                                Navigator.push(
-                                                  context, 
-                                                  CupertinoPageRoute(
-                                                    builder: (builder) => QuranDetailsPage(
+                                                _fastPush(QuranDetailsPage(
                                                       pageNumber: lastReadPage,
                                                       jsonData: widgejsonData,
                                                       shouldHighlightText: false,
                                                       highlightVerse: "",
                                                       quarterJsonData: quarterjsonData,
                                                       shouldHighlightSura: false,
-                                                    )
-                                                  )
-                                                ).then((value) => setState(() {}));
+                                                    ));
                                              },
                                            );
                                          }
@@ -898,21 +910,21 @@ class _HomeState extends State<Home>
                                             text: "quran".tr(),
                                             imagePath: "assets/images/qlogo.png",
                                             onPressed: () {
-                                               Navigator.push(context, CupertinoPageRoute(builder: (builder) => SurahListPage(jsonData: widgejsonData, quarterjsonData: quarterjsonData)));
+                                               _fastPush(SurahListPage(jsonData: widgejsonData, quarterjsonData: quarterjsonData));
                                             }
                                           ),
                                           HomeGridItem(
                                             text: "audios".tr(),
                                             imagePath: "assets/images/quranlogo.png",
                                             onPressed: () {
-                                               Navigator.push(context, CupertinoPageRoute(builder: (builder) => BlocProvider.value(value: playerPageBloc, child: RecitersPage(jsonData: widgejsonData))));
+                                               _fastPush(BlocProvider.value(value: playerPageBloc, child: RecitersPage(jsonData: widgejsonData)));
                                             }
                                           ),
                                           HomeGridItem(
                                             text: "Hadith".tr(),
                                             imagePath: "assets/images/muhammed.png",
                                             onPressed: () {
-                                               Navigator.push(context, CupertinoPageRoute(builder: (builder) => BlocProvider.value(value: hadithPageBloc, child: HadithBooksPage(locale: context.locale.languageCode))));
+                                               _fastPush(BlocProvider.value(value: hadithPageBloc, child: HadithBooksPage(locale: context.locale.languageCode)));
                                             }
                                           ),
                                           // HomeGridItem(
@@ -927,7 +939,7 @@ class _HomeState extends State<Home>
                                             text: "azkar".tr(),
                                             imagePath: "assets/images/azkar.png",
                                             onPressed: () {
-                                               Navigator.push(context, CupertinoPageRoute(builder: ((context) => const AzkarHomePage())));
+                                               _fastPush(const AzkarHomePage());
                                             }
                                           ),
 
@@ -935,7 +947,7 @@ class _HomeState extends State<Home>
                                             text: "sibha".tr(),
                                             imagePath: "assets/images/sibha.png",
                                             onPressed: () {
-                                               Navigator.push(context, CupertinoPageRoute(builder: (builder) => const SibhaPage()));
+                                               _fastPush(const SibhaPage());
                                             }
                                           ),
 
@@ -943,7 +955,7 @@ class _HomeState extends State<Home>
                                             text: "radios".tr(),
                                             imagePath: "assets/images/radio.png",
                                             onPressed: () {
-                                               Navigator.push(context, CupertinoPageRoute(builder: (builder) => const RadioPage()));
+                                               _fastPush(const RadioPage());
                                             }
                                           ),
                                       ],
@@ -959,6 +971,8 @@ class _HomeState extends State<Home>
                     ),
                   ),
                 ),
+                        ],
+                      ),
               ),
             ),
           ),

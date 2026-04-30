@@ -11,6 +11,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttericon/entypo_icons.dart';
 import 'package:fluttericon/font_awesome_icons.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:khatmah/features/audiopage/models/reciter.dart';
 import 'package:khatmah/blocs/bloc/player_bloc_bloc.dart';
 import 'package:khatmah/GlobalHelpers/constants.dart';
@@ -21,8 +22,9 @@ import 'package:khatmah/features/audiopage/player/player_bar.dart';
 import 'package:khatmah/blocs/bloc/bloc/player_bar_bloc.dart';
 import 'package:khatmah/features/audiopage/views/reciter_all_surahs_page.dart';
 import 'dart:math' as math;
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:khatmah/features/home.dart';
+import 'package:khatmah/features/widgets/custom_app_bar.dart';
+import 'package:khatmah/features/widgets/islamic_background.dart';
 import 'package:quran/quran.dart' as quran;
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -283,25 +285,11 @@ print(jsonData2);
   Widget build(BuildContext context) {
     final screenSize = MediaQuery.of(context).size;
     return 
-        Scaffold(
-          backgroundColor:  getValue("darkMode")?quranPagesColorDark:quranPagesColorLight,
-          appBar: AppBar(
-            backgroundColor:getValue("darkMode")?darkModeSecondaryColor.withOpacity(.9): blueColor,
-            elevation: 0,
-            title: Text(
-              "allReciters".tr(),
-              style: const TextStyle(color: Colors.white),
-            ),
-            automaticallyImplyLeading: false,
-            leading: IconButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-                icon: const Icon(
-                  Entypo.logout,
-                  color: Colors.white,
-                )),
-            systemOverlayStyle: SystemUiOverlayStyle.light,
+        IslamicBackground(
+          child: Scaffold(
+            backgroundColor: Colors.transparent,
+          appBar: CustomAppBar(
+            title: "allReciters".tr(),
             bottom: PreferredSize(
               preferredSize: Size(screenSize.width, screenSize.height * .1),
               child: Padding(
@@ -950,8 +938,8 @@ print(jsonData2);
                           ));
                     },
                   ),
-                ),
-        )
-    ;
+        ),
+      ),
+    );
   }
 }

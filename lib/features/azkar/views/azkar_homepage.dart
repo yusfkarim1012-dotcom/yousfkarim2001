@@ -8,6 +8,8 @@ import 'package:khatmah/features/azkar/data/azkar.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:khatmah/features/azkar/model/dua_model.dart';
 import 'package:khatmah/features/azkar/views/zikr_detailspage.dart';
+import 'package:khatmah/features/widgets/custom_back_button.dart';
+import 'package:khatmah/features/widgets/islamic_background.dart';
 import 'package:quran/quran.dart';
 import 'package:superellipse_shape/superellipse_shape.dart';
 
@@ -38,33 +40,21 @@ class _AzkarHomePageState extends State<AzkarHomePage> {
   TextEditingController textEditingController = TextEditingController();
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: MediaQuery.of(context).size.height,
-      decoration: const BoxDecoration(
-          image: DecorationImage(
-              fit: BoxFit.cover,
-              image: AssetImage(
-                "assets/images/try6.png",
-              ),
-              alignment: Alignment.center,
-              opacity: .6)),
+    return IslamicBackground(
       child: Scaffold(
-        backgroundColor: getValue("darkMode")
-              ? quranPagesColorDark
-              :quranPagesColorLight,
+        backgroundColor: Colors.transparent,
         body: CustomScrollView(
           slivers: <Widget>[
             SliverAppBar(
               floating: true,
               pinned: true,
-              iconTheme: const IconThemeData(color:  Colors.white),
-              backgroundColor: getValue("darkMode")
-              ? darkModeSecondaryColor
-              : blueColor,
+              iconTheme: IconThemeData(color: getValue("darkMode")? Colors.white : Colors.black87),
+              backgroundColor: Colors.transparent,
+              leading: const CustomBackButton(),
               elevation: 0, // No shadow
               title: Text(
                 "azkar".tr(),
-                style: TextStyle(color: Colors.white, fontSize: 16.sp),
+                style: TextStyle(color: getValue("darkMode")? Colors.white : Colors.black87, fontSize: 16.sp, fontWeight: FontWeight.bold),
               ),
               expandedHeight: 100.h,
               collapsedHeight: kToolbarHeight,
@@ -78,18 +68,18 @@ class _AzkarHomePageState extends State<AzkarHomePage> {
                   ),
                   child: Row(
                     children: [
-                      const Icon(Icons.search, color: Colors.white),
+                      Icon(Icons.search, color: getValue("darkMode")? Colors.white : Colors.black54),
                       const SizedBox(width: 10),
                       Expanded(
                         child: TextField(
-                          style: const TextStyle(color: Colors.white),
+                          style: TextStyle(color: getValue("darkMode")? Colors.white : Colors.black87),
                           controller: textEditingController,
                           onChanged: (val) {
                             searchFunction(val);
                           },
                           decoration: InputDecoration(
                             hintText: 'SearchDua'.tr(),
-                            hintStyle: const TextStyle(color: Colors.white),
+                            hintStyle: TextStyle(color: getValue("darkMode")? Colors.white54 : Colors.black54),
                             border: InputBorder.none,
                           ),
                         ),
@@ -100,7 +90,7 @@ class _AzkarHomePageState extends State<AzkarHomePage> {
                               textEditingController.clear();
                               searchFunction("");
                             },
-                            icon: const Icon(Icons.close, color: Colors.white))
+                            icon: Icon(Icons.close, color: getValue("darkMode")? Colors.white : Colors.black54))
                     ],
                   ),
                 ),
@@ -116,8 +106,7 @@ class _AzkarHomePageState extends State<AzkarHomePage> {
                     child: Material(
                       color:getValue("darkMode")
               ? darkModeSecondaryColor
-              .withOpacity(.8): const Color.fromARGB(255, 255, 255, 255)
-                          .withOpacity(.2),
+              .withOpacity(.8): const Color(0xffF5EFE8).withOpacity(.9),
                       shape: SuperellipseShape(
                         borderRadius: BorderRadius.circular(34.0.r),
                       ),

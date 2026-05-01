@@ -51,10 +51,12 @@ class HeaderWidget extends StatelessWidget {
                   "اياتها\n${getVerseCount(e["surah"])}",
                   style: TextStyle(
                       // color: accentColor,
-                      color: indexOfTheme == null
-                          ? primaryColors[getValue("quranPageolorsIndex")]
-                              .withOpacity(.9)
-                          : primaryColors[indexOfTheme].withOpacity(.92),
+                      color: !getValue("darkMode") 
+                          ? const Color(0xff4A4039)
+                          : (indexOfTheme == null
+                              ? primaryColors[getValue("quranPageolorsIndex")]
+                                  .withOpacity(.9)
+                              : primaryColors[indexOfTheme].withOpacity(.92)),
                       fontSize: 5.sp,
                       fontFamily: "UthmanicHafs13"),
                 ),
@@ -65,10 +67,12 @@ text:    "${e["surah"]}",
                   style: TextStyle(
                     fontFamily: "arsura",
                     fontSize: 25.sp,
-                    color: indexOfTheme == null
-                        ? primaryColors[getValue("quranPageolorsIndex")]
-                            .withOpacity(.9)
-                        : primaryColors[indexOfTheme].withOpacity(.9),
+                    color: !getValue("darkMode") 
+                        ? const Color(0xff4A4039)
+                        : (indexOfTheme == null
+                            ? primaryColors[getValue("quranPageolorsIndex")]
+                                .withOpacity(.9)
+                            : primaryColors[indexOfTheme].withOpacity(.9)),
                   ),
 
                       ),
@@ -80,10 +84,12 @@ text:    "${e["surah"]}",
                   textAlign: TextAlign.center,
                   style: TextStyle(
                       //color: accentColor,//
-                      color: indexOfTheme == null
-                          ? primaryColors[getValue("quranPageolorsIndex")]
-                              .withOpacity(.9)
-                          : primaryColors[indexOfTheme].withOpacity(.9),
+                      color: !getValue("darkMode") 
+                          ? const Color(0xff4A4039)
+                          : (indexOfTheme == null
+                              ? primaryColors[getValue("quranPageolorsIndex")]
+                                  .withOpacity(.9)
+                              : primaryColors[indexOfTheme].withOpacity(.9)),
                       fontSize: 5.sp,
                       fontFamily: "UthmanicHafs13"),
                 ),

@@ -682,10 +682,12 @@ class _SurahListPageState extends State<SurahListPage> {
                         indicatorPadding:
                             EdgeInsets.symmetric(horizontal: 20.w),
                         indicatorSize: TabBarIndicatorSize.tab,
-                        indicatorColor: Colors.white,
+                        indicatorColor: !getValue("darkMode") ? const Color(0xff5C4A1E) : Colors.white,
                         indicatorWeight: 4,
-                        labelColor: Colors.white,
-                        unselectedLabelColor: Colors.white.withOpacity(0.6),
+                        labelColor: !getValue("darkMode") ? const Color(0xff5C4A1E) : Colors.white,
+                        unselectedLabelColor: !getValue("darkMode") 
+                            ? const Color(0xff5C4A1E).withOpacity(0.6) 
+                            : Colors.white.withOpacity(0.6),
                         tabs: tabs,
                         onTap: (index) {
                           setState(() {

@@ -84,8 +84,9 @@ class _QuranVerticalViewState extends State<QuranVerticalView> {
                         style: TextStyle(
                             fontSize: 12.sp,
                             fontWeight: FontWeight.bold,
-                            color: backgroundColors[
-                                getValue("quranPageolorsIndex")]),
+                            color: !getValue("darkMode") 
+                                ? const Color(0xff4A4039)
+                                : backgroundColors[getValue("quranPageolorsIndex")]),
                       ),
                       Text(
                         widget.jsonData[
@@ -95,8 +96,9 @@ class _QuranVerticalViewState extends State<QuranVerticalView> {
                             fontSize: 12.sp,
                             fontFamily: "taha",
                             fontWeight: FontWeight.bold,
-                            color: backgroundColors[
-                                getValue("quranPageolorsIndex")]),
+                            color: !getValue("darkMode") 
+                                ? const Color(0xff4A4039)
+                                : backgroundColors[getValue("quranPageolorsIndex")]),
                       )
                     ],
                   ),

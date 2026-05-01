@@ -44,11 +44,15 @@ class QuranPageHeader extends StatelessWidget {
                     icon: Icon(
                       Icons.arrow_back_ios,
                       size: 24.sp,
-                      color: secondaryColors[getValue("quranPageolorsIndex")],
+                      color: !getValue("darkMode") 
+                          ? const Color(0xff4A4039)
+                          : secondaryColors[getValue("quranPageolorsIndex")],
                     )),
                 Text(surahName,
                     style: TextStyle(
-                        color: secondaryColors[getValue("quranPageolorsIndex")],
+                        color: !getValue("darkMode") 
+                            ? const Color(0xff4A4039)
+                            : secondaryColors[getValue("quranPageolorsIndex")],
                         fontFamily: "Taha",
                         fontSize: 14.sp)),
               ],
@@ -74,7 +78,9 @@ class QuranPageHeader extends StatelessWidget {
                     icon: Icon(
                       Icons.settings,
                       size: 24.sp,
-                      color: secondaryColors[getValue("quranPageolorsIndex")],
+                      color: !getValue("darkMode") 
+                          ? const Color(0xff4A4039)
+                          : secondaryColors[getValue("quranPageolorsIndex")],
                     ))
               ],
             ),
@@ -105,7 +111,9 @@ class QuranPageHeader extends StatelessWidget {
           style: TextStyle(
             fontFamily: 'aldahabi',
             fontSize: 10.sp,
-            color: backgroundColors[getValue("quranPageolorsIndex")],
+            color: !getValue("darkMode") 
+                ? const Color(0xff4A4039)
+                : backgroundColors[getValue("quranPageolorsIndex")],
           ),
         ),
       );
@@ -125,7 +133,9 @@ class QuranPageHeader extends StatelessWidget {
             style: TextStyle(
               fontFamily: 'aldahabi',
               fontSize: 12.sp,
-              color: backgroundColors[getValue("quranPageolorsIndex")],
+              color: !getValue("darkMode") 
+                  ? const Color(0xff4A4039)
+                  : backgroundColors[getValue("quranPageolorsIndex")],
             ),
           ),
         ),

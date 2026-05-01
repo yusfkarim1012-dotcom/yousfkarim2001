@@ -154,15 +154,15 @@ class LastReadCard extends StatelessWidget {
                 : const Color(0xffD4C4A0).withOpacity(0.6),
             width: 1.5,
           ),
-          boxShadow: [
-            BoxShadow(
-              color: isDark
-                  ? Colors.black45
-                  : const Color(0xff8B6914).withOpacity(0.12),
-              blurRadius: 15,
-              offset: const Offset(0, 6),
-            ),
-          ],
+          boxShadow: isDark
+              ? []
+              : [
+                  BoxShadow(
+                    color: const Color(0xff8B6914).withOpacity(0.12),
+                    blurRadius: 15,
+                    offset: const Offset(0, 6),
+                  ),
+                ],
         ),
         child: Stack(
           children: [
@@ -283,15 +283,15 @@ class BookmarkCard extends StatelessWidget {
                 : const Color(0xffA0D4C4).withOpacity(0.6),
             width: 1.5,
           ),
-          boxShadow: [
-            BoxShadow(
-              color: isDark
-                  ? Colors.black45
-                  : const Color(0xff148B69).withOpacity(0.12),
-              blurRadius: 15,
-              offset: const Offset(0, 6),
-            ),
-          ],
+          boxShadow: isDark
+              ? []
+              : [
+                  BoxShadow(
+                    color: const Color(0xff148B69).withOpacity(0.12),
+                    blurRadius: 15,
+                    offset: const Offset(0, 6),
+                  ),
+                ],
         ),
         child: Stack(
           children: [
@@ -432,15 +432,15 @@ class DailyContentCard extends StatelessWidget {
                 : const Color(0xffD4C4A0).withOpacity(0.5),
             width: 1.0,
           ),
-          boxShadow: [
-            BoxShadow(
-              color: isDark
-                  ? Colors.black26
-                  : Colors.brown.withOpacity(0.08),
-              blurRadius: 15,
-              offset: const Offset(0, 5),
-            ),
-          ],
+          boxShadow: isDark
+              ? []
+              : [
+                  BoxShadow(
+                    color: Colors.brown.withOpacity(0.08),
+                    blurRadius: 15,
+                    offset: const Offset(0, 5),
+                  ),
+                ],
         ),
         child: Column(
           children: [
@@ -517,9 +517,9 @@ class HomeGridItem extends StatelessWidget {
             width: 1.0,
           ),
         ),
-        elevation: isDark ? 2 : 4,
+        elevation: isDark ? 0 : 4,
         shadowColor: isDark
-            ? Colors.black38
+            ? Colors.transparent
             : Colors.brown.withOpacity(0.15),
         child: InkWell(
           onTap: onPressed,

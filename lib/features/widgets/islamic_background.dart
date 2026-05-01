@@ -10,36 +10,74 @@ class IslamicBackground extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     bool isDark = getValue("darkMode") ?? false;
-    
+
     return Container(
-      decoration: BoxDecoration(
-        color: isDark ? const Color(0xff1C1815) : const Color(0xffFFF8EE),
-        image: DecorationImage(
-          image: const AssetImage("assets/images/islamic_pattern_bg.png"),
-          repeat: ImageRepeat.repeat,
-          opacity: isDark ? 0.05 : 0.15,
-        ),
-      ),
-      child: Container(
-        decoration: BoxDecoration(
-          image: DecorationImage(
-            image: const AssetImage("assets/images/islamic_top_bg.png"),
-            fit: BoxFit.cover,
-            alignment: Alignment.topCenter,
-            opacity: isDark ? 0.15 : 0.4,
-          ),
-        ),
-        child: Container(
-          decoration: BoxDecoration(
-            image: DecorationImage(
-              image: const AssetImage("assets/images/islamic_bottom_bg.png"),
-              fit: BoxFit.cover,
-              alignment: Alignment.bottomCenter,
-              opacity: isDark ? 0.15 : 0.4,
+      color: isDark ? const Color(0xff12100E) : const Color(0xffFFF8EE),
+      child: Stack(
+        children: [
+          // 1. Pattern (Full fill)
+          Positioned.fill(
+            child: Opacity(
+              opacity: isDark ? 0.2 : 0.15,
+              child: Image.asset(
+                "assets/images/islamic_pattern_bg.png",
+                repeat: ImageRepeat.repeat,
+              ),
             ),
           ),
-          child: child,
-        ),
+          // 2. Top Arch
+          Positioned(
+            top: 0,
+            left: 0,
+            right: 0,
+            height: MediaQuery.of(context).size.height * 0.5,
+            child: Opacity(
+              opacity: isDark ? 0.25 : 0.5,
+              child: ShaderMask(
+                shaderCallback: (rect) {
+                  return const LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    colors: [Colors.black, Colors.transparent],
+                  ).createShader(Rect.fromLTRB(0, 0, rect.width, rect.height));
+                },
+                blendMode: BlendMode.dstIn,
+                child: Image.asset(
+                  "assets/images/islamic_top_bg.png",
+                  fit: BoxFit.cover,
+                  alignment: Alignment.topCenter,
+                ),
+              ),
+            ),
+          ),
+          // 3. Bottom Mandala
+          Positioned(
+            bottom: 0,
+            left: 0,
+            right: 0,
+            height: MediaQuery.of(context).size.height * 0.5,
+            child: Opacity(
+              opacity: isDark ? 0.25 : 0.5,
+              child: ShaderMask(
+                shaderCallback: (rect) {
+                  return const LinearGradient(
+                    begin: Alignment.bottomCenter,
+                    end: Alignment.topCenter,
+                    colors: [Colors.black, Colors.transparent],
+                  ).createShader(Rect.fromLTRB(0, 0, rect.width, rect.height));
+                },
+                blendMode: BlendMode.dstIn,
+                child: Image.asset(
+                  "assets/images/islamic_bottom_bg.png",
+                  fit: BoxFit.cover,
+                  alignment: Alignment.bottomCenter,
+                ),
+              ),
+            ),
+          ),
+          // 4. Content
+          child,
+        ],
       ),
     );
   }

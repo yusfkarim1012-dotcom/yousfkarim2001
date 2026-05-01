@@ -325,14 +325,16 @@ class _HomeState extends State<Home>
   downloadAndStoreHadithData() async {
     await Future.delayed(const Duration(seconds: 1));
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-    if (prefs.getString("hadithlist-v2-100000-${context.locale.languageCode}") ==
+    if (prefs
+            .getString("hadithlist-v2-100000-${context.locale.languageCode}") ==
         null) {
       Response response = await Dio().get(
           "https://hadeethenc.com/api/v1/categories/roots/?language=${context.locale.languageCode}");
 
       if (response.data != null) {
         final jsonData = json.encode(response.data);
-        prefs.setString("categories-v2-${context.locale.languageCode}", jsonData);
+        prefs.setString(
+            "categories-v2-${context.locale.languageCode}", jsonData);
 
         response.data.forEach((category) async {
           Response response2 = await Dio().get(
@@ -349,7 +351,8 @@ class _HomeState extends State<Home>
                     "hadithlist-v2-100000-${context.locale.languageCode}") ==
                 null) {
               prefs.setString(
-                  "hadithlist-v2-100000-${context.locale.languageCode}", jsonData);
+                  "hadithlist-v2-100000-${context.locale.languageCode}",
+                  jsonData);
             } else {
               final dataOfOldHadithlist = json.decode(prefs.getString(
                       "hadithlist-v2-100000-${context.locale.languageCode}")!)
@@ -614,6 +617,7 @@ class _HomeState extends State<Home>
       ),
     ).then((value) => setState(() {}));
   }
+
   getLocationData() {}
   String currentCity = "";
 
@@ -626,7 +630,8 @@ class _HomeState extends State<Home>
 
   updateDateData() async {
     await Future.delayed(const Duration(milliseconds: 300));
-    HijriCalendar.setLocal(rtlLanguages.contains(context.locale.languageCode) ? "ar" : "en");
+    HijriCalendar.setLocal(
+        rtlLanguages.contains(context.locale.languageCode) ? "ar" : "en");
     _today = HijriCalendar.now();
     setState(() {});
   }
@@ -637,296 +642,426 @@ class _HomeState extends State<Home>
     // print(screenSize.height);
     // print(screenSize.width);
     return Scaffold(
-        backgroundColor: Colors.transparent,
-        body: Navigator(
-                onGenerateRoute: (settings) => MaterialPageRoute(
-                    settings: settings,
-                    builder: (builder) => Container(
-                        height: screenSize.height,
-                    decoration: BoxDecoration(
-                         color: index == 1
-                            ? getValue("darkMode")
-                                ? const Color(0xff1C1815)
-                                : const Color(0xffFFF8EE)
-                            : darkPrimaryColor,
-                        image: index == 1
-                            ? DecorationImage(
-                                image:
-                                    const AssetImage("assets/images/islamic_top_bg.png"),
-                                fit: BoxFit.cover,
-                                alignment: Alignment.topCenter,
-                                opacity: getValue("darkMode") ? .15 : .85)
-                            : DecorationImage(
-                                image: AssetImage((DateTime.now().hour < 17 &&
-                                        DateTime.now().hour > 6)
-                                    ? "assets/images/daytimetry2.png"
-                                    : "assets/images/prayerbackgroundnight.png"),
-                                alignment: Alignment.topCenter,
-                                fit: (DateTime.now().hour < 17 &&
-                                        DateTime.now().hour > 6)
-                                    ? BoxFit.fill
-                                    : BoxFit.scaleDown,
-                                opacity: .2)),
-                    child: Container(
-                      height: screenSize.height,
-                      decoration: BoxDecoration(
-                          color: Colors.transparent,
-                          image: DecorationImage(
-                              image: const AssetImage("assets/images/islamic_bottom_bg.png"),
-                              fit: BoxFit.cover,
-                              alignment: Alignment.bottomCenter,
-                              opacity: getValue("darkMode") ? .15 : .6)),
-                      child: Stack(children: [
-                          if (index == 1)
-                            const Positioned(
-                              top: 0,
-                              left: 0,
-                              right: 0,
-                              child: IgnorePointer(
-                                child: AnimatedIslamicDecorations(),
-                              ),
-                            ),
-                        Scaffold(
-                        appBar: AppBar(
-                          toolbarHeight: 0,
-                          elevation: 0,
-                          backgroundColor: Colors.transparent,
+      backgroundColor: Colors.transparent,
+      body: Navigator(
+        onGenerateRoute: (settings) => MaterialPageRoute(
+          settings: settings,
+          builder: (builder) {
+            bool isDark = getValue("darkMode") ?? false;
+            return Container(
+              color: index == 1
+                  ? (isDark ? const Color(0xff12100E) : const Color(0xffFFF8EE))
+                  : darkPrimaryColor,
+              child: Stack(
+                children: [
+                  if (index == 1)
+                    Positioned.fill(
+                      child: Opacity(
+                        opacity: isDark ? 0.2 : 0.15,
+                        child: Image.asset(
+                          "assets/images/islamic_pattern_bg.png",
+                          repeat: ImageRepeat.repeat,
                         ),
-                        extendBodyBehindAppBar: true,
-                        backgroundColor: Colors.transparent,
-                        body: SafeArea(
-                           child: Container(
-                          width: screenSize.width,
-                          // height: screenSize.height,
-                          decoration: BoxDecoration(
-                              image: DecorationImage(
-                                  image: const AssetImage(
-                                      "assets/images/islamic_pattern_bg.png"),
-                                  repeat: ImageRepeat.repeat,
-                                  opacity: index == 1 ? (getValue("darkMode") ? .05 : .15) : 0)),
-                          child: Column(
-                            children: [
-                               HomeHeader(
-                                screenSize: screenSize,
-                                onDarkModeToggle: (){
-                                   updateValue(
-                                      "darkMode", !getValue("darkMode"));
-                                  setState(() {});
-                                },
-                                onLanguageChanged: (val){
-                                  context.setLocale(val);
-                                  getAndStoreRecitersData();
-                                  getAndStoreRadioData();
-                                  downloadAndStoreHadithData();
-                                  updateDateData();
-                                },
-                               ),
-                          Expanded(
-                            child: SingleChildScrollView(
-                              child: Column(
-                                children: [
-                                  if (_today != null) ...[
-                                     // Date Display
-                                     Padding(
-                                      padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 10.h),
-                                      child: Container(
-                                        padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
-                                        decoration: BoxDecoration(
-                                          color: getValue("darkMode")
-                                              ? const Color(0xff2A2520).withOpacity(0.8)
-                                              : Colors.white.withOpacity(0.85),
-                                          borderRadius: BorderRadius.circular(20.r),
-                                          boxShadow: [
-                                            BoxShadow(
+                      ),
+                    )
+                  else
+                    Positioned.fill(
+                      child: Opacity(
+                        opacity: 0.2,
+                        child: Image.asset(
+                          (DateTime.now().hour < 17 && DateTime.now().hour > 6)
+                              ? "assets/images/daytimetry2.png"
+                              : "assets/images/prayerbackgroundnight.png",
+                          fit: (DateTime.now().hour < 17 &&
+                                  DateTime.now().hour > 6)
+                              ? BoxFit.fill
+                              : BoxFit.scaleDown,
+                          alignment: Alignment.topCenter,
+                        ),
+                      ),
+                    ),
+
+                  // 2. Top Arch (Only for main screens)
+                  if (index == 1)
+                    Positioned(
+                      top: 0,
+                      left: 0,
+                      right: 0,
+                      height: MediaQuery.of(context).size.height * 0.5,
+                      child: Opacity(
+                        opacity: isDark ? 0.25 : 0.5,
+                        child: ShaderMask(
+                          shaderCallback: (rect) {
+                            return const LinearGradient(
+                              begin: Alignment.topCenter,
+                              end: Alignment.bottomCenter,
+                              colors: [Colors.black, Colors.transparent],
+                            ).createShader(
+                                Rect.fromLTRB(0, 0, rect.width, rect.height));
+                          },
+                          blendMode: BlendMode.dstIn,
+                          child: Image.asset(
+                            "assets/images/islamic_top_bg.png",
+                            fit: BoxFit.cover,
+                            alignment: Alignment.topCenter,
+                          ),
+                        ),
+                      ),
+                    ),
+
+                  // 3. Bottom Mandala (Only for main screens)
+                  if (index == 1)
+                    Positioned(
+                      bottom: 0,
+                      left: 0,
+                      right: 0,
+                      height: MediaQuery.of(context).size.height * 0.5,
+                      child: Opacity(
+                        opacity: isDark ? 0.25 : 0.5,
+                        child: ShaderMask(
+                          shaderCallback: (rect) {
+                            return const LinearGradient(
+                              begin: Alignment.bottomCenter,
+                              end: Alignment.topCenter,
+                              colors: [Colors.black, Colors.transparent],
+                            ).createShader(
+                                Rect.fromLTRB(0, 0, rect.width, rect.height));
+                          },
+                          blendMode: BlendMode.dstIn,
+                          child: Image.asset(
+                            "assets/images/islamic_bottom_bg.png",
+                            fit: BoxFit.cover,
+                            alignment: Alignment.bottomCenter,
+                          ),
+                        ),
+                      ),
+                    ),
+
+                  // 4. Floating decorations
+                  if (index == 1)
+                    const Positioned(
+                      top: 0,
+                      left: 0,
+                      right: 0,
+                      child: IgnorePointer(
+                        child: AnimatedIslamicDecorations(),
+                      ),
+                    ),
+
+                  // 5. Scaffold content
+                  Scaffold(
+                    appBar: AppBar(
+                      toolbarHeight: 0,
+                      elevation: 0,
+                      shadowColor: Colors.transparent,
+                      backgroundColor: Colors.transparent,
+                    ),
+                    extendBodyBehindAppBar: true,
+                    backgroundColor: Colors.transparent,
+                    body: SafeArea(
+                      child: Container(
+                        width: screenSize.width,
+                        // height: screenSize.height,
+                        decoration: const BoxDecoration(),
+                        child: Column(
+                          children: [
+                            HomeHeader(
+                              screenSize: screenSize,
+                              onDarkModeToggle: () {
+                                updateValue("darkMode", !getValue("darkMode"));
+                                setState(() {});
+                              },
+                              onLanguageChanged: (val) {
+                                context.setLocale(val);
+                                getAndStoreRecitersData();
+                                getAndStoreRadioData();
+                                downloadAndStoreHadithData();
+                                updateDateData();
+                              },
+                            ),
+                            Expanded(
+                              child: SingleChildScrollView(
+                                child: Column(
+                                  children: [
+                                    if (_today != null) ...[
+                                      // Date Display
+                                      Padding(
+                                        padding: EdgeInsets.symmetric(
+                                            horizontal: 16.w, vertical: 10.h),
+                                        child: Container(
+                                          padding: EdgeInsets.symmetric(
+                                              horizontal: 16.w, vertical: 8.h),
+                                          decoration: BoxDecoration(
                                               color: getValue("darkMode")
-                                                  ? Colors.black26
-                                                  : const Color(0xff8B6914).withOpacity(0.1),
-                                              blurRadius: 8,
-                                              offset: const Offset(0, 2),
-                                            ),
-                                          ],
-                                          border: Border.all(
-                                            color: getValue("darkMode")
-                                                ? const Color(0xffC5A053).withOpacity(0.3)
-                                                : const Color(0xffD4C4A0).withOpacity(0.5),
-                                            width: 1,
-                                          )
-                                        ),
-                                        child: Row(
-                                          mainAxisAlignment: MainAxisAlignment.center,
-                                          mainAxisSize: MainAxisSize.min,
-                                          children: [
-                                            Builder(
-                                              builder: (context) {
+                                                  ? const Color(0xff2A2520)
+                                                      .withOpacity(0.8)
+                                                  : Colors.white
+                                                      .withOpacity(0.85),
+                                              borderRadius:
+                                                  BorderRadius.circular(20.r),
+                                              boxShadow: [
+                                                BoxShadow(
+                                                  color: getValue("darkMode")
+                                                      ? Colors.black26
+                                                      : const Color(0xff8B6914)
+                                                          .withOpacity(0.1),
+                                                  blurRadius: 8,
+                                                  offset: const Offset(0, 2),
+                                                ),
+                                              ],
+                                              border: Border.all(
+                                                color: getValue("darkMode")
+                                                    ? const Color(0xffC5A053)
+                                                        .withOpacity(0.3)
+                                                    : const Color(0xffD4C4A0)
+                                                        .withOpacity(0.5),
+                                                width: 1,
+                                              )),
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            mainAxisSize: MainAxisSize.min,
+                                            children: [
+                                              Builder(builder: (context) {
                                                 try {
                                                   return Text(
-                                                    _today.toFormat("dd - MMMM - yyyy"),
+                                                    _today.toFormat(
+                                                        "dd - MMMM - yyyy"),
                                                     style: TextStyle(
-                                                        color: getValue("darkMode") ? const Color(0xffF0E0C0) : const Color(0xff755C26),
-                                                         fontSize: 13.sp,
-                                                         fontWeight: FontWeight.w600,
-                                                         fontFamily: "cairo"),
+                                                        color:
+                                                            getValue("darkMode")
+                                                                ? const Color(
+                                                                    0xffF0E0C0)
+                                                                : const Color(
+                                                                    0xff755C26),
+                                                        fontSize: 13.sp,
+                                                        fontWeight:
+                                                            FontWeight.w600,
+                                                        fontFamily: "cairo"),
                                                   );
                                                 } catch (e) {
                                                   return Container();
                                                 }
-                                              }
-                                            ),
-                                            Padding(
-                                              padding: EdgeInsets.symmetric(horizontal: 8.w),
-                                              child: Text(
-                                                " | ",
-                                                style: TextStyle(
-                                                  color: getValue("darkMode") ? const Color(0xffC5A053).withOpacity(0.5) : const Color(0xffD4C4A0),
-                                                  fontSize: 14.sp,
+                                              }),
+                                              Padding(
+                                                padding: EdgeInsets.symmetric(
+                                                    horizontal: 8.w),
+                                                child: Text(
+                                                  " | ",
+                                                  style: TextStyle(
+                                                    color: getValue("darkMode")
+                                                        ? const Color(
+                                                                0xffC5A053)
+                                                            .withOpacity(0.5)
+                                                        : const Color(
+                                                            0xffD4C4A0),
+                                                    fontSize: 14.sp,
+                                                  ),
                                                 ),
                                               ),
-                                            ),
-                                            Builder(
-                                              builder: (context) {
+                                              Builder(builder: (context) {
                                                 String formattedDate;
                                                 try {
-                                                  formattedDate = DateFormat.yMMMEd(context.locale.languageCode).format(DateTime.now());
+                                                  formattedDate =
+                                                      DateFormat.yMMMEd(context
+                                                              .locale
+                                                              .languageCode)
+                                                          .format(
+                                                              DateTime.now());
                                                 } catch (e) {
-                                                  formattedDate = DateFormat.yMMMEd("en").format(DateTime.now());
+                                                  formattedDate =
+                                                      DateFormat.yMMMEd("en")
+                                                          .format(
+                                                              DateTime.now());
                                                 }
                                                 return Text(
                                                   formattedDate,
                                                   style: TextStyle(
-                                                      color: getValue("darkMode") ? const Color(0xffF0E0C0) : const Color(0xff755C26),
+                                                      color:
+                                                          getValue("darkMode")
+                                                              ? const Color(
+                                                                  0xffF0E0C0)
+                                                              : const Color(
+                                                                  0xff755C26),
                                                       fontSize: 13.sp,
-                                                      fontWeight: FontWeight.w600,
+                                                      fontWeight:
+                                                          FontWeight.w600,
                                                       fontFamily: "cairo"),
                                                 );
-                                              }
-                                            ),
-                                          ],
+                                              }),
+                                            ],
+                                          ),
                                         ),
                                       ),
-                                     ),
 
-                                     // Last Read & Last Bookmark Section
-                                     Builder(
-                                       builder: (context) {
-                                         // Last Read Data
-                                         int lastReadPage = getValue("lastRead") == "non" ? 1 : getValue("lastRead");
-                                         var pageData = quran.getPageData(lastReadPage);
-                                         int surahNum = pageData[0]["surah"];
-                                         String surahName = rtlLanguages.contains(context.locale.languageCode) 
-                                             ? quran.getSurahNameArabic(surahNum) 
-                                             : quran.getSurahName(surahNum);
-                                         int juzNum = quran.getJuzNumber(surahNum, pageData[0]["start"]);
+                                      // Last Read & Last Bookmark Section
+                                      Builder(builder: (context) {
+                                        // Last Read Data
+                                        int lastReadPage =
+                                            getValue("lastRead") == "non"
+                                                ? 1
+                                                : getValue("lastRead");
+                                        var pageData =
+                                            quran.getPageData(lastReadPage);
+                                        int surahNum = pageData[0]["surah"];
+                                        String surahName = rtlLanguages
+                                                .contains(
+                                                    context.locale.languageCode)
+                                            ? quran.getSurahNameArabic(surahNum)
+                                            : quran.getSurahName(surahNum);
+                                        int juzNum = quran.getJuzNumber(
+                                            surahNum, pageData[0]["start"]);
 
-                                         // Last Bookmark Data
-                                         List bookmarksList = json.decode(getValue("bookmarks"));
-                                         var lastBookmark = bookmarksList.isNotEmpty ? bookmarksList.last : null;
+                                        // Last Bookmark Data
+                                        List bookmarksList =
+                                            json.decode(getValue("bookmarks"));
+                                        var lastBookmark =
+                                            bookmarksList.isNotEmpty
+                                                ? bookmarksList.last
+                                                : null;
 
-                                         if (lastBookmark != null) {
-                                           // Show side by side
-                                           int bSurahNum = int.parse((lastBookmark["suraNumber"] ?? 1).toString());
-                                           int bVerseNum = int.parse((lastBookmark["verseNumber"] ?? 1).toString());
-                                           int bPageNum = quran.getPageNumber(bSurahNum, bVerseNum);
-                                           String bSurahName = rtlLanguages.contains(context.locale.languageCode) 
-                                               ? quran.getSurahNameArabic(bSurahNum) 
-                                               : quran.getSurahName(bSurahNum);
+                                        if (lastBookmark != null) {
+                                          // Show side by side
+                                          int bSurahNum = int.parse(
+                                              (lastBookmark["suraNumber"] ?? 1)
+                                                  .toString());
+                                          int bVerseNum = int.parse(
+                                              (lastBookmark["verseNumber"] ?? 1)
+                                                  .toString());
+                                          int bPageNum = quran.getPageNumber(
+                                              bSurahNum, bVerseNum);
+                                          String bSurahName = rtlLanguages
+                                                  .contains(context
+                                                      .locale.languageCode)
+                                              ? quran
+                                                  .getSurahNameArabic(bSurahNum)
+                                              : quran.getSurahName(bSurahNum);
 
-                                           return Padding(
-                                             padding: EdgeInsets.symmetric(horizontal: 12.w),
-                                             child: Row(
-                                               children: [
-                                                 Expanded(
-                                                   child: LastReadCard(
-                                                     surahName: surahName,
-                                                     pageNumber: lastReadPage,
-                                                     juzNumber: juzNum,
-                                                     isHalfWidth: true,
-                                                     onTap: () {
-                                                        _fastPush(QuranDetailsPage(
-                                                              pageNumber: lastReadPage,
-                                                              jsonData: widgejsonData,
-                                                              shouldHighlightText: false,
-                                                              highlightVerse: "",
-                                                              quarterJsonData: quarterjsonData,
-                                                              shouldHighlightSura: false,
-                                                            ));
-                                                     },
-                                                   ),
-                                                 ),
-                                                 Expanded(
-                                                   child: BookmarkCard(
-                                                     surahName: bSurahName,
-                                                     bookmarkName: lastBookmark["name"] ?? "",
-                                                     verseNumber: bVerseNum,
-                                                     isHalfWidth: true,
-                                                     onTap: () {
-                                                        _fastPush(QuranDetailsPage(
-                                                              pageNumber: bPageNum,
-                                                              jsonData: widgejsonData,
-                                                              shouldHighlightText: true,
-                                                              highlightVerse: quran.getVerse(bSurahNum, bVerseNum),
-                                                              quarterJsonData: quarterjsonData,
-                                                              shouldHighlightSura: false,
-                                                            ));
-                                                     },
-                                                   ),
-                                                 ),
-                                               ],
-                                             ),
-                                           );
-                                         } else {
-                                           // Show only Last Read full width
-                                           return LastReadCard(
-                                             surahName: surahName,
-                                             pageNumber: lastReadPage,
-                                             juzNumber: juzNum,
-                                             onTap: () {
-                                                _fastPush(QuranDetailsPage(
-                                                      pageNumber: lastReadPage,
-                                                      jsonData: widgejsonData,
-                                                      shouldHighlightText: false,
-                                                      highlightVerse: "",
-                                                      quarterJsonData: quarterjsonData,
-                                                      shouldHighlightSura: false,
-                                                    ));
-                                             },
-                                           );
-                                         }
-                                       }
-                                     ),
-                                  ],
-                                  
-                                  SizedBox(height: 20.h),
+                                          return Padding(
+                                            padding: EdgeInsets.symmetric(
+                                                horizontal: 12.w),
+                                            child: Row(
+                                              children: [
+                                                Expanded(
+                                                  child: LastReadCard(
+                                                    surahName: surahName,
+                                                    pageNumber: lastReadPage,
+                                                    juzNumber: juzNum,
+                                                    isHalfWidth: true,
+                                                    onTap: () {
+                                                      _fastPush(
+                                                          QuranDetailsPage(
+                                                        pageNumber:
+                                                            lastReadPage,
+                                                        jsonData: widgejsonData,
+                                                        shouldHighlightText:
+                                                            false,
+                                                        highlightVerse: "",
+                                                        quarterJsonData:
+                                                            quarterjsonData,
+                                                        shouldHighlightSura:
+                                                            false,
+                                                      ));
+                                                    },
+                                                  ),
+                                                ),
+                                                Expanded(
+                                                  child: BookmarkCard(
+                                                    surahName: bSurahName,
+                                                    bookmarkName:
+                                                        lastBookmark["name"] ??
+                                                            "",
+                                                    verseNumber: bVerseNum,
+                                                    isHalfWidth: true,
+                                                    onTap: () {
+                                                      _fastPush(
+                                                          QuranDetailsPage(
+                                                        pageNumber: bPageNum,
+                                                        jsonData: widgejsonData,
+                                                        shouldHighlightText:
+                                                            true,
+                                                        highlightVerse:
+                                                            quran.getVerse(
+                                                                bSurahNum,
+                                                                bVerseNum),
+                                                        quarterJsonData:
+                                                            quarterjsonData,
+                                                        shouldHighlightSura:
+                                                            false,
+                                                      ));
+                                                    },
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          );
+                                        } else {
+                                          // Show only Last Read full width
+                                          return LastReadCard(
+                                            surahName: surahName,
+                                            pageNumber: lastReadPage,
+                                            juzNumber: juzNum,
+                                            onTap: () {
+                                              _fastPush(QuranDetailsPage(
+                                                pageNumber: lastReadPage,
+                                                jsonData: widgejsonData,
+                                                shouldHighlightText: false,
+                                                highlightVerse: "",
+                                                quarterJsonData:
+                                                    quarterjsonData,
+                                                shouldHighlightSura: false,
+                                              ));
+                                            },
+                                          );
+                                        }
+                                      }),
+                                    ],
 
-                                  // Feature Grid
-                                  Padding(
-                                    padding: EdgeInsets.symmetric(horizontal: 10.w),
-                                    child: GridView.count(
-                                      shrinkWrap: true,
-                                      physics: const NeverScrollableScrollPhysics(),
-                                      crossAxisCount: 3,
-                                      childAspectRatio: 0.9,
-                                      children: [
+                                    SizedBox(height: 20.h),
+
+                                    // Feature Grid
+                                    Padding(
+                                      padding: EdgeInsets.symmetric(
+                                          horizontal: 10.w),
+                                      child: GridView.count(
+                                        shrinkWrap: true,
+                                        physics:
+                                            const NeverScrollableScrollPhysics(),
+                                        crossAxisCount: 3,
+                                        childAspectRatio: 0.9,
+                                        children: [
                                           HomeGridItem(
-                                            text: "quran".tr(),
-                                            imagePath: "assets/images/qlogo.png",
-                                            onPressed: () {
-                                               _fastPush(SurahListPage(jsonData: widgejsonData, quarterjsonData: quarterjsonData));
-                                            }
-                                          ),
+                                              text: "quran".tr(),
+                                              imagePath:
+                                                  "assets/images/qlogo.png",
+                                              onPressed: () {
+                                                _fastPush(SurahListPage(
+                                                    jsonData: widgejsonData,
+                                                    quarterjsonData:
+                                                        quarterjsonData));
+                                              }),
                                           HomeGridItem(
-                                            text: "audios".tr(),
-                                            imagePath: "assets/images/quranlogo.png",
-                                            onPressed: () {
-                                               _fastPush(BlocProvider.value(value: playerPageBloc, child: RecitersPage(jsonData: widgejsonData)));
-                                            }
-                                          ),
+                                              text: "audios".tr(),
+                                              imagePath:
+                                                  "assets/images/quranlogo.png",
+                                              onPressed: () {
+                                                _fastPush(BlocProvider.value(
+                                                    value: playerPageBloc,
+                                                    child: RecitersPage(
+                                                        jsonData:
+                                                            widgejsonData)));
+                                              }),
                                           HomeGridItem(
-                                            text: "Hadith".tr(),
-                                            imagePath: "assets/images/muhammed.png",
-                                            onPressed: () {
-                                               _fastPush(BlocProvider.value(value: hadithPageBloc, child: HadithBooksPage(locale: context.locale.languageCode)));
-                                            }
-                                          ),
+                                              text: "Hadith".tr(),
+                                              imagePath:
+                                                  "assets/images/muhammed.png",
+                                              onPressed: () {
+                                                _fastPush(BlocProvider.value(
+                                                    value: hadithPageBloc,
+                                                    child: HadithBooksPage(
+                                                        locale: context.locale
+                                                            .languageCode)));
+                                              }),
                                           // HomeGridItem(
                                           //   text: "qibla".tr(),
                                           //   imagePath: "assets/images/kabaa.png",
@@ -935,49 +1070,50 @@ class _HomeState extends State<Home>
                                           //   }
                                           // ),
 
-                                           HomeGridItem(
-                                            text: "azkar".tr(),
-                                            imagePath: "assets/images/azkar.png",
-                                            onPressed: () {
-                                               _fastPush(const AzkarHomePage());
-                                            }
-                                          ),
+                                          HomeGridItem(
+                                              text: "azkar".tr(),
+                                              imagePath:
+                                                  "assets/images/azkar.png",
+                                              onPressed: () {
+                                                _fastPush(
+                                                    const AzkarHomePage());
+                                              }),
 
                                           HomeGridItem(
-                                            text: "sibha".tr(),
-                                            imagePath: "assets/images/sibha.png",
-                                            onPressed: () {
-                                               _fastPush(const SibhaPage());
-                                            }
-                                          ),
+                                              text: "sibha".tr(),
+                                              imagePath:
+                                                  "assets/images/sibha.png",
+                                              onPressed: () {
+                                                _fastPush(const SibhaPage());
+                                              }),
 
                                           HomeGridItem(
-                                            text: "radios".tr(),
-                                            imagePath: "assets/images/radio.png",
-                                            onPressed: () {
-                                               _fastPush(const RadioPage());
-                                            }
-                                          ),
-                                      ],
+                                              text: "radios".tr(),
+                                              imagePath:
+                                                  "assets/images/radio.png",
+                                              onPressed: () {
+                                                _fastPush(const RadioPage());
+                                              }),
+                                        ],
+                                      ),
                                     ),
-                                  ),
-                                  SizedBox(height: 100.h),
-                                ],
+                                    SizedBox(height: 100.h),
+                                  ],
+                                ),
                               ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                     ),
                   ),
-                ),
-                        ],
-                      ),
+                ],
               ),
-            ),
-          ),
+            );
+          },
         ),
-      );
+      ),
+    );
   }
 
   @override
@@ -998,7 +1134,6 @@ class AlarmScreen extends StatefulWidget {
 }
 
 class _AlarmScreenState extends State<AlarmScreen> {
-
   // AlarmModel? alarmModel;
   bool isLoading = true;
   @override

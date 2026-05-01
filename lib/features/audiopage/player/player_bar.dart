@@ -161,13 +161,15 @@ class _PlayerBarState extends State<PlayerBar> {
                                       : null,
                                   color: isMinimized ? null : darkPrimaryColor,
                                   borderRadius: BorderRadius.circular(isMinimized ? 15.r : 0),
-                                  boxShadow: isMinimized ? [
-                                    BoxShadow(
-                                      color: Colors.black.withOpacity(0.3),
-                                      blurRadius: 10,
-                                      offset: const Offset(0, 5),
-                                    )
-                                  ] : null),
+                                  boxShadow: isMinimized && !getValue("darkMode")
+                                      ? [
+                                          BoxShadow(
+                                            color: Colors.black.withOpacity(0.3),
+                                            blurRadius: 10,
+                                            offset: const Offset(0, 5),
+                                          )
+                                        ]
+                                      : null),
                               child: isMinimized
                                   ? _buildMinimizedBar(state)
                                   : _buildExtendedPlayer(state),

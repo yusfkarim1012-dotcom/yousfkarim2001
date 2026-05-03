@@ -43,6 +43,7 @@ import 'package:khatmah/features/notifications/data/40hadith.dart';
 import 'package:khatmah/features/notifications/views/all_notification_page.dart';
 import 'package:khatmah/features/qibla/q_compass.dart';
 import 'package:khatmah/features/home_widgets.dart';
+import 'package:khatmah/features/prayer_times/prayer_times_page.dart';
 import 'package:khatmah/features/qibla/qibla_page.dart';
 import 'package:khatmah/features/radio_page/radio_page.dart';
 import 'package:khatmah/features/shortvideos/shortvideos.dart';
@@ -1062,13 +1063,23 @@ class _HomeState extends State<Home>
                                                         locale: context.locale
                                                             .languageCode)));
                                               }),
-                                          // HomeGridItem(
-                                          //   text: "qibla".tr(),
-                                          //   imagePath: "assets/images/kabaa.png",
-                                          //   onPressed: () {
-                                          //      Navigator.push(context, CupertinoPageRoute(builder: (builder) => const QiblaPage()));
-                                          //   }
-                                          // ),
+                                          HomeGridItem(
+                                              text: "قبلة".tr(),
+                                              imagePath:
+                                                  "assets/images/kabaa.png",
+                                              onPressed: () {
+                                                _fastPush(
+                                                    const QiblaPage());
+                                              }),
+
+                                          HomeGridItem(
+                                              text: "مواقيت الصلاة",
+                                              imagePath:
+                                                  "assets/images/praying.png",
+                                              onPressed: () {
+                                                _fastPush(
+                                                    const PrayerTimesPage());
+                                              }),
 
                                           HomeGridItem(
                                               text: "azkar".tr(),

@@ -23,11 +23,11 @@ class PrayerWidgetProvider : HomeWidgetProvider() {
             val isha = widgetData.getString("isha", "--:--") ?: "--:--"
             val nextPrayer = widgetData.getString("next_prayer", "") ?: ""
 
-            val fajrLabel = widgetData.getString("fajr_label", "Fajr") ?: "Fajr"
-            val dhuhrLabel = widgetData.getString("dhuhr_label", "Dhuhr") ?: "Dhuhr"
-            val asrLabel = widgetData.getString("asr_label", "Asr") ?: "Asr"
-            val maghribLabel = widgetData.getString("maghrib_label", "Maghrib") ?: "Maghrib"
-            val ishaLabel = widgetData.getString("isha_label", "Isha") ?: "Isha"
+            val fajrLabel = widgetData.getString("fajr_label", "الفجر") ?: "الفجر"
+            val dhuhrLabel = widgetData.getString("dhuhr_label", "الظهر") ?: "الظهر"
+            val asrLabel = widgetData.getString("asr_label", "العصر") ?: "العصر"
+            val maghribLabel = widgetData.getString("maghrib_label", "المغرب") ?: "المغرب"
+            val ishaLabel = widgetData.getString("isha_label", "العشاء") ?: "العشاء"
 
             views.setTextViewText(R.id.fajr_time, fajr)
             views.setTextViewText(R.id.dhuhr_time, dhuhr)
@@ -41,9 +41,10 @@ class PrayerWidgetProvider : HomeWidgetProvider() {
             views.setTextViewText(R.id.maghrib_label, maghribLabel)
             views.setTextViewText(R.id.isha_label, ishaLabel)
 
-            // Highlight next prayer
+            // Highlight next prayer in green, rest white
             val green = 0xFF4CAF50.toInt()
             val white = 0xFFFFFFFF.toInt()
+
             views.setTextColor(R.id.fajr_label, if (nextPrayer == "fajr") green else white)
             views.setTextColor(R.id.fajr_time, if (nextPrayer == "fajr") green else white)
             views.setTextColor(R.id.dhuhr_label, if (nextPrayer == "dhuhr") green else white)

@@ -41,6 +41,7 @@ import 'package:khatmah/features/sibha/tasbih_overlay.dart';
 import 'package:superellipse_shape/superellipse_shape.dart';
 import 'package:workmanager/workmanager.dart';
 import 'GlobalHelpers/messaging_helper.dart';
+import 'features/prayer_times/prayer_widget_helper.dart';
 // import 'package:alarm/alarm.dart';
 final AudioPlayer audioPlayer = AudioPlayer();
 
@@ -71,6 +72,12 @@ void main() async {
       );
   // await AndroidAlarmManager.initialize();
   await initializeHive();
+  // Update prayer widget on app start
+  try {
+    final lang = await SharedPreferences.getInstance();
+    final code = lang.getString('locale') ?? 'ar';
+    PrayerWidgetHelper.updateWidget(langCode: code);
+  } catch (_) {}
   SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
       statusBarColor: Colors.transparent,
       statusBarIconBrightness: Brightness.light));

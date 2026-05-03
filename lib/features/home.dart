@@ -1064,7 +1064,8 @@ class _HomeState extends State<Home>
                                                             .languageCode)));
                                               }),
                                           HomeGridItem(
-                                              text: "قبلة".tr(),
+                                              text: rtlLanguages.contains(context.locale.languageCode)
+                                                  ? "القبلة" : "Qibla",
                                               imagePath:
                                                   "assets/images/kabaa.png",
                                               onPressed: () {
@@ -1073,7 +1074,8 @@ class _HomeState extends State<Home>
                                               }),
 
                                           HomeGridItem(
-                                              text: "مواقيت الصلاة",
+                                              text: rtlLanguages.contains(context.locale.languageCode)
+                                                  ? "مواقيت الصلاة" : "Prayer Times",
                                               imagePath:
                                                   "assets/images/prayer_times_icon.png",
                                               onPressed: () {

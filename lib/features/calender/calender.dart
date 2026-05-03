@@ -17,9 +17,7 @@ class CalenderPage extends StatefulWidget {
 
 class _CalenderPageState extends State<CalenderPage> {
   int index = 1;
-  var _today = j.HijriCalendar.now().toFormat(
-                    "dd - MMMM - yyyy",
-                  );
+  final ValueNotifier<DateTime> _dateNotifier = ValueNotifier(DateTime.now());
   var _selectedDate = DateTime.now();
   var date = DateTime.now();
   @override
@@ -45,14 +43,21 @@ class _CalenderPageState extends State<CalenderPage> {
           ),
           Padding(
             padding: const EdgeInsets.all(8.0),
-            child: JGlobalDatePicker(
-              widgetType: WidgetType.JContainer,
-              pickerType: index == 0 ? PickerType.JHijri : PickerType.JNormal,
-              buttons: const SizedBox(),
-              primaryColor: blueColor,
-              calendarTextColor: Colors.black,
-              backgroundColor: Colors.white,
-              borderRadius: const Radius.circular(10),
+            child: Theme(
+              data: Theme.of(context).copyWith(
+                textTheme: Theme.of(context).textTheme.copyWith(
+                  bodyMedium: TextStyle(fontSize: 16.sp, fontFamily: 'cairo', fontWeight: FontWeight.w600),
+                  bodySmall: TextStyle(fontSize: 14.sp, fontFamily: 'cairo'),
+                ),
+              ),
+              child: JGlobalDatePicker(
+                widgetType: WidgetType.JContainer,
+                pickerType: index == 0 ? PickerType.JHijri : PickerType.JNormal,
+                buttons: const SizedBox(),
+                primaryColor: blueColor,
+                calendarTextColor: getValue("darkMode") ? Colors.white : Colors.black,
+                backgroundColor: getValue("darkMode") ? const Color(0xff1C1815) : Colors.white,
+                borderRadius: const Radius.circular(10),
               headerTitle: Container(
                 decoration:  BoxDecoration(color:  getValue("darkMode")
               ? darkModeSecondaryColor
@@ -120,59 +125,58 @@ class _CalenderPageState extends State<CalenderPage> {
               pickerMode: DatePickerMode.day,
               pickerTheme: Theme.of(context),
               locale: context.locale,
-              textDirection: m.TextDirection.rtl,
               onChange: (val) {
                 _selectedDate = val.date;
-                date = val.date;
-
-                _today = j. HijriCalendar.fromDate(val.date).toFormat(
-                    "dd - MMMM - yyyy",
-                  );
-                setState(() {});
-                // return val;
+                _dateNotifier.value = val.date;
               },
+            ),
             ),
           ),
           SizedBox(
             height: 50.h,
           ),
-          Container(      decoration: BoxDecoration(
-                                                                color:
-                                                                   Colors.white,
-                                                                borderRadius:
-                                                                    BorderRadius
-                                                                        .circular(
-                                                                            20.r)),
+          Container(
+            decoration: BoxDecoration(
+              color: getValue("darkMode") ? const Color(0xff1C1815) : Colors.white,
+              borderRadius: BorderRadius.circular(20.r)
+            ),
             child: Padding(
               padding: const EdgeInsets.all(12.0),
               child: Container(
-                          decoration: BoxDecoration(
-                                                                color:
-                                                                     getValue("darkMode")?quranPagesColorDark:quranPagesColorLight
-                                                                        .withOpacity(
-                                                                            .6),
-                                                                borderRadius:
-                                                                    BorderRadius
-                                                                        .circular(
-                                                                            20.r)),
+                decoration: BoxDecoration(
+                  color: getValue("darkMode") ? Colors.white.withOpacity(0.05) : const Color(0x3BFFDC69),
+                  borderRadius: BorderRadius.circular(20.r)
+                ),
                 child: Padding(
                   padding: const EdgeInsets.all(16.0),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      Text(
-                        _today,
-                        style: TextStyle(color: getValue("darkMode")
-              ? Colors.white
-              :  Colors.black, fontSize: 20.sp),
-                      ),
-                      Text(
-                        DateFormat.yMMMEd(context.locale.languageCode).format(date),
-                        style: TextStyle(color:  getValue("darkMode")
-              ? Colors.white
-              :  Colors.black, fontSize: 20.sp),
-                      ),
-                    ],
+                  child: ValueListenableBuilder<DateTime>(
+                    valueListenable: _dateNotifier,
+                    builder: (context, currentDate, child) {
+                      String hijriDate = j.HijriCalendar.fromDate(currentDate).toFormat("dd - MMMM - yyyy");
+                      return Column(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          Text(
+                            hijriDate,
+                            style: TextStyle(
+                              color: getValue("darkMode") ? Colors.white : Colors.black, 
+                              fontSize: 20.sp,
+                              fontWeight: FontWeight.bold,
+                              fontFamily: 'cairo'
+                            ),
+                          ),
+                          SizedBox(height: 4.h),
+                          Text(
+                            DateFormat.yMMMEd(context.locale.languageCode).format(currentDate),
+                            style: TextStyle(
+                              color: getValue("darkMode") ? Colors.white70 : Colors.black87, 
+                              fontSize: 16.sp,
+                              fontFamily: 'cairo'
+                            ),
+                          ),
+                        ],
+                      );
+                    }
                   ),
                 ),
               ),

@@ -119,6 +119,14 @@ dependencies:
   # in_app_review: ^2.0.8
   string_validator: 
 
+  # --- Prayer Times & Offline Geocoder ---
+  muslim_data_flutter:
+    path: ../muslim-data-flutter
+  drift: ^2.29.0
+  drift_flutter: ^0.2.7
+  sqlite3: ^2.9.4
+  sqlite3_flutter_libs: ^0.5.40
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -157,6 +165,7 @@ flutter:
     - assets/images/
     - assets/json/
     - assets/translations/
+    - assets/db/
 
   #   - images/a_dot_ham.jpeg
 

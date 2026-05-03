@@ -1,259 +1,312 @@
-// import 'package:easy_localization/easy_localization.dart';
-// import 'package:flutter/material.dart';
-// import 'package:flutter_qiblah/flutter_qiblah.dart';
-// import 'package:flutter_screenutil/flutter_screenutil.dart';
-// import 'package:flutter_svg/flutter_svg.dart';
-// import 'package:permission_handler/permission_handler.dart';
+import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_qiblah/flutter_qiblah.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:permission_handler/permission_handler.dart';
 
-// class CustomCompassBody extends StatefulWidget {
-//   const CustomCompassBody({super.key});
+class CustomCompassBody extends StatefulWidget {
+  const CustomCompassBody({super.key});
 
-//   @override
-//   State<CustomCompassBody> createState() => _CustomCompassBodyState();
-// }
+  @override
+  State<CustomCompassBody> createState() => _CustomCompassBodyState();
+}
 
-// class _CustomCompassBodyState extends State<CustomCompassBody> {
-//   bool _hasPermissions = false;
-//   bool _deviceSupported = true;
+class _CustomCompassBodyState extends State<CustomCompassBody> {
+  bool _hasPermissions = false;
+  bool _deviceSupported = true;
+  bool _checkingSupport = true;
 
-//   @override
-//   void initState() {
-//     super.initState();
-//     _checkDeviceSupport();
-//     _fetchPermissionStatus();
-//   }
+  @override
+  void initState() {
+    super.initState();
+    _checkDeviceSupport();
+    _fetchPermissionStatus();
+  }
 
-//   Future<void> _checkDeviceSupport() async {
-//     final supported = await FlutterQiblah.androidDeviceSensorSupport();
-//     if (mounted) {
-//       setState(() {
-//         _deviceSupported = supported ?? false;
-//       });
-//     }
-//   }
+  Future<void> _checkDeviceSupport() async {
+    final supported = await FlutterQiblah.androidDeviceSensorSupport();
+    if (mounted) {
+      setState(() {
+        _deviceSupported = supported ?? false;
+        _checkingSupport = false;
+      });
+    }
+  }
 
-//   void _fetchPermissionStatus() {
-//     Permission.locationWhenInUse.status.then((status) {
-//       if (mounted) {
-//         setState(() {
-//           _hasPermissions = status == PermissionStatus.granted;
-//         });
-//       }
-//     });
-//   }
+  Future<void> _fetchPermissionStatus() async {
+    final status = await Permission.locationWhenInUse.status;
+    if (mounted) {
+      setState(() {
+        _hasPermissions = status == PermissionStatus.granted;
+      });
+    }
+  }
 
-//   @override
-//   Widget build(BuildContext context) {
-//     if (!_deviceSupported) {
-//       return Center(
-//         child: Column(
-//           mainAxisAlignment: MainAxisAlignment.center,
-//           children: [
-//             Icon(Icons.error_outline, size: 48.sp, color: Colors.white70),
-//             SizedBox(height: 16.h),
-//             Text(
-//               "Device does not support compass",
-//               style: TextStyle(color: Colors.white, fontSize: 18.sp),
-//               textAlign: TextAlign.center,
-//             ),
-//           ],
-//         ),
-//       );
-//     }
+  @override
+  Widget build(BuildContext context) {
+    if (_checkingSupport) {
+      return const Center(
+        child: CircularProgressIndicator(
+          color: Color(0xffC5A053),
+          strokeWidth: 2.5,
+        ),
+      );
+    }
 
-//     if (!_hasPermissions) {
-//       return Center(
-//         child: Column(
-//           mainAxisAlignment: MainAxisAlignment.center,
-//           children: [
-//             Icon(Icons.location_off, size: 48.sp, color: Colors.white70),
-//             SizedBox(height: 16.h),
-//             Text(
-//               "Location permission required",
-//               style: TextStyle(color: Colors.white, fontSize: 18.sp),
-//               textAlign: TextAlign.center,
-//             ),
-//             SizedBox(height: 20.h),
-//             ElevatedButton(
-//               style: ElevatedButton.styleFrom(
-//                 padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 12.h),
-//               ),
-//               child: const Text("Grant Permission"),
-//               onPressed: () async {
-//                 await [Permission.location, Permission.locationWhenInUse].request();
-//                 _fetchPermissionStatus();
-//               },
-//             ),
-//           ],
-//         ),
-//       );
-//     }
+    if (!_deviceSupported) {
+      return Center(
+        child: Padding(
+          padding: EdgeInsets.all(32.w),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(Icons.sensors_off_rounded,
+                  size: 64.sp, color: Colors.white38),
+              SizedBox(height: 20.h),
+              Text(
+                'ئامێرەکەت کۆمپاسی نییە',
+                style: TextStyle(
+                  color: Colors.white70,
+                  fontSize: 16.sp,
+                  fontFamily: 'cairo',
+                ),
+                textAlign: TextAlign.center,
+              ),
+            ],
+          ),
+        ),
+      );
+    }
 
-//     return StreamBuilder<QiblahDirection>(
-//       stream: FlutterQiblah.qiblahStream,
-//       builder: (context, snapshot) {
-//         if (snapshot.connectionState == ConnectionState.waiting) {
-//           return const Center(child: CircularProgressIndicator.adaptive());
-//         }
+    if (!_hasPermissions) {
+      return Center(
+        child: Padding(
+          padding: EdgeInsets.all(32.w),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(Icons.location_off_rounded,
+                  size: 64.sp, color: Colors.white38),
+              SizedBox(height: 20.h),
+              Text(
+                'مۆڵەتی شوێن پێویستە بۆ دیاریکردنی قیبلە',
+                style: TextStyle(
+                  color: Colors.white70,
+                  fontSize: 15.sp,
+                  fontFamily: 'cairo',
+                ),
+                textAlign: TextAlign.center,
+              ),
+              SizedBox(height: 24.h),
+              ElevatedButton.icon(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color(0xffC5A053),
+                  foregroundColor: Colors.white,
+                  padding: EdgeInsets.symmetric(
+                      horizontal: 24.w, vertical: 12.h),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(16.r),
+                  ),
+                ),
+                icon: const Icon(Icons.location_on_rounded),
+                label: Text(
+                  'داوای مۆڵەت بکە',
+                  style: TextStyle(fontFamily: 'cairo', fontSize: 14.sp),
+                ),
+                onPressed: () async {
+                  await [
+                    Permission.location,
+                    Permission.locationWhenInUse,
+                  ].request();
+                  _fetchPermissionStatus();
+                },
+              ),
+            ],
+          ),
+        ),
+      );
+    }
 
-//         if (snapshot.hasError) {
-//           return Center(
-//             child: Column(
-//               mainAxisAlignment: MainAxisAlignment.center,
-//               children: [
-//                 Icon(Icons.error_outline, size: 48.sp, color: Colors.redAccent),
-//                 SizedBox(height: 16.h),
-//                 Text(
-//                   "Error: ${snapshot.error}",
-//                   style: TextStyle(color: Colors.white, fontSize: 16.sp),
-//                   textAlign: TextAlign.center,
-//                 ),
-//               ],
-//             ),
-//           );
-//         }
+    return StreamBuilder<QiblahDirection>(
+      stream: FlutterQiblah.qiblahStream,
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Center(
+            child: CircularProgressIndicator(
+              color: Color(0xffC5A053),
+              strokeWidth: 2.5,
+            ),
+          );
+        }
 
-//         if (!snapshot.hasData) {
-//           return const Center(child: Text("Waiting for compass data..."));
-//         }
+        if (snapshot.hasError) {
+          return Center(
+            child: Text(
+              'کێشەیەک ڕووی داو: ${snapshot.error}',
+              style: TextStyle(color: Colors.white70, fontSize: 14.sp,
+                  fontFamily: 'cairo'),
+              textAlign: TextAlign.center,
+            ),
+          );
+        }
 
-//         final qiblahDirection = snapshot.data!;
-        
-//         // Get the compass heading (device rotation)
-//         final double heading = qiblahDirection.direction;
-        
-//         // Get the Qibla angle relative to North
-//         final double qiblahAngle = qiblahDirection.qiblah;
-        
-//         // Calculate rotation for compass rose (rotates opposite to device heading)
-//         final double compassTurn = (heading * -1) / 360;
-        
-//         // Calculate rotation for Qibla needle
-//         // The needle should point to Qibla direction
-//         final double needleTurn = ((qiblahAngle - heading) / 360);
+        if (!snapshot.hasData) {
+          return Center(
+            child: Text(
+              'چاوەڕوانی داتای کۆمپاس...',
+              style: TextStyle(
+                  color: Colors.white70,
+                  fontSize: 14.sp,
+                  fontFamily: 'cairo'),
+            ),
+          );
+        }
 
-//         return Center(
-//           child: Column(
-//             mainAxisAlignment: MainAxisAlignment.center,
-//             children: [
-//               // Accuracy warning
-//               if (qiblahDirection.offset != null && 
-//                   (qiblahDirection.offset! > 15 || qiblahDirection.offset! < -15))
-//                 Padding(
-//                   padding: EdgeInsets.only(bottom: 20.h),
-//                   child: Container(
-//                     padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.h),
-//                     decoration: BoxDecoration(
-//                       color: Colors.orangeAccent.withOpacity(0.8),
-//                       borderRadius: BorderRadius.circular(8),
-//                     ),
-//                     child: Text(
-//                       "Move phone in figure-8 pattern to calibrate",
-//                       style: TextStyle(color: Colors.white, fontSize: 12.sp),
-//                       textAlign: TextAlign.center,
-//                     ),
-//                   ),
-//                 ),
-              
-//               // Aligned indicator (when pointing to Qibla)
-//               if (qiblahDirection.offset != null && 
-//                   qiblahDirection.offset!.abs() < 5)
-//                 Padding(
-//                   padding: EdgeInsets.only(bottom: 20.h),
-//                   child: Container(
-//                     padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.h),
-//                     decoration: BoxDecoration(
-//                       color: Colors.greenAccent.withOpacity(0.8),
-//                       borderRadius: BorderRadius.circular(8),
-//                     ),
-//                     child: Row(
-//                       mainAxisSize: MainAxisSize.min,
-//                       children: [
-//                         Icon(Icons.check_circle, color: Colors.white, size: 16.sp),
-//                         SizedBox(width: 8.w),
-//                         Text(
-//                           "Aligned with Qibla",
-//                           style: TextStyle(color: Colors.white, fontSize: 12.sp, fontWeight: FontWeight.bold),
-//                         ),
-//                       ],
-//                     ),
-//                   ),
-//                 ),
+        final qiblahDirection = snapshot.data!;
 
-//               // Compass visualization
-//               SizedBox(
-//                 width: MediaQuery.of(context).size.width * 0.8,
-//                 height: MediaQuery.of(context).size.width * 0.8,
-//                 child: Stack(
-//                   alignment: Alignment.center,
-//                   children: [
-//                     // Compass Rose (Background) - rotates with device
-//                     AnimatedRotation(
-//                       duration: const Duration(milliseconds: 300),
-//                       turns: compassTurn,
-//                       curve: Curves.easeOut,
-//                       child: Image.asset(
-//                         "assets/images/compassn.png",
-//                         fit: BoxFit.fill,
-//                       ),
-//                     ),
+        // کۆردینەیتی ئامێرەکە
+        final double heading = qiblahDirection.direction;
 
-//                     // Qibla Needle - points to Qibla direction
-//                     AnimatedRotation(
-//                       duration: const Duration(milliseconds: 300),
-//                       turns: needleTurn,
-//                       curve: Curves.easeOut,
-//                       child: SvgPicture.asset(
-//                         "assets/images/needle.svg",
-//                         fit: BoxFit.contain,
-//                         height: MediaQuery.of(context).size.width * 0.7,
-//                       ),
-//                     ),
-//                   ],
-//                 ),
-//               ),
+        // ئاراستەی قیبلە بە پێی ڕووی باکور
+        final double qiblahAngle = qiblahDirection.qiblah;
 
-//               SizedBox(height: 20.h),
+        // گێردانی کۆمپاسی ڕووباک (پێچەوانەی ئامێر)
+        final double compassTurn = (heading * -1) / 360;
 
-//               // Current heading display
-//               Text(
-//                 "${heading.toStringAsFixed(0)}°",
-//                 style: TextStyle(
-//                   color: Colors.white,
-//                   fontSize: 28.sp,
-//                   fontWeight: FontWeight.bold,
-//                 ),
-//               ),
-              
-//               SizedBox(height: 8.h),
+        // گێردانی ئاستیکەی قیبلە
+        final double needleTurn = (qiblahAngle - heading) / 360;
 
-//               // Qibla direction display
-//               Text(
-//                 "Qibla Direction: ${qiblahAngle.toStringAsFixed(1)}°",
-//                 style: TextStyle(
-//                   color: Colors.white70,
-//                   fontSize: 16.sp,
-//                 ),
-//               ),
+        final bool isAligned = qiblahDirection.offset != null &&
+            qiblahDirection.offset!.abs() < 5;
+        final bool needsCalibration = qiblahDirection.offset != null &&
+            qiblahDirection.offset!.abs() > 15;
 
-//               // Offset from Qibla
-//               if (qiblahDirection.offset != null)
-//                 Padding(
-//                   padding: EdgeInsets.only(top: 8.h),
-//                   child: Text(
-//                     "Offset: ${qiblahDirection.offset!.toStringAsFixed(1)}°",
-//                     style: TextStyle(
-//                       color: qiblahDirection.offset!.abs() < 5 
-//                           ? Colors.greenAccent 
-//                           : Colors.white54,
-//                       fontSize: 14.sp,
-//                     ),
-//                   ),
-//                 ),
-//             ],
-//           ),
-//         );
-//       },
-//     );
-//   }
-// }
+        return Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              // نیشاندەری هەوکارکردن
+              if (isAligned) ...[
+                Container(
+                  margin: EdgeInsets.only(bottom: 16.h),
+                  padding: EdgeInsets.symmetric(
+                      horizontal: 16.w, vertical: 10.h),
+                  decoration: BoxDecoration(
+                    color: const Color(0xff2A6048),
+                    borderRadius: BorderRadius.circular(12.r),
+                    border: Border.all(
+                        color: const Color(0xff4CAF82).withOpacity(0.5)),
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(Icons.check_circle_rounded,
+                          color: const Color(0xff7DF7C0), size: 18.sp),
+                      SizedBox(width: 8.w),
+                      Text(
+                        'ڕووی قیبلەیە! ✓',
+                        style: TextStyle(
+                          color: const Color(0xff7DF7C0),
+                          fontSize: 14.sp,
+                          fontWeight: FontWeight.bold,
+                          fontFamily: 'cairo',
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ] else if (needsCalibration) ...[
+                Container(
+                  margin: EdgeInsets.only(bottom: 16.h),
+                  padding: EdgeInsets.symmetric(
+                      horizontal: 16.w, vertical: 10.h),
+                  decoration: BoxDecoration(
+                    color: Colors.orange.withOpacity(0.15),
+                    borderRadius: BorderRadius.circular(12.r),
+                    border: Border.all(
+                        color: Colors.orange.withOpacity(0.4)),
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(Icons.warning_amber_rounded,
+                          color: Colors.orange, size: 18.sp),
+                      SizedBox(width: 8.w),
+                      Text(
+                        'ئامێرەکەت کالیبر بکەرەوە (شەکلی 8)',
+                        style: TextStyle(
+                          color: Colors.orange,
+                          fontSize: 12.sp,
+                          fontFamily: 'cairo',
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+
+              // --- کۆمپاسی دیاری ---
+              SizedBox(
+                width: MediaQuery.of(context).size.width * 0.78,
+                height: MediaQuery.of(context).size.width * 0.78,
+                child: Stack(
+                  alignment: Alignment.center,
+                  children: [
+                    // کۆمپاسی ڕووباک — گێردانی پێچەوانەی ئامێر
+                    AnimatedRotation(
+                      duration: const Duration(milliseconds: 300),
+                      turns: compassTurn,
+                      curve: Curves.easeOut,
+                      child: Image.asset(
+                        'assets/images/compassn.png',
+                        fit: BoxFit.fill,
+                      ),
+                    ),
+
+                    // ئاستیکەی قیبلە — ڕووی کارگەی قیبلە
+                    AnimatedRotation(
+                      duration: const Duration(milliseconds: 300),
+                      turns: needleTurn,
+                      curve: Curves.easeOut,
+                      child: SvgPicture.asset(
+                        'assets/images/needle.svg',
+                        fit: BoxFit.contain,
+                        height: MediaQuery.of(context).size.width * 0.7,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+
+              SizedBox(height: 24.h),
+
+              // دەرجەی ئامێر
+              Text(
+                '${heading.toStringAsFixed(0)}°',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 28.sp,
+                  fontWeight: FontWeight.bold,
+                  fontFamily: 'cairo',
+                ),
+              ),
+
+              SizedBox(height: 6.h),
+
+              // ئاراستەی قیبلە
+              Text(
+                'ئاراستەی قیبلە: ${qiblahAngle.toStringAsFixed(1)}°',
+                style: TextStyle(
+                  color: Colors.white60,
+                  fontSize: 13.sp,
+                  fontFamily: 'cairo',
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+}

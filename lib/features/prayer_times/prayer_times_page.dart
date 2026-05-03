@@ -3,6 +3,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:home_widget/home_widget.dart';
 import 'package:khatmah/GlobalHelpers/constants.dart';
 import 'package:khatmah/GlobalHelpers/hive_helper.dart';
 import 'package:muslim_data_flutter/muslim_data_flutter.dart';
@@ -127,10 +128,30 @@ class _PrayerTimesPageState extends State<PrayerTimesPage>
       final attr = PrayerAttribute(calculationMethod: CalculationMethod.mwl, asrMethod: AsrMethod.shafii, higherLatitudeMethod: HigherLatitudeMethod.angleBased);
       final l = loc ?? Location(id: 0, name: 'GPS', latitude: _lat!, longitude: _lng!, countryCode: 'XX', countryName: '', hasFixedPrayerTime: false);
       final pt = await repo.getPrayerTimes(location: l, date: DateTime.now(), attribute: attr, useFixedPrayer: loc != null);
-      if (mounted) { setState(() { _prayerTime = pt; _isLoading = false; }); _fadeCtrl.forward(from: 0); _startCountdown(); }
+      if (mounted) { setState(() { _prayerTime = pt; _isLoading = false; }); _fadeCtrl.forward(from: 0); _startCountdown(); _updateWidget(); }
     } catch (e) {
       if (mounted) setState(() { _isLoading = false; _errorMessage = _t('خطأ في التحميل', 'هەڵەیەک ڕوویدا', 'Error loading data'); });
     }
+  }
+
+  Future<void> _updateWidget() async {
+    if (_prayerTime == null) return;
+    try {
+      final fmtW = (DateTime dt) { final h = dt.hour % 12 == 0 ? 12 : dt.hour % 12; return '$h:${dt.minute.toString().padLeft(2, '0')}'; };
+      await HomeWidget.saveWidgetData('fajr', fmtW(_prayerTime!.fajr));
+      await HomeWidget.saveWidgetData('dhuhr', fmtW(_prayerTime!.dhuhr));
+      await HomeWidget.saveWidgetData('asr', fmtW(_prayerTime!.asr));
+      await HomeWidget.saveWidgetData('maghrib', fmtW(_prayerTime!.maghrib));
+      await HomeWidget.saveWidgetData('isha', fmtW(_prayerTime!.isha));
+      await HomeWidget.saveWidgetData('next_prayer', _nextPrayerKey);
+      // Localized labels
+      await HomeWidget.saveWidgetData('fajr_label', _t('الفجر', 'بانگی بەیانی', 'Fajr'));
+      await HomeWidget.saveWidgetData('dhuhr_label', _t('الظهر', 'نیوەڕۆ', 'Dhuhr'));
+      await HomeWidget.saveWidgetData('asr_label', _t('العصر', 'ئێوارە', 'Asr'));
+      await HomeWidget.saveWidgetData('maghrib_label', _t('المغرب', 'ئاوابوون', 'Maghrib'));
+      await HomeWidget.saveWidgetData('isha_label', _t('العشاء', 'خەوتن', 'Isha'));
+      await HomeWidget.updateWidget(androidName: 'PrayerWidgetProvider');
+    } catch (_) {}
   }
 
   Future<void> _loadForLocation(Location loc) async {
@@ -140,7 +161,7 @@ class _PrayerTimesPageState extends State<PrayerTimesPage>
       _locationName = '${loc.name}, ${loc.countryName}';
       final attr = PrayerAttribute(calculationMethod: CalculationMethod.mwl, asrMethod: AsrMethod.shafii, higherLatitudeMethod: HigherLatitudeMethod.angleBased);
       final pt = await MuslimRepository().getPrayerTimes(location: loc, date: DateTime.now(), attribute: attr, useFixedPrayer: loc.hasFixedPrayerTime);
-      if (mounted) { setState(() { _prayerTime = pt; _isLoading = false; }); _fadeCtrl.forward(from: 0); _startCountdown(); }
+      if (mounted) { setState(() { _prayerTime = pt; _isLoading = false; }); _fadeCtrl.forward(from: 0); _startCountdown(); _updateWidget(); }
     } catch (e) {
       if (mounted) setState(() { _isLoading = false; _errorMessage = _t('خطأ', 'هەڵە', 'Error'); });
     }

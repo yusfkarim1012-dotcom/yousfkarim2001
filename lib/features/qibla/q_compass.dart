@@ -18,11 +18,10 @@ class _CustomCompassBodyState extends State<CustomCompassBody> {
   bool _loading = true;
   String _error = '';
 
-  String _t(String ar, String ku, String en) {
+  // 8 languages: ar, en, de, am, ms, pt, tr, ru
+  String _t(Map<String, String> texts) {
     final l = context.locale.languageCode;
-    if (l == 'ar') return ar;
-    if (l == 'ckb' || l == 'ku') return ku;
-    return en;
+    return texts[l] ?? texts['en'] ?? '';
   }
 
   @override
@@ -34,27 +33,30 @@ class _CustomCompassBodyState extends State<CustomCompassBody> {
   Future<void> _checkLocation() async {
     try {
       setState(() { _loading = true; _error = ''; });
-
-      // Check location service
       bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
       if (!serviceEnabled) {
-        if (mounted) setState(() { _loading = false; _error = _t('يرجى تفعيل خدمة الموقع', 'خزمەتگوزاری شوێن چالاک بکە', 'Enable location service'); });
+        if (mounted) setState(() { _loading = false; _error = _t({
+          'ar': 'يرجى تفعيل خدمة الموقع', 'en': 'Please enable location service',
+          'de': 'Bitte Standortdienst aktivieren', 'am': 'እባክዎ የአካባቢ አገልግሎት ያንቁ',
+          'ms': 'Sila aktifkan perkhidmatan lokasi', 'pt': 'Ative o serviço de localização',
+          'tr': 'Lütfen konum hizmetini etkinleştirin', 'ru': 'Включите службу геолокации',
+        }); });
         return;
       }
-
-      // Check permission
       LocationPermission perm = await Geolocator.checkPermission();
-      if (perm == LocationPermission.denied) {
-        perm = await Geolocator.requestPermission();
-      }
+      if (perm == LocationPermission.denied) perm = await Geolocator.requestPermission();
       if (perm == LocationPermission.denied || perm == LocationPermission.deniedForever) {
-        if (mounted) setState(() { _loading = false; _error = _t('يرجى السماح بالوصول للموقع', 'مۆڵەتی شوێن بدە', 'Allow location access'); });
+        if (mounted) setState(() { _loading = false; _error = _t({
+          'ar': 'يرجى السماح بالوصول للموقع', 'en': 'Please allow location access',
+          'de': 'Bitte Standortzugriff erlauben', 'am': 'እባክዎ የአካባቢ ተደራሽነት ይፍቀዱ',
+          'ms': 'Sila benarkan akses lokasi', 'pt': 'Permita o acesso à localização',
+          'tr': 'Lütfen konum erişimine izin verin', 'ru': 'Разрешите доступ к геолокации',
+        }); });
         return;
       }
-
       if (mounted) setState(() { _locationReady = true; _loading = false; });
     } catch (e) {
-      if (mounted) setState(() { _loading = false; _error = _t('خطأ: $e', 'هەڵە: $e', 'Error: $e'); });
+      if (mounted) setState(() { _loading = false; _error = e.toString(); });
     }
   }
 
@@ -78,7 +80,10 @@ class _CustomCompassBodyState extends State<CustomCompassBody> {
           style: ElevatedButton.styleFrom(backgroundColor: gold, foregroundColor: Colors.white,
             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14.r))),
           icon: const Icon(Icons.refresh_rounded),
-          label: Text(_t('إعادة المحاولة', 'هەوڵدانەوە', 'Retry'), style: TextStyle(fontFamily: 'cairo', fontSize: 14.sp)),
+          label: Text(_t({'ar': 'إعادة المحاولة', 'en': 'Retry', 'de': 'Wiederholen',
+            'am': 'እንደገና ሞክር', 'ms': 'Cuba lagi', 'pt': 'Tentar novamente',
+            'tr': 'Tekrar dene', 'ru': 'Повторить'}),
+            style: TextStyle(fontFamily: 'cairo', fontSize: 14.sp)),
           onPressed: _checkLocation),
       ])));
 
@@ -91,7 +96,10 @@ class _CustomCompassBodyState extends State<CustomCompassBody> {
           return Center(child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
             CircularProgressIndicator(color: gold, strokeWidth: 2.5),
             SizedBox(height: 12.h),
-            Text(_t('جاري تحديد القبلة...', 'دۆزینەوەی قیبلە...', 'Finding Qibla...'),
+            Text(_t({'ar': 'جاري تحديد القبلة...', 'en': 'Finding Qibla...',
+              'de': 'Qibla wird gesucht...', 'am': 'ቂብላ በመፈለግ ላይ...',
+              'ms': 'Mencari Kiblat...', 'pt': 'Encontrando Qibla...',
+              'tr': 'Kıble bulunuyor...', 'ru': 'Поиск Киблы...'}),
               style: TextStyle(color: sub, fontSize: 13.sp, fontFamily: 'cairo')),
           ]));
         }
@@ -100,15 +108,18 @@ class _CustomCompassBodyState extends State<CustomCompassBody> {
           return Center(child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
             Icon(Icons.error_outline, size: 48.sp, color: Colors.red.shade300),
             SizedBox(height: 12.h),
-            Text(_t('خطأ في البوصلة', 'هەڵە لە کۆمپاس', 'Compass error'),
+            Text(_t({'ar': 'خطأ في البوصلة', 'en': 'Compass error',
+              'de': 'Kompassfehler', 'am': 'የኮምፓስ ስህተት',
+              'ms': 'Ralat kompas', 'pt': 'Erro na bússola',
+              'tr': 'Pusula hatası', 'ru': 'Ошибка компаса'}),
               style: TextStyle(color: sub, fontSize: 14.sp, fontFamily: 'cairo')),
-            SizedBox(height: 6.h),
-            Text('${snap.error}', style: TextStyle(color: sub.withOpacity(0.6), fontSize: 10.sp), textAlign: TextAlign.center),
             SizedBox(height: 16.h),
             ElevatedButton(
               style: ElevatedButton.styleFrom(backgroundColor: gold, foregroundColor: Colors.white),
               onPressed: () => setState(() { _locationReady = false; _checkLocation(); }),
-              child: Text(_t('إعادة', 'دووبارە', 'Retry'), style: const TextStyle(fontFamily: 'cairo'))),
+              child: Text(_t({'ar': 'إعادة', 'en': 'Retry', 'de': 'Wiederholen',
+                'am': 'እንደገና', 'ms': 'Cuba lagi', 'pt': 'Tentar',
+                'tr': 'Tekrar', 'ru': 'Повторить'}), style: const TextStyle(fontFamily: 'cairo'))),
           ]));
         }
 
@@ -120,49 +131,121 @@ class _CustomCompassBodyState extends State<CustomCompassBody> {
         final offset = data.offset ?? 999;
         final isAligned = offset.abs() < 5;
 
-        return Center(child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
+        return SingleChildScrollView(
+          physics: const BouncingScrollPhysics(),
+          child: Column(children: [
+            SizedBox(height: 8.h),
+
+            // --- Qibla degree info ---
+            Container(
+              margin: EdgeInsets.symmetric(horizontal: 20.w),
+              padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 10.h),
+              decoration: BoxDecoration(
+                color: isDark ? Colors.white.withOpacity(0.06) : gold.withOpacity(0.08),
+                borderRadius: BorderRadius.circular(14.r),
+                border: Border.all(color: gold.withOpacity(0.25)),
+              ),
+              child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+                Icon(Icons.explore_rounded, color: gold, size: 20.sp),
+                SizedBox(width: 8.w),
+                Text('${_t({'ar': 'اتجاه القبلة', 'en': 'Qibla direction',
+                  'de': 'Qibla-Richtung', 'am': 'የቂብላ አቅጣጫ',
+                  'ms': 'Arah Kiblat', 'pt': 'Direção da Qibla',
+                  'tr': 'Kıble yönü', 'ru': 'Направление Киблы'})}: ',
+                  style: TextStyle(color: sub, fontSize: 12.sp, fontFamily: 'cairo')),
+                Text('${qiblah.toStringAsFixed(1)}°',
+                  style: TextStyle(color: gold, fontSize: 16.sp, fontWeight: FontWeight.bold, fontFamily: 'cairo')),
+              ]),
+            ),
+            SizedBox(height: 8.h),
+
+            // --- Aligned badge ---
             if (isAligned)
               Container(
+                margin: EdgeInsets.symmetric(horizontal: 20.w),
                 padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 8.h),
                 decoration: BoxDecoration(
                   color: isDark ? const Color(0xff1E4A38) : const Color(0xffE8F5E9),
                   borderRadius: BorderRadius.circular(12.r),
                   border: Border.all(color: const Color(0xff4CAF82).withOpacity(0.5))),
-                child: Row(mainAxisSize: MainAxisSize.min, children: [
-                  Icon(Icons.check_circle_rounded, color: const Color(0xff4CAF82), size: 16.sp),
+                child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+                  Icon(Icons.check_circle_rounded, color: const Color(0xff4CAF82), size: 18.sp),
                   SizedBox(width: 6.w),
-                  Text(_t('اتجاه القبلة ✓', 'ڕووی قیبلەیە ✓', 'Facing Qibla ✓'),
+                  Text(_t({'ar': 'أنت تواجه القبلة ✓', 'en': 'You are facing Qibla ✓',
+                    'de': 'Sie blicken zur Qibla ✓', 'am': 'ወደ ቂብላ ፊት ለፊት ነዎት ✓',
+                    'ms': 'Anda menghadap Kiblat ✓', 'pt': 'Você está virado para a Qibla ✓',
+                    'tr': 'Kıbleye bakıyorsunuz ✓', 'ru': 'Вы смотрите на Киблу ✓'}),
                     style: TextStyle(color: const Color(0xff4CAF82), fontSize: 13.sp, fontWeight: FontWeight.bold, fontFamily: 'cairo')),
                 ]),
               ),
             SizedBox(height: 12.h),
 
-            // Compass
+            // --- Compass ---
             SizedBox(
-              width: MediaQuery.of(context).size.width * 0.75,
-              height: MediaQuery.of(context).size.width * 0.75,
+              width: MediaQuery.of(context).size.width * 0.78,
+              height: MediaQuery.of(context).size.width * 0.78,
               child: Stack(alignment: Alignment.center, children: [
                 // Compass dial
                 Transform.rotate(
                   angle: heading * (-math.pi / 180),
                   child: Image.asset('assets/images/compassn.png', fit: BoxFit.fill)),
-                // Qibla needle
+                // Qibla needle — rotated so arrow points UP toward Qibla
                 Transform.rotate(
                   angle: (qiblah - heading) * (math.pi / 180),
                   child: SvgPicture.asset('assets/images/needle.svg',
-                    fit: BoxFit.contain, height: MediaQuery.of(context).size.width * 0.65)),
+                    fit: BoxFit.contain, height: MediaQuery.of(context).size.width * 0.68)),
+              ]),
+            ),
+            SizedBox(height: 16.h),
+
+            // --- Heading degrees ---
+            Text('${heading.toStringAsFixed(0)}°',
+              style: TextStyle(color: txt, fontSize: 30.sp, fontWeight: FontWeight.bold, fontFamily: 'cairo')),
+            SizedBox(height: 4.h),
+            Text(_t({'ar': 'اتجاهك الحالي', 'en': 'Your current heading',
+              'de': 'Ihre aktuelle Richtung', 'am': 'የአሁኑ አቅጣጫዎ',
+              'ms': 'Arah semasa anda', 'pt': 'Sua direção atual',
+              'tr': 'Mevcut yönünüz', 'ru': 'Ваше текущее направление'}),
+              style: TextStyle(color: sub, fontSize: 11.sp, fontFamily: 'cairo')),
+            SizedBox(height: 20.h),
+
+            // --- Calibration instructions ---
+            Container(
+              margin: EdgeInsets.symmetric(horizontal: 20.w),
+              padding: EdgeInsets.all(14.w),
+              decoration: BoxDecoration(
+                color: isDark ? Colors.white.withOpacity(0.04) : Colors.orange.withOpacity(0.06),
+                borderRadius: BorderRadius.circular(14.r),
+                border: Border.all(color: Colors.orange.withOpacity(0.2)),
+              ),
+              child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                Row(children: [
+                  Icon(Icons.info_outline_rounded, color: Colors.orange.shade300, size: 18.sp),
+                  SizedBox(width: 8.w),
+                  Text(_t({'ar': 'كيفية المعايرة', 'en': 'How to calibrate',
+                    'de': 'So kalibrieren Sie', 'am': 'እንዴት ማስተካከል',
+                    'ms': 'Cara menentukur', 'pt': 'Como calibrar',
+                    'tr': 'Nasıl kalibre edilir', 'ru': 'Как откалибровать'}),
+                    style: TextStyle(color: Colors.orange.shade300, fontSize: 13.sp,
+                      fontWeight: FontWeight.bold, fontFamily: 'cairo')),
+                ]),
+                SizedBox(height: 8.h),
+                Text(_t({
+                  'ar': '١. أمسك الهاتف بشكل مسطح\n٢. حرّك الهاتف على شكل رقم 8\n٣. ابتعد عن المعادن والأجهزة الإلكترونية\n٤. أدر جسمك حتى يشير السهم للأعلى',
+                  'en': '1. Hold phone flat\n2. Move phone in figure-8 pattern\n3. Stay away from metals and electronics\n4. Turn your body until the arrow points up',
+                  'de': '1. Halten Sie das Telefon flach\n2. Bewegen Sie es in einer 8er-Form\n3. Halten Sie Abstand zu Metallen\n4. Drehen Sie sich, bis der Pfeil nach oben zeigt',
+                  'am': '1. ስልኩን ጠፍጣፋ አድርገው ያዙ\n2. ስልኩን በ8 ቅርጽ ያንቀሳቅሱ\n3. ከብረት ራቅ ይበሉ\n4. ቀስቱ ወደ ላይ እስኪጠቁም ድረስ ዙሩ',
+                  'ms': '1. Pegang telefon rata\n2. Gerakkan dalam bentuk angka 8\n3. Jauhkan dari logam\n4. Pusing badan sehingga anak panah ke atas',
+                  'pt': '1. Segure o telefone plano\n2. Mova em forma de 8\n3. Afaste-se de metais\n4. Gire até a seta apontar para cima',
+                  'tr': '1. Telefonu düz tutun\n2. 8 şeklinde hareket ettirin\n3. Metallerden uzak durun\n4. Ok yukarı gösterene kadar dönün',
+                  'ru': '1. Держите телефон горизонтально\n2. Двигайте телефон в виде восьмёрки\n3. Держитесь подальше от металлов\n4. Поворачивайтесь, пока стрелка не укажет вверх',
+                }),
+                  style: TextStyle(color: sub, fontSize: 11.sp, fontFamily: 'cairo', height: 1.6)),
               ]),
             ),
             SizedBox(height: 20.h),
-            Text('${heading.toStringAsFixed(0)}°',
-              style: TextStyle(color: txt, fontSize: 28.sp, fontWeight: FontWeight.bold, fontFamily: 'cairo')),
-            SizedBox(height: 4.h),
-            Text('${_t('اتجاه القبلة', 'ئاراستەی قیبلە', 'Qibla direction')}: ${qiblah.toStringAsFixed(1)}°',
-              style: TextStyle(color: sub, fontSize: 12.sp, fontFamily: 'cairo')),
-          ],
-        ));
+          ]),
+        );
       },
     );
   }

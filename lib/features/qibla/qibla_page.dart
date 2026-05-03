@@ -8,11 +8,9 @@ import 'package:khatmah/features/qibla/q_compass.dart';
 class QiblaPage extends StatelessWidget {
   const QiblaPage({super.key});
 
-  String _t(BuildContext c, String ar, String ku, String en) {
+  String _t(BuildContext c, Map<String, String> texts) {
     final l = c.locale.languageCode;
-    if (l == 'ar') return ar;
-    if (l == 'ckb' || l == 'ku') return ku;
-    return en;
+    return texts[l] ?? texts['en'] ?? '';
   }
 
   @override
@@ -27,24 +25,12 @@ class QiblaPage extends StatelessWidget {
         elevation: 0, centerTitle: true, backgroundColor: Colors.transparent,
         iconTheme: IconThemeData(color: txt),
         title: Text(
-          _t(context, 'القبلة', 'قیبلە', 'Qibla'),
+          _t(context, {'ar': 'القبلة', 'en': 'Qibla', 'de': 'Qibla',
+            'am': 'ቂብላ', 'ms': 'Kiblat', 'pt': 'Qibla', 'tr': 'Kıble', 'ru': 'Кибла'}),
           style: TextStyle(fontWeight: FontWeight.w700, fontSize: 18.sp, color: txt, fontFamily: 'cairo'),
         ),
       ),
-      body: Column(
-        children: [
-          Expanded(child: CustomCompassBody(isDark: isDark)),
-          Padding(
-            padding: EdgeInsets.fromLTRB(20.w, 8.h, 20.w, 20.h),
-            child: Text(
-              _t(context, 'أبعد الجهاز عن المعادن للحصول على نتائج أفضل',
-                'ئامێرەکەت لەدوور شتی ئاسنی بگرە', 'Keep device away from metal for best results'),
-              style: TextStyle(color: isDark ? Colors.white38 : Colors.black38, fontSize: 11.sp, fontFamily: 'cairo'),
-              textAlign: TextAlign.center,
-            ),
-          ),
-        ],
-      ),
+      body: CustomCompassBody(isDark: isDark),
     );
   }
 }

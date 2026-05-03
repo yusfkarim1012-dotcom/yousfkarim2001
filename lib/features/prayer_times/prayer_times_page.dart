@@ -23,6 +23,7 @@ class _PrayerTimesPageState extends State<PrayerTimesPage>
   String _locationName = '';
   double? _lat;
   double? _lng;
+  Location? _selectedLocation;
   late AnimationController _fadeController;
   late Animation<double> _fadeAnimation;
 
@@ -214,8 +215,17 @@ class _PrayerTimesPageState extends State<PrayerTimesPage>
           ),
           actions: [
             IconButton(
-              icon: const Icon(Icons.refresh_rounded, color: Colors.white),
-              onPressed: _loadPrayerTimes,
+              icon: const Icon(Icons.search_rounded, color: Colors.white),
+              onPressed: _showSearchDialog,
+              tooltip: 'گەڕان بۆ شار',
+            ),
+            IconButton(
+              icon: const Icon(Icons.my_location_rounded, color: Colors.white),
+              onPressed: () {
+                _selectedLocation = null;
+                _loadPrayerTimes();
+              },
+              tooltip: 'GPS',
             ),
           ],
         ),
@@ -568,5 +578,160 @@ class _PrayerTimesPageState extends State<PrayerTimesPage>
         ],
       ),
     );
+  }
+
+  // --- بحثی شار ---
+  void _showSearchDialog() {
+    final searchController = TextEditingController();
+    List<Location> results = [];
+    bool searching = false;
+
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: const Color(0xff1C1815),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(24.r)),
+      ),
+      builder: (ctx) {
+        return StatefulBuilder(
+          builder: (ctx, setModalState) {
+            return Padding(
+              padding: EdgeInsets.only(
+                bottom: MediaQuery.of(ctx).viewInsets.bottom,
+                left: 16.w, right: 16.w, top: 16.h,
+              ),
+              child: SizedBox(
+                height: MediaQuery.of(ctx).size.height * 0.6,
+                child: Column(
+                  children: [
+                    // Handle bar
+                    Container(
+                      width: 40.w, height: 4.h,
+                      decoration: BoxDecoration(
+                        color: Colors.white24,
+                        borderRadius: BorderRadius.circular(2),
+                      ),
+                    ),
+                    SizedBox(height: 16.h),
+                    Text('گەڕان بۆ شار',
+                      style: TextStyle(color: Colors.white, fontSize: 16.sp,
+                        fontWeight: FontWeight.bold, fontFamily: 'cairo'),
+                    ),
+                    SizedBox(height: 12.h),
+                    // Search field
+                    TextField(
+                      controller: searchController,
+                      style: TextStyle(color: Colors.white, fontFamily: 'cairo', fontSize: 14.sp),
+                      decoration: InputDecoration(
+                        hintText: 'ناوی شار بنووسە...',
+                        hintStyle: TextStyle(color: Colors.white38, fontFamily: 'cairo', fontSize: 13.sp),
+                        prefixIcon: const Icon(Icons.search, color: Color(0xffC5A053)),
+                        filled: true,
+                        fillColor: Colors.white.withOpacity(0.08),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(14.r),
+                          borderSide: BorderSide.none,
+                        ),
+                        suffixIcon: searching
+                            ? Padding(
+                                padding: EdgeInsets.all(12.w),
+                                child: SizedBox(width: 18.w, height: 18.w,
+                                  child: const CircularProgressIndicator(
+                                    strokeWidth: 2, color: Color(0xffC5A053)),
+                                ),
+                              )
+                            : null,
+                      ),
+                      onChanged: (val) async {
+                        if (val.length < 2) {
+                          setModalState(() => results = []);
+                          return;
+                        }
+                        setModalState(() => searching = true);
+                        final repo = MuslimRepository();
+                        final res = await repo.searchLocations(locationName: val);
+                        setModalState(() {
+                          results = res;
+                          searching = false;
+                        });
+                      },
+                    ),
+                    SizedBox(height: 8.h),
+                    // Results
+                    Expanded(
+                      child: results.isEmpty
+                          ? Center(
+                              child: Text(
+                                searchController.text.length < 2
+                                    ? 'لانیکەم ٢ پیت بنووسە'
+                                    : 'هیچ ئەنجامێک نەدۆزرایەوە',
+                                style: TextStyle(color: Colors.white38,
+                                  fontSize: 13.sp, fontFamily: 'cairo'),
+                              ),
+                            )
+                          : ListView.builder(
+                              itemCount: results.length,
+                              itemBuilder: (ctx, i) {
+                                final loc = results[i];
+                                return ListTile(
+                                  leading: Icon(Icons.location_city_rounded,
+                                    color: const Color(0xffC5A053), size: 22.sp),
+                                  title: Text(loc.name,
+                                    style: TextStyle(color: Colors.white,
+                                      fontFamily: 'cairo', fontSize: 14.sp)),
+                                  subtitle: Text(loc.countryName,
+                                    style: TextStyle(color: Colors.white54,
+                                      fontFamily: 'cairo', fontSize: 11.sp)),
+                                  onTap: () {
+                                    Navigator.pop(ctx);
+                                    _loadForLocation(loc);
+                                  },
+                                );
+                              },
+                            ),
+                    ),
+                  ],
+                ),
+              ),
+            );
+          },
+        );
+      },
+    );
+  }
+
+  Future<void> _loadForLocation(Location loc) async {
+    setState(() {
+      _isLoading = true;
+      _errorMessage = '';
+      _selectedLocation = loc;
+    });
+    try {
+      _lat = loc.latitude;
+      _lng = loc.longitude;
+      _locationName = '${loc.name}, ${loc.countryName}';
+
+      final attribute = PrayerAttribute(
+        calculationMethod: CalculationMethod.mwl,
+        asrMethod: AsrMethod.shafii,
+        higherLatitudeMethod: HigherLatitudeMethod.angleBased,
+      );
+      final repo = MuslimRepository();
+      final prayerTime = await repo.getPrayerTimes(
+        location: loc,
+        date: DateTime.now(),
+        attribute: attribute,
+        useFixedPrayer: loc.hasFixedPrayerTime,
+      );
+      if (mounted) {
+        setState(() { _prayerTime = prayerTime; _isLoading = false; });
+        _fadeController.forward(from: 0);
+      }
+    } catch (e) {
+      if (mounted) {
+        setState(() { _isLoading = false; _errorMessage = 'هەڵەیەک ڕوویدا'; });
+      }
+    }
   }
 }

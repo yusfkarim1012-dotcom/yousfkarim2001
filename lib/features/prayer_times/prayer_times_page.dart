@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:ui' as ui;
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -237,13 +238,16 @@ class _PrayerTimesPageState extends State<PrayerTimesPage>
               style: TextStyle(color: Colors.white, fontSize: 22.sp, fontWeight: FontWeight.bold, fontFamily: 'cairo')),
             SizedBox(height: 8.h),
             // Countdown digits
-            Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-              _digit(h.toString().padLeft(2, '0'), _t('ساعة', 'کاتژمێر', 'hr')),
-              Text(' : ', style: TextStyle(color: const Color(0xff7DF7C0), fontSize: 24.sp, fontWeight: FontWeight.bold)),
-              _digit(m.toString().padLeft(2, '0'), _t('دقيقة', 'خولەک', 'min')),
-              Text(' : ', style: TextStyle(color: const Color(0xff7DF7C0), fontSize: 24.sp, fontWeight: FontWeight.bold)),
-              _digit(s.toString().padLeft(2, '0'), _t('ثانية', 'چرکە', 'sec')),
-            ]),
+            Directionality(
+              textDirection: ui.TextDirection.ltr,
+              child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+                _digit(h.toString().padLeft(2, '0'), _t('ساعة', 'کاتژمێر', 'hr')),
+                Text(' : ', style: TextStyle(color: const Color(0xff7DF7C0), fontSize: 24.sp, fontWeight: FontWeight.bold)),
+                _digit(m.toString().padLeft(2, '0'), _t('دقيقة', 'خولەک', 'min')),
+                Text(' : ', style: TextStyle(color: const Color(0xff7DF7C0), fontSize: 24.sp, fontWeight: FontWeight.bold)),
+                _digit(s.toString().padLeft(2, '0'), _t('ثانية', 'چرکە', 'sec')),
+              ]),
+            ),
           ]),
         ),
         SizedBox(height: 12.h),

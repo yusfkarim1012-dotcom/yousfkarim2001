@@ -301,7 +301,7 @@ class _PrayerTimesPageState extends State<PrayerTimesPage>
         SizedBox(width: 12.w),
         Expanded(child: Text(name, style: TextStyle(
           color: isNext ? (isDark ? const Color(0xff7DF7C0) : const Color(0xff2E7D32)) : txt,
-          fontSize: 15.sp, fontWeight: isNext ? FontWeight.bold : FontWeight.w600, fontFamily: 'cairo'))),
+          fontSize: 18.sp, fontWeight: FontWeight.bold, fontFamily: 'cairo'))),
         if (time != null)
           Container(
             padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 5.h),
@@ -310,7 +310,7 @@ class _PrayerTimesPageState extends State<PrayerTimesPage>
               borderRadius: BorderRadius.circular(8.r)),
             child: Text(_fmt(time), style: TextStyle(
               color: isNext ? (isDark ? const Color(0xff7DF7C0) : const Color(0xff2E7D32)) : (isDark ? Colors.white.withOpacity(0.85) : txt),
-              fontSize: 14.sp, fontWeight: FontWeight.bold, fontFamily: 'cairo'))),
+              fontSize: 17.sp, fontWeight: FontWeight.w900, fontFamily: 'cairo'))),
         if (isNext) ...[SizedBox(width: 6.w), Icon(Icons.arrow_forward_ios_rounded, color: const Color(0xff4CAF82), size: 12.sp)],
       ]),
     );

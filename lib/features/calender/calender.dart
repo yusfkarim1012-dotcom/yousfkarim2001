@@ -20,6 +20,7 @@ class _CalenderPageState extends State<CalenderPage> {
   var _today = j.HijriCalendar.now().toFormat(
                     "dd - MMMM - yyyy",
                   );
+  var _selectedDate = DateTime.now();
   var date = DateTime.now();
   @override
   Widget build(BuildContext context) {
@@ -114,13 +115,14 @@ class _CalenderPageState extends State<CalenderPage> {
                 ),
               ),
               startDate: JDateModel(dateTime: DateTime.parse("1984-12-24")),
-              selectedDate: JDateModel(dateTime: DateTime.now()),
+              selectedDate: JDateModel(dateTime: _selectedDate),
               endDate: JDateModel(dateTime: DateTime.parse("2030-09-20")),
               pickerMode: DatePickerMode.day,
               pickerTheme: Theme.of(context),
               locale: context.locale,
               textDirection: m.TextDirection.rtl,
               onChange: (val) {
+                _selectedDate = val.date;
                 date = val.date;
 
                 _today = j. HijriCalendar.fromDate(val.date).toFormat(

@@ -1075,7 +1075,7 @@ class _HomeState extends State<Home>
                                           HomeGridItem(
                                               text: "مواقيت الصلاة",
                                               imagePath:
-                                                  "assets/images/prayerbackgroundnight.png",
+                                                  "assets/images/prayer_times_icon.png",
                                               onPressed: () {
                                                 _fastPush(
                                                     const PrayerTimesPage());

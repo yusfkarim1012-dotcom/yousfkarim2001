@@ -45,9 +45,17 @@ class _CalenderPageState extends State<CalenderPage> {
             padding: const EdgeInsets.all(8.0),
             child: Theme(
               data: Theme.of(context).copyWith(
-                textTheme: Theme.of(context).textTheme.copyWith(
-                  bodyMedium: TextStyle(fontSize: 16.sp, fontFamily: 'cairo', fontWeight: FontWeight.w600),
-                  bodySmall: TextStyle(fontSize: 14.sp, fontFamily: 'cairo'),
+                textTheme: index == 0 ? Theme.of(context).textTheme.copyWith(
+                  bodyMedium: TextStyle(fontSize: 18.sp, fontFamily: 'cairo', fontWeight: FontWeight.bold),
+                  bodyLarge: TextStyle(fontSize: 18.sp, fontFamily: 'cairo', fontWeight: FontWeight.bold),
+                  bodySmall: TextStyle(fontSize: 16.sp, fontFamily: 'cairo', fontWeight: FontWeight.bold),
+                  labelSmall: TextStyle(fontSize: 16.sp, fontFamily: 'cairo', fontWeight: FontWeight.bold),
+                  labelLarge: TextStyle(fontSize: 18.sp, fontFamily: 'cairo', fontWeight: FontWeight.bold),
+                  titleSmall: TextStyle(fontSize: 18.sp, fontFamily: 'cairo', fontWeight: FontWeight.bold),
+                  titleMedium: TextStyle(fontSize: 18.sp, fontFamily: 'cairo', fontWeight: FontWeight.bold),
+                ) : Theme.of(context).textTheme.copyWith(
+                  bodyMedium: const TextStyle(fontFamily: 'cairo'),
+                  bodySmall: const TextStyle(fontFamily: 'cairo'),
                 ),
               ),
               child: JGlobalDatePicker(

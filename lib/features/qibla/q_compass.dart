@@ -185,52 +185,15 @@ class _CustomCompassBodyState extends State<CustomCompassBody> {
               width: MediaQuery.of(context).size.width * 0.78,
               height: MediaQuery.of(context).size.width * 0.78,
               child: Stack(alignment: Alignment.center, children: [
-                // Inner beautiful circle
-                Container(
-                  width: MediaQuery.of(context).size.width * 0.65,
-                  height: MediaQuery.of(context).size.width * 0.65,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    border: Border.all(color: gold.withOpacity(0.3), width: 2),
-                  ),
-                ),
-                // Center dot
-                Container(
-                  width: 12.w, height: 12.w,
-                  decoration: BoxDecoration(color: gold, shape: BoxShape.circle),
-                ),
-                // The rotating 4-way arrow with Kaaba
+                // Compass dial
+                Transform.rotate(
+                  angle: heading * (-math.pi / 180),
+                  child: Image.asset('assets/images/compassn.png', fit: BoxFit.fill)),
+                // Qibla needle — rotated so arrow points UP toward Qibla
                 Transform.rotate(
                   angle: (qiblah - heading) * (math.pi / 180),
-                  child: SizedBox(
-                    width: MediaQuery.of(context).size.width * 0.78,
-                    height: MediaQuery.of(context).size.width * 0.78,
-                    child: Stack(
-                      alignment: Alignment.center,
-                      children: [
-                        // Vertical line
-                        Container(width: 3.w, height: MediaQuery.of(context).size.width * 0.65, color: gold.withOpacity(0.6)),
-                        // Horizontal line
-                        Container(height: 3.w, width: MediaQuery.of(context).size.width * 0.65, color: gold.withOpacity(0.3)),
-                        // The Kaaba placed at the top
-                        Positioned(
-                          top: 0,
-                          child: Container(
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              boxShadow: [BoxShadow(color: gold.withOpacity(0.4), blurRadius: 10, spreadRadius: 2)],
-                            ),
-                            child: Image.asset('assets/images/kabaa.png', height: 65.h),
-                          ),
-                        ),
-                        // Arrows on the other 3 ends
-                        Positioned(bottom: 0, child: Icon(Icons.keyboard_arrow_down_rounded, color: gold.withOpacity(0.8), size: 36.sp)),
-                        Positioned(left: 0, child: Icon(Icons.keyboard_arrow_left_rounded, color: gold.withOpacity(0.5), size: 36.sp)),
-                        Positioned(right: 0, child: Icon(Icons.keyboard_arrow_right_rounded, color: gold.withOpacity(0.5), size: 36.sp)),
-                      ],
-                    ),
-                  ),
-                ),
+                  child: SvgPicture.asset('assets/images/needle.svg',
+                    fit: BoxFit.contain, height: MediaQuery.of(context).size.width * 0.68)),
               ]),
             ),
             SizedBox(height: 16.h),
@@ -246,7 +209,43 @@ class _CustomCompassBodyState extends State<CustomCompassBody> {
               style: TextStyle(color: sub, fontSize: 11.sp, fontFamily: 'cairo')),
             SizedBox(height: 20.h),
 
-
+            // --- Calibration instructions ---
+            Container(
+              margin: EdgeInsets.symmetric(horizontal: 20.w),
+              padding: EdgeInsets.all(14.w),
+              decoration: BoxDecoration(
+                color: isDark ? Colors.white.withOpacity(0.04) : Colors.orange.withOpacity(0.06),
+                borderRadius: BorderRadius.circular(14.r),
+                border: Border.all(color: Colors.orange.withOpacity(0.2)),
+              ),
+              child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                Row(children: [
+                  Icon(Icons.info_outline_rounded, color: Colors.orange.shade300, size: 18.sp),
+                  SizedBox(width: 8.w),
+                  Text(_t({'ar': 'كيفية المعايرة', 'en': 'How to calibrate',
+                    'de': 'So kalibrieren Sie', 'am': 'እንዴት ማስተካከል',
+                    'ms': 'Cara menentukur', 'pt': 'Como calibrar',
+                    'tr': 'Nasıl kalibre edilir', 'ru': 'Как откалибровать'}),
+                    style: TextStyle(color: Colors.orange.shade300, fontSize: 13.sp,
+                      fontWeight: FontWeight.bold, fontFamily: 'cairo')),
+                ]),
+                SizedBox(height: 8.h),
+                Text(_t({
+                  'ar': '١. أمسك الهاتف بشكل مسطح\n٢. حرّك الهاتف على شكل رقم 8\n٣. ابتعد عن المعادن والأجهزة الإلكترونية\n٤. أدر جسمك حتى يشير السهم للأعلى',
+                  'en': '1. Hold phone flat\n2. Move phone in figure-8 pattern\n3. Stay away from metals and electronics\n4. Turn your body until the arrow points up',
+                  'de': '1. Halten Sie das Telefon flach\n2. Bewegen Sie es in einer 8er-Form\n3. Halten Sie Abstand zu Metallen\n4. Drehen Sie sich, bis der Pfeil nach oben zeigt',
+                  'am': '1. ስልኩን ጠፍጣፋ አድርገው ያዙ\n2. ስልኩን በ8 ቅርጽ ያንቀሳቅሱ\n3. ከብረት ራቅ ይበሉ\n4. ቀስቱ ወደ ላይ እስኪጠቁም ድረስ ዙሩ',
+                  'ms': '1. Pegang telefon rata\n2. Gerakkan dalam bentuk angka 8\n3. Jauhkan dari logam\n4. Pusing badan sehingga anak panah ke atas',
+                  'pt': '1. Segure o telefone plano\n2. Mova em forma de 8\n3. Afaste-se de metais\n4. Gire até a seta apontar para cima',
+                  'tr': '1. Telefonu düz tutun\n2. 8 şeklinde hareket ettirin\n3. Metallerden uzak durun\n4. Ok yukarı gösterene kadar dönün',
+                  'ru': '1. Держите телефон горизонтально\n2. Двигайте телефон в виде восьмёрки\n3. Держитесь подальше от металлов\n4. Поворачивайтесь, пока стрелка не укажет вверх',
+                  'ku': '١. مۆبایلەکەت بە تەختی بگرە\n٢. مۆبایلەکەت بە شێوەی ژمارە 8 بسوڕێنە\n٣. دووربە لە ئاسن و موگناتیس\n٤. خۆت بسوڕێنە تا سەهمەکە ڕووی لە سەرەوە دەبێت',
+                  'ckb': '١. مۆبایلەکەت بە تەختی بگرە\n٢. مۆبایلەکەت بە شێوەی ژمارە 8 بسوڕێنە\n٣. دووربە لە ئاسن و موگناتیس\n٤. خۆت بسوڕێنە تا سەهمەکە ڕووی لە سەرەوە دەبێت',
+                }),
+                  style: TextStyle(color: sub, fontSize: 11.sp, fontFamily: 'cairo', height: 1.6)),
+              ]),
+            ),
+            SizedBox(height: 20.h),
           ]),
         );
       },

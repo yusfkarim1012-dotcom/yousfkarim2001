@@ -1088,6 +1088,7 @@ class _HomeState extends State<Home>
                                               text: "calender".tr(),
                                               imagePath:
                                                   "assets/images/hijri_calendar_icon.png",
+                                              iconSize: 55.h,
                                               onPressed: () {
                                                 _fastPush(
                                                     const CalenderPage());

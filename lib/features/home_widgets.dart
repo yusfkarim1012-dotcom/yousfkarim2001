@@ -491,12 +491,14 @@ class HomeGridItem extends StatelessWidget {
   final String text;
   final VoidCallback onPressed;
   final String imagePath;
+  final double? iconSize;
 
   const HomeGridItem(
       {Key? key,
       required this.text,
       required this.onPressed,
-      required this.imagePath})
+      required this.imagePath,
+      this.iconSize})
       : super(key: key);
 
   @override
@@ -534,9 +536,9 @@ class HomeGridItem extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 if (imagePath.contains("svg"))
-                  SvgPicture.asset(imagePath, height: 40.h)
+                  SvgPicture.asset(imagePath, height: iconSize ?? 40.h)
                 else
-                  Image.asset(imagePath, height: 40.h),
+                  Image.asset(imagePath, height: iconSize ?? 40.h),
                 SizedBox(height: 10.h),
                 Text(
                   text,

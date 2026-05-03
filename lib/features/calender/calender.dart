@@ -4,7 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:hijri/hijri_calendar.dart' as j;
 import 'package:khatmah/GlobalHelpers/constants.dart';
 import 'package:flutter/material.dart' as m;
-import 'package:jhijri_picker/jhijri_picker.dart';
+import 'jhijri_picker/jhijri_picker.dart';
 import 'package:khatmah/GlobalHelpers/hive_helper.dart';
 // import 'package:jhijri_picker/jhijri_picker.dart';
 

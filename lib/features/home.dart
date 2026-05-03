@@ -44,6 +44,7 @@ import 'package:khatmah/features/notifications/views/all_notification_page.dart'
 import 'package:khatmah/features/qibla/q_compass.dart';
 import 'package:khatmah/features/home_widgets.dart';
 import 'package:khatmah/features/prayer_times/prayer_times_page.dart';
+import 'package:khatmah/features/calender/calender.dart';
 import 'package:khatmah/features/qibla/qibla_page.dart';
 import 'package:khatmah/features/radio_page/radio_page.dart';
 import 'package:khatmah/features/shortvideos/shortvideos.dart';
@@ -1081,6 +1082,15 @@ class _HomeState extends State<Home>
                                               onPressed: () {
                                                 _fastPush(
                                                     const PrayerTimesPage());
+                                              }),
+
+                                          HomeGridItem(
+                                              text: "calender".tr(),
+                                              imagePath:
+                                                  "assets/images/hijri_calendar_icon.png",
+                                              onPressed: () {
+                                                _fastPush(
+                                                    const CalenderPage());
                                               }),
 
                                           HomeGridItem(

@@ -170,7 +170,7 @@ class _PrayerTimesPageState extends State<PrayerTimesPage>
 
   @override
   Widget build(BuildContext context) {
-    final isDark = getValue('darkMode') ?? false;
+    final isDark = false; // Forced light mode as requested by user
     final bg = isDark ? darkPrimaryColor : const Color(0xffFAF6EE);
     final cardBg = isDark ? Colors.white.withOpacity(0.12) : Colors.white;
     final textColor = isDark ? Colors.white : const Color(0xff2C1810);
@@ -185,7 +185,7 @@ class _PrayerTimesPageState extends State<PrayerTimesPage>
         title: Text(_t('مواقيت الصلاة', 'کاتی نوێژ', 'Prayer Times'),
           style: TextStyle(fontWeight: FontWeight.w700, fontSize: 18.sp, color: textColor, fontFamily: 'cairo')),
         actions: [
-          IconButton(icon: Icon(Icons.search_rounded, color: isDark ? Colors.white : textColor), onPressed: () => _showSearch(isDark)),
+          IconButton(icon: Icon(Icons.search_rounded, color: isDark ? Colors.white : textColor), onPressed: () => _showSearch()),
           IconButton(icon: Icon(Icons.my_location_rounded, color: isDark ? Colors.white : textColor),
             onPressed: () { _selectedLocation = null; _loadPrayerTimes(); }),
         ],
@@ -341,7 +341,8 @@ class _PrayerTimesPageState extends State<PrayerTimesPage>
   }
 
   // --- Search ---
-  void _showSearch(bool isDark) {
+  void _showSearch() {
+    final isDark = false; // Forced light mode
     final ctrl = TextEditingController();
     List<Location> res = [];
     bool loading = false;

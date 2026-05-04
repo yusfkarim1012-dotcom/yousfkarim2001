@@ -264,87 +264,89 @@ class _PrayerTimesPageState extends State<PrayerTimesPage>
     final nextMeta = _prayers.firstWhere((m) => m['key'] == displayKey, orElse: () => _prayers[0]);
     final h = _remaining.inHours, m = _remaining.inMinutes % 60, s = _remaining.inSeconds % 60;
 
-    return SingleChildScrollView(
-      physics: const BouncingScrollPhysics(),
-      padding: EdgeInsets.fromLTRB(16.w, 4.h, 16.w, 24.h),
+    return Padding(
+      padding: EdgeInsets.fromLTRB(12.w, 2.h, 12.w, 8.h),
       child: Column(children: [
         // --- Countdown Hero ---
         Container(
           width: double.infinity,
-          padding: EdgeInsets.symmetric(vertical: 24.h, horizontal: 20.w),
+          padding: EdgeInsets.symmetric(vertical: 12.h, horizontal: 16.w),
           decoration: BoxDecoration(
             gradient: LinearGradient(begin: Alignment.topCenter, end: Alignment.bottomCenter,
               colors: isDark
                 ? [const Color(0xff1E4A38), const Color(0xff0E2A1C)]
                 : [const Color(0xff1B6B45), const Color(0xff0D4A2E)]),
-            borderRadius: BorderRadius.circular(24.r),
+            borderRadius: BorderRadius.circular(20.r),
             border: Border.all(color: gold.withOpacity(0.35), width: 1.2),
             boxShadow: [
-              BoxShadow(color: const Color(0xff1B5E3B).withOpacity(0.35), blurRadius: 18, offset: const Offset(0, 8)),
-              BoxShadow(color: gold.withOpacity(0.08), blurRadius: 30, spreadRadius: -5),
+              BoxShadow(color: const Color(0xff1B5E3B).withOpacity(0.3), blurRadius: 12, offset: const Offset(0, 6)),
             ],
           ),
-          child: Column(children: [
-            // Mosque icon
-            Image.asset('assets/images/mosquepnggold.png', width: 36.w, height: 36.w, color: gold.withOpacity(0.6)),
-            SizedBox(height: 6.h),
-            Text(tGlobal('next_prayer', context.locale.languageCode),
-              style: TextStyle(color: Colors.white60, fontSize: 12.sp, fontFamily: 'cairo', letterSpacing: 0.5)),
-            SizedBox(height: 4.h),
-            Text(tGlobal(displayKey, context.locale.languageCode),
-              style: TextStyle(color: gold, fontSize: 24.sp, fontWeight: FontWeight.bold, fontFamily: 'cairo')),
-            SizedBox(height: 14.h),
+          child: Column(mainAxisSize: MainAxisSize.min, children: [
+            Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+              Image.asset('assets/images/mosquepnggold.png', width: 22.w, height: 22.w, color: gold.withOpacity(0.6)),
+              SizedBox(width: 8.w),
+              Text(tGlobal('next_prayer', context.locale.languageCode),
+                style: TextStyle(color: Colors.white60, fontSize: 11.sp, fontFamily: 'cairo')),
+              SizedBox(width: 6.w),
+              Text(tGlobal(displayKey, context.locale.languageCode),
+                style: TextStyle(color: gold, fontSize: 18.sp, fontWeight: FontWeight.bold, fontFamily: 'cairo')),
+            ]),
+            SizedBox(height: 8.h),
             // Countdown digit boxes
             Directionality(
               textDirection: ui.TextDirection.ltr,
               child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
                 _digitBox(_fmtN(h.toString().padLeft(2, '0')), tGlobal('hour', context.locale.languageCode)),
-                Padding(padding: EdgeInsets.symmetric(horizontal: 6.w),
-                  child: Text(':', style: TextStyle(color: gold, fontSize: 28.sp, fontWeight: FontWeight.bold))),
+                Padding(padding: EdgeInsets.symmetric(horizontal: 5.w),
+                  child: Text(':', style: TextStyle(color: gold, fontSize: 22.sp, fontWeight: FontWeight.bold))),
                 _digitBox(_fmtN(m.toString().padLeft(2, '0')), tGlobal('minute', context.locale.languageCode)),
-                Padding(padding: EdgeInsets.symmetric(horizontal: 6.w),
-                  child: Text(':', style: TextStyle(color: gold, fontSize: 28.sp, fontWeight: FontWeight.bold))),
+                Padding(padding: EdgeInsets.symmetric(horizontal: 5.w),
+                  child: Text(':', style: TextStyle(color: gold, fontSize: 22.sp, fontWeight: FontWeight.bold))),
                 _digitBox(_fmtN(s.toString().padLeft(2, '0')), tGlobal('second', context.locale.languageCode)),
               ]),
             ),
           ]),
         ),
-        SizedBox(height: 12.h),
+        SizedBox(height: 6.h),
 
         // --- Location + Date ---
         Container(
-          padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 10.h),
+          padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 7.h),
           decoration: BoxDecoration(
             color: isDark ? Colors.white.withOpacity(0.06) : gold.withOpacity(0.08),
-            borderRadius: BorderRadius.circular(14.r),
+            borderRadius: BorderRadius.circular(12.r),
             border: Border.all(color: gold.withOpacity(0.25)),
           ),
           child: Row(children: [
-            Icon(Icons.location_on_rounded, color: gold, size: 20.sp),
-            SizedBox(width: 8.w),
-            Expanded(child: Text(_locationName, style: TextStyle(color: txt, fontSize: 13.sp, fontWeight: FontWeight.w600, fontFamily: 'cairo'), maxLines: 1, overflow: TextOverflow.ellipsis)),
+            Icon(Icons.location_on_rounded, color: gold, size: 16.sp),
+            SizedBox(width: 6.w),
+            Expanded(child: Text(_locationName, style: TextStyle(color: txt, fontSize: 12.sp, fontWeight: FontWeight.w600, fontFamily: 'cairo'), maxLines: 1, overflow: TextOverflow.ellipsis)),
             Text(_fmtN(DateFormat('dd MMM', context.locale.languageCode).format(DateTime.now())),
-              style: TextStyle(color: gold, fontSize: 11.sp, fontFamily: 'cairo', fontWeight: FontWeight.bold)),
+              style: TextStyle(color: gold, fontSize: 10.sp, fontFamily: 'cairo', fontWeight: FontWeight.bold)),
           ]),
         ),
-        SizedBox(height: 14.h),
+        SizedBox(height: 6.h),
 
-        // --- Prayer Cards ---
-        Container(
-          padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 24.h),
-          decoration: BoxDecoration(
-            image: const DecorationImage(
-              image: AssetImage('assets/images/islamic_frame.png'),
-              fit: BoxFit.fill,
+        // --- Prayer Cards (fills remaining space) ---
+        Expanded(
+          child: Container(
+            padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 10.h),
+            decoration: BoxDecoration(
+              image: const DecorationImage(
+                image: AssetImage('assets/images/islamic_frame.png'),
+                fit: BoxFit.fill,
+              ),
             ),
-          ),
-          child: Column(
-            children: List.generate(_prayers.length, (i) {
-              final p = _prayers[i];
-              final time = _getTime(p['key']!);
-              final isNext = p['key'] == _displayPrayerKey;
-              return _prayerCard(p, time, isNext, isDark, cardBg, txt, sub, gold, i);
-            }),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: List.generate(_prayers.length, (i) {
+                final p = _prayers[i];
+                final time = _getTime(p['key']!);
+                final isNext = p['key'] == _displayPrayerKey;
+                return _prayerCard(p, time, isNext, isDark, cardBg, txt, sub, gold, i);
+              }),
+            ),
           ),
         ),
       ]),
@@ -352,17 +354,16 @@ class _PrayerTimesPageState extends State<PrayerTimesPage>
   }
 
   Widget _digitBox(String val, String label) => Container(
-    width: 68.w,
-    padding: EdgeInsets.symmetric(vertical: 8.h, horizontal: 4.w),
+    width: 58.w,
+    padding: EdgeInsets.symmetric(vertical: 5.h, horizontal: 4.w),
     decoration: BoxDecoration(
       color: Colors.white.withOpacity(0.08),
-      borderRadius: BorderRadius.circular(14.r),
+      borderRadius: BorderRadius.circular(12.r),
       border: Border.all(color: Colors.white.withOpacity(0.1)),
     ),
-    child: Column(children: [
-      Text(val, style: TextStyle(color: const Color(0xff7DF7C0), fontSize: 28.sp, fontWeight: FontWeight.bold, fontFamily: 'cairo')),
-      SizedBox(height: 2.h),
-      Text(label, style: TextStyle(color: Colors.white54, fontSize: 9.sp, fontFamily: 'cairo')),
+    child: Column(mainAxisSize: MainAxisSize.min, children: [
+      Text(val, style: TextStyle(color: const Color(0xff7DF7C0), fontSize: 22.sp, fontWeight: FontWeight.bold, fontFamily: 'cairo')),
+      Text(label, style: TextStyle(color: Colors.white54, fontSize: 8.sp, fontFamily: 'cairo')),
     ]),
   );
 
@@ -372,55 +373,45 @@ class _PrayerTimesPageState extends State<PrayerTimesPage>
     return AnimatedContainer(
       duration: const Duration(milliseconds: 400),
       curve: Curves.easeInOut,
-      margin: EdgeInsets.only(bottom: 10.h),
-      padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 14.h),
+      padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 10.h),
       decoration: BoxDecoration(
         gradient: isNext ? LinearGradient(
           begin: Alignment.centerLeft, end: Alignment.centerRight,
           colors: [nextGreen, nextGreen.withOpacity(0.85)],
         ) : null,
         color: isNext ? null : cardBg,
-        borderRadius: BorderRadius.circular(16.r),
+        borderRadius: BorderRadius.circular(14.r),
         border: Border.all(
           color: isNext ? gold.withOpacity(0.5) : gold.withOpacity(0.12),
           width: isNext ? 1.5 : 0.8,
         ),
         boxShadow: isNext
-          ? [BoxShadow(color: nextGreen.withOpacity(0.3), blurRadius: 12, offset: const Offset(0, 4))]
-          : [BoxShadow(color: Colors.black.withOpacity(0.04), blurRadius: 8, offset: const Offset(0, 2))],
+          ? [BoxShadow(color: nextGreen.withOpacity(0.3), blurRadius: 10, offset: const Offset(0, 3))]
+          : [BoxShadow(color: Colors.black.withOpacity(0.04), blurRadius: 6, offset: const Offset(0, 2))],
       ),
       child: Row(children: [
-        // Icon with subtle background
         Container(
-          width: 40.w, height: 40.w,
+          width: 34.w, height: 34.w,
           decoration: BoxDecoration(
             color: isNext ? Colors.white.withOpacity(0.15) : gold.withOpacity(0.08),
-            borderRadius: BorderRadius.circular(12.r),
+            borderRadius: BorderRadius.circular(10.r),
           ),
-          child: Center(child: Image.asset(p['icon']!, width: 26.w, height: 26.w)),
+          child: Center(child: Image.asset(p['icon']!, width: 22.w, height: 22.w)),
         ),
-        SizedBox(width: 12.w),
-        Expanded(child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(name, style: TextStyle(
-              color: isNext ? Colors.white : txt,
-              fontSize: 17.sp, fontWeight: FontWeight.bold, fontFamily: 'cairo')),
-            if (isNext)
-              Text(tGlobal('next_prayer', context.locale.languageCode),
-                style: TextStyle(color: gold.withOpacity(0.8), fontSize: 10.sp, fontFamily: 'cairo')),
-          ],
-        )),
+        SizedBox(width: 10.w),
+        Expanded(child: Text(name, style: TextStyle(
+          color: isNext ? Colors.white : txt,
+          fontSize: 15.sp, fontWeight: FontWeight.bold, fontFamily: 'cairo'))),
         if (time != null)
           Container(
-            padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
+            padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 4.h),
             decoration: BoxDecoration(
               color: isNext ? Colors.white.withOpacity(0.15) : gold.withOpacity(0.08),
-              borderRadius: BorderRadius.circular(10.r),
+              borderRadius: BorderRadius.circular(8.r),
               border: Border.all(color: isNext ? gold.withOpacity(0.3) : Colors.transparent)),
             child: Text(_fmt(time), style: TextStyle(
               color: isNext ? Colors.white : txt,
-              fontSize: 16.sp, fontWeight: FontWeight.w900, fontFamily: 'cairo'))),
+              fontSize: 14.sp, fontWeight: FontWeight.w900, fontFamily: 'cairo'))),
       ]),
     );
   }

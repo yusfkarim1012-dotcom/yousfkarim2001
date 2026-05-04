@@ -51,13 +51,13 @@ class _PrayerTimesPageState extends State<PrayerTimesPage>
     return en;
   }
 
-  List<Map<String, String>> get _prayers => [
-    {'key': 'fajr', 'ar': 'الفجر', 'ku': 'بانگی بەیانی', 'en': 'Fajr', 'icon': '🌙'},
-    {'key': 'sunrise', 'ar': 'الشروق', 'ku': 'هەڵاتنی خۆر', 'en': 'Sunrise', 'icon': '🌅'},
-    {'key': 'dhuhr', 'ar': 'الظهر', 'ku': 'نیوەڕۆ', 'en': 'Dhuhr', 'icon': '☀️'},
-    {'key': 'asr', 'ar': 'العصر', 'ku': 'ئێوارە', 'en': 'Asr', 'icon': '🌤️'},
-    {'key': 'maghrib', 'ar': 'المغرب', 'ku': 'ئاوابوون', 'en': 'Maghrib', 'icon': '🌇'},
-    {'key': 'isha', 'ar': 'العشاء', 'ku': 'خەوتن', 'en': 'Isha', 'icon': '🌑'},
+  final List<Map<String, String>> _prayers = [
+    {'key': 'fajr', 'ar': 'الفجر', 'ku': 'بانگی بەیانی', 'en': 'Fajr', 'icon': 'assets/images/fajr_icon.png'},
+    {'key': 'sunrise', 'ar': 'الشروق', 'ku': 'خۆرهەڵاتن', 'en': 'Sunrise', 'icon': 'assets/images/sunrise_icon.png'},
+    {'key': 'dhuhr', 'ar': 'الظهر', 'ku': 'نیوەڕۆ', 'en': 'Dhuhr', 'icon': 'assets/images/dhuhr_icon.png'},
+    {'key': 'asr', 'ar': 'العصر', 'ku': 'ئێوارە', 'en': 'Asr', 'icon': 'assets/images/asr_icon.png'},
+    {'key': 'maghrib', 'ar': 'المغرب', 'ku': 'ئاوابوون', 'en': 'Maghrib', 'icon': 'assets/images/maghrib_icon.png'},
+    {'key': 'isha', 'ar': 'العشاء', 'ku': 'خەوتن', 'en': 'Isha', 'icon': 'assets/images/isha_icon.png'},
   ];
 
   DateTime? _getTime(String key) {
@@ -271,12 +271,23 @@ class _PrayerTimesPageState extends State<PrayerTimesPage>
         SizedBox(height: 14.h),
 
         // --- Prayer Cards ---
-        ...List.generate(_prayers.length, (i) {
-          final p = _prayers[i];
-          final time = _getTime(p['key']!);
-          final isNext = p['key'] == _nextPrayerKey;
-          return _prayerCard(p, time, isNext, isDark, cardBg, txt, sub, gold, i);
-        }),
+        Container(
+          padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 24.h),
+          decoration: BoxDecoration(
+            image: const DecorationImage(
+              image: AssetImage('assets/images/islamic_frame.png'),
+              fit: BoxFit.fill,
+            ),
+          ),
+          child: Column(
+            children: List.generate(_prayers.length, (i) {
+              final p = _prayers[i];
+              final time = _getTime(p['key']!);
+              final isNext = p['key'] == _nextPrayerKey;
+              return _prayerCard(p, time, isNext, isDark, cardBg, txt, sub, gold, i);
+            }),
+          ),
+        ),
       ]),
     );
   }
@@ -301,7 +312,7 @@ class _PrayerTimesPageState extends State<PrayerTimesPage>
         boxShadow: isDark ? [] : [BoxShadow(color: Colors.black.withOpacity(0.03), blurRadius: 6, offset: const Offset(0, 2))],
       ),
       child: Row(children: [
-        Text(p['icon']!, style: TextStyle(fontSize: 22.sp)),
+        Image.asset(p['icon']!, width: 28.w, height: 28.w),
         SizedBox(width: 12.w),
         Expanded(child: Text(name, style: TextStyle(
           color: isNext ? (isDark ? const Color(0xff7DF7C0) : const Color(0xff2E7D32)) : txt,

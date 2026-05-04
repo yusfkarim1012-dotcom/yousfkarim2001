@@ -16,7 +16,7 @@ class CalenderPage extends StatefulWidget {
 }
 
 class _CalenderPageState extends State<CalenderPage> {
-  int index = 1;
+  int index = 0;
   final ValueNotifier<DateTime> _dateNotifier = ValueNotifier(DateTime.now());
   var _selectedDate = DateTime.now();
   var date = DateTime.now();

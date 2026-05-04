@@ -81,7 +81,7 @@ class _QiblahMapsState extends State<QiblahMaps> {
     return StreamBuilder<QiblahDirection>(
       stream: FlutterQiblah.qiblahStream,
       builder: (context, snap) {
-        final heading = (snap.data?.direction ?? 0) * (math.pi / 180) * -1; // Convert to radians and reverse for rotation
+        final heading = (snap.data?.direction ?? 0) * (math.pi / 180); // Convert to radians for rotation
 
         return Stack(
           children: [

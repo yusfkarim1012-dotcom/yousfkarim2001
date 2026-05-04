@@ -50,9 +50,12 @@ class PrayerWidgetHelper {
       final now = DateTime.now();
       String nextPrayer = 'fajr';
       final prayers = {'fajr': pt.fajr, 'dhuhr': pt.dhuhr, 'asr': pt.asr, 'maghrib': pt.maghrib, 'isha': pt.isha};
+      bool found = false;
       for (final e in prayers.entries) {
-        if (e.value.isAfter(now)) { nextPrayer = e.key; break; }
+        if (e.value.isAfter(now)) { nextPrayer = e.key; found = true; break; }
       }
+      // After all prayers passed (post-Isha), next is still fajr (tomorrow)
+      if (!found) nextPrayer = 'fajr';
 
       // Save widget data
       await HomeWidget.saveWidgetData('fajr', fmt(pt.fajr));

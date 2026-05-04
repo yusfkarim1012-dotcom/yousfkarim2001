@@ -62,17 +62,29 @@ class _PrayerTimesPageState extends State<PrayerTimesPage>
       case 'asr': return _prayerTime!.asr;
       case 'maghrib': return _prayerTime!.maghrib;
       case 'isha': return _prayerTime!.isha;
+      case 'fajr_tomorrow':
+        return _prayerTime!.fajr.add(const Duration(days: 1));
     }
     return null;
   }
 
+  /// Returns the key of the next upcoming prayer.
+  /// After Isha, returns 'fajr_tomorrow' so the countdown targets
+  /// tomorrow's Fajr time instead of today's (already passed) Fajr.
   String _findNextPrayer() {
     if (_prayerTime == null) return '';
     final now = DateTime.now();
     for (final k in ['fajr', 'dhuhr', 'asr', 'maghrib', 'isha']) {
       if (_getTime(k)!.isAfter(now)) return k;
     }
-    return 'fajr';
+    // All prayers have passed for today → next is tomorrow's Fajr
+    return 'fajr_tomorrow';
+  }
+
+  /// The display key strips '_tomorrow' so the UI shows "Fajr" not "fajr_tomorrow".
+  String get _displayPrayerKey {
+    if (_nextPrayerKey == 'fajr_tomorrow') return 'fajr';
+    return _nextPrayerKey;
   }
 
   void _startCountdown() {
@@ -89,7 +101,14 @@ class _PrayerTimesPageState extends State<PrayerTimesPage>
     if (t == null) return;
     final diff = t.difference(DateTime.now());
     if (diff.isNegative) {
+      // Prayer time has passed — recalculate which prayer is next
+      final oldKey = _nextPrayerKey;
       _nextPrayerKey = _findNextPrayer();
+      // If we crossed midnight and fajr_tomorrow is now fajr (today),
+      // reload prayer times for the new day
+      if (oldKey == 'fajr_tomorrow' && _nextPrayerKey != 'fajr_tomorrow') {
+        _loadPrayerTimes();
+      }
       _updateWidget();
       return;
     }
@@ -241,7 +260,8 @@ class _PrayerTimesPageState extends State<PrayerTimesPage>
     ]));
 
   Widget _buildBody(bool isDark, Color cardBg, Color txt, Color sub, Color gold) {
-    final nextMeta = _prayers.firstWhere((m) => m['key'] == _nextPrayerKey, orElse: () => _prayers[0]);
+    final displayKey = _displayPrayerKey;
+    final nextMeta = _prayers.firstWhere((m) => m['key'] == displayKey, orElse: () => _prayers[0]);
     final h = _remaining.inHours, m = _remaining.inMinutes % 60, s = _remaining.inSeconds % 60;
 
     return SingleChildScrollView(
@@ -251,29 +271,40 @@ class _PrayerTimesPageState extends State<PrayerTimesPage>
         // --- Countdown Hero ---
         Container(
           width: double.infinity,
-          padding: EdgeInsets.symmetric(vertical: 20.h, horizontal: 16.w),
+          padding: EdgeInsets.symmetric(vertical: 24.h, horizontal: 20.w),
           decoration: BoxDecoration(
-            gradient: LinearGradient(begin: Alignment.topLeft, end: Alignment.bottomRight,
-              colors: isDark ? [const Color(0xff1E4A38), const Color(0xff162E24)] : [const Color(0xff2A6048), const Color(0xff1B5E3B)]),
-            borderRadius: BorderRadius.circular(20.r),
-            border: Border.all(color: gold.withOpacity(0.3)),
+            gradient: LinearGradient(begin: Alignment.topCenter, end: Alignment.bottomCenter,
+              colors: isDark
+                ? [const Color(0xff1E4A38), const Color(0xff0E2A1C)]
+                : [const Color(0xff1B6B45), const Color(0xff0D4A2E)]),
+            borderRadius: BorderRadius.circular(24.r),
+            border: Border.all(color: gold.withOpacity(0.35), width: 1.2),
+            boxShadow: [
+              BoxShadow(color: const Color(0xff1B5E3B).withOpacity(0.35), blurRadius: 18, offset: const Offset(0, 8)),
+              BoxShadow(color: gold.withOpacity(0.08), blurRadius: 30, spreadRadius: -5),
+            ],
           ),
           child: Column(children: [
+            // Mosque icon
+            Image.asset('assets/images/mosquepnggold.png', width: 36.w, height: 36.w, color: gold.withOpacity(0.6)),
+            SizedBox(height: 6.h),
             Text(tGlobal('next_prayer', context.locale.languageCode),
-              style: TextStyle(color: Colors.white60, fontSize: 12.sp, fontFamily: 'cairo')),
+              style: TextStyle(color: Colors.white60, fontSize: 12.sp, fontFamily: 'cairo', letterSpacing: 0.5)),
             SizedBox(height: 4.h),
-            Text(tGlobal(nextMeta['key']!, context.locale.languageCode),
-              style: TextStyle(color: Colors.white, fontSize: 22.sp, fontWeight: FontWeight.bold, fontFamily: 'cairo')),
-            SizedBox(height: 8.h),
-            // Countdown digits
+            Text(tGlobal(displayKey, context.locale.languageCode),
+              style: TextStyle(color: gold, fontSize: 24.sp, fontWeight: FontWeight.bold, fontFamily: 'cairo')),
+            SizedBox(height: 14.h),
+            // Countdown digit boxes
             Directionality(
               textDirection: ui.TextDirection.ltr,
               child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-                _digit(_fmtN(h.toString().padLeft(2, '0')), tGlobal('hour', context.locale.languageCode)),
-                Text(' : ', style: TextStyle(color: const Color(0xff7DF7C0), fontSize: 24.sp, fontWeight: FontWeight.bold)),
-                _digit(_fmtN(m.toString().padLeft(2, '0')), tGlobal('minute', context.locale.languageCode)),
-                Text(' : ', style: TextStyle(color: const Color(0xff7DF7C0), fontSize: 24.sp, fontWeight: FontWeight.bold)),
-                _digit(_fmtN(s.toString().padLeft(2, '0')), tGlobal('second', context.locale.languageCode)),
+                _digitBox(_fmtN(h.toString().padLeft(2, '0')), tGlobal('hour', context.locale.languageCode)),
+                Padding(padding: EdgeInsets.symmetric(horizontal: 6.w),
+                  child: Text(':', style: TextStyle(color: gold, fontSize: 28.sp, fontWeight: FontWeight.bold))),
+                _digitBox(_fmtN(m.toString().padLeft(2, '0')), tGlobal('minute', context.locale.languageCode)),
+                Padding(padding: EdgeInsets.symmetric(horizontal: 6.w),
+                  child: Text(':', style: TextStyle(color: gold, fontSize: 28.sp, fontWeight: FontWeight.bold))),
+                _digitBox(_fmtN(s.toString().padLeft(2, '0')), tGlobal('second', context.locale.languageCode)),
               ]),
             ),
           ]),
@@ -311,7 +342,7 @@ class _PrayerTimesPageState extends State<PrayerTimesPage>
             children: List.generate(_prayers.length, (i) {
               final p = _prayers[i];
               final time = _getTime(p['key']!);
-              final isNext = p['key'] == _nextPrayerKey;
+              final isNext = p['key'] == _displayPrayerKey;
               return _prayerCard(p, time, isNext, isDark, cardBg, txt, sub, gold, i);
             }),
           ),
@@ -320,41 +351,76 @@ class _PrayerTimesPageState extends State<PrayerTimesPage>
     );
   }
 
-  Widget _digit(String val, String label) => Column(children: [
-    Text(val, style: TextStyle(color: const Color(0xff7DF7C0), fontSize: 26.sp, fontWeight: FontWeight.bold, fontFamily: 'cairo')),
-    Text(label, style: TextStyle(color: Colors.white38, fontSize: 9.sp, fontFamily: 'cairo')),
-  ]);
+  Widget _digitBox(String val, String label) => Container(
+    width: 68.w,
+    padding: EdgeInsets.symmetric(vertical: 8.h, horizontal: 4.w),
+    decoration: BoxDecoration(
+      color: Colors.white.withOpacity(0.08),
+      borderRadius: BorderRadius.circular(14.r),
+      border: Border.all(color: Colors.white.withOpacity(0.1)),
+    ),
+    child: Column(children: [
+      Text(val, style: TextStyle(color: const Color(0xff7DF7C0), fontSize: 28.sp, fontWeight: FontWeight.bold, fontFamily: 'cairo')),
+      SizedBox(height: 2.h),
+      Text(label, style: TextStyle(color: Colors.white54, fontSize: 9.sp, fontFamily: 'cairo')),
+    ]),
+  );
 
   Widget _prayerCard(Map<String, String> p, DateTime? time, bool isNext, bool isDark, Color cardBg, Color txt, Color sub, Color gold, int i) {
     final name = tGlobal(p['key']!, context.locale.languageCode);
-    return Container(
-      margin: EdgeInsets.only(bottom: 8.h),
-      padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 13.h),
+    final nextGreen = const Color(0xff1B6B45);
+    return AnimatedContainer(
+      duration: const Duration(milliseconds: 400),
+      curve: Curves.easeInOut,
+      margin: EdgeInsets.only(bottom: 10.h),
+      padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 14.h),
       decoration: BoxDecoration(
-        color: isNext ? (isDark ? const Color(0xff1E4A38) : const Color(0xffE8F5E9)) : cardBg,
-        borderRadius: BorderRadius.circular(14.r),
+        gradient: isNext ? LinearGradient(
+          begin: Alignment.centerLeft, end: Alignment.centerRight,
+          colors: [nextGreen, nextGreen.withOpacity(0.85)],
+        ) : null,
+        color: isNext ? null : cardBg,
+        borderRadius: BorderRadius.circular(16.r),
         border: Border.all(
-          color: isNext ? const Color(0xff4CAF82).withOpacity(0.6) : (isDark ? Colors.white.withOpacity(0.08) : gold.withOpacity(0.15)),
-          width: isNext ? 1.5 : 1,
+          color: isNext ? gold.withOpacity(0.5) : gold.withOpacity(0.12),
+          width: isNext ? 1.5 : 0.8,
         ),
-        boxShadow: isDark ? [] : [BoxShadow(color: Colors.black.withOpacity(0.03), blurRadius: 6, offset: const Offset(0, 2))],
+        boxShadow: isNext
+          ? [BoxShadow(color: nextGreen.withOpacity(0.3), blurRadius: 12, offset: const Offset(0, 4))]
+          : [BoxShadow(color: Colors.black.withOpacity(0.04), blurRadius: 8, offset: const Offset(0, 2))],
       ),
       child: Row(children: [
-        Image.asset(p['icon']!, width: 28.w, height: 28.w),
+        // Icon with subtle background
+        Container(
+          width: 40.w, height: 40.w,
+          decoration: BoxDecoration(
+            color: isNext ? Colors.white.withOpacity(0.15) : gold.withOpacity(0.08),
+            borderRadius: BorderRadius.circular(12.r),
+          ),
+          child: Center(child: Image.asset(p['icon']!, width: 26.w, height: 26.w)),
+        ),
         SizedBox(width: 12.w),
-        Expanded(child: Text(name, style: TextStyle(
-          color: isNext ? (isDark ? const Color(0xff7DF7C0) : const Color(0xff2E7D32)) : txt,
-          fontSize: 18.sp, fontWeight: FontWeight.bold, fontFamily: 'cairo'))),
+        Expanded(child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(name, style: TextStyle(
+              color: isNext ? Colors.white : txt,
+              fontSize: 17.sp, fontWeight: FontWeight.bold, fontFamily: 'cairo')),
+            if (isNext)
+              Text(tGlobal('next_prayer', context.locale.languageCode),
+                style: TextStyle(color: gold.withOpacity(0.8), fontSize: 10.sp, fontFamily: 'cairo')),
+          ],
+        )),
         if (time != null)
           Container(
-            padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 5.h),
+            padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
             decoration: BoxDecoration(
-              color: isNext ? const Color(0xff4CAF82).withOpacity(isDark ? 0.2 : 0.12) : (isDark ? Colors.white.withOpacity(0.06) : gold.withOpacity(0.08)),
-              borderRadius: BorderRadius.circular(8.r)),
+              color: isNext ? Colors.white.withOpacity(0.15) : gold.withOpacity(0.08),
+              borderRadius: BorderRadius.circular(10.r),
+              border: Border.all(color: isNext ? gold.withOpacity(0.3) : Colors.transparent)),
             child: Text(_fmt(time), style: TextStyle(
-              color: isNext ? (isDark ? const Color(0xff7DF7C0) : const Color(0xff2E7D32)) : (isDark ? Colors.white.withOpacity(0.85) : txt),
-              fontSize: 17.sp, fontWeight: FontWeight.w900, fontFamily: 'cairo'))),
-        if (isNext) ...[SizedBox(width: 6.w), Icon(Icons.arrow_forward_ios_rounded, color: const Color(0xff4CAF82), size: 12.sp)],
+              color: isNext ? Colors.white : txt,
+              fontSize: 16.sp, fontWeight: FontWeight.w900, fontFamily: 'cairo'))),
       ]),
     );
   }

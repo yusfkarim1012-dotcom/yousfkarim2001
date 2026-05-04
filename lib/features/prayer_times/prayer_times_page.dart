@@ -172,7 +172,7 @@ class _PrayerTimesPageState extends State<PrayerTimesPage>
   Widget build(BuildContext context) {
     final isDark = getValue('darkMode') ?? false;
     final bg = isDark ? darkPrimaryColor : const Color(0xffFAF6EE);
-    final cardBg = isDark ? Colors.white.withOpacity(0.07) : Colors.white;
+    final cardBg = isDark ? Colors.white.withOpacity(0.12) : Colors.white;
     final textColor = isDark ? Colors.white : const Color(0xff2C1810);
     final subText = isDark ? Colors.white54 : const Color(0xff8B7355);
     final gold = const Color(0xffC5A053);
@@ -190,12 +190,21 @@ class _PrayerTimesPageState extends State<PrayerTimesPage>
             onPressed: () { _selectedLocation = null; _loadPrayerTimes(); }),
         ],
       ),
-      body: _isLoading
-          ? Center(child: CircularProgressIndicator(color: gold, strokeWidth: 2.5))
-          : _errorMessage.isNotEmpty
-              ? _buildError(textColor, gold)
-              : FadeTransition(opacity: CurvedAnimation(parent: _fadeCtrl, curve: Curves.easeInOut),
-                  child: _buildBody(isDark, cardBg, textColor, subText, gold)),
+      body: Container(
+        decoration: BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage(isDark ? "assets/images/prayerbackgroundnight.png" : "assets/images/daytimetry2.png"),
+            fit: BoxFit.cover,
+            colorFilter: ColorFilter.mode(bg.withOpacity(0.85), BlendMode.darken),
+          ),
+        ),
+        child: _isLoading
+            ? Center(child: CircularProgressIndicator(color: gold, strokeWidth: 2.5))
+            : _errorMessage.isNotEmpty
+                ? _buildError(textColor, gold)
+                : FadeTransition(opacity: CurvedAnimation(parent: _fadeCtrl, curve: Curves.easeInOut),
+                    child: _buildBody(isDark, cardBg, textColor, subText, gold)),
+      ),
     );
   }
 

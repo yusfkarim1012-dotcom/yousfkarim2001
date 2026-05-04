@@ -107,16 +107,6 @@ String tGlobal(String key, String langCode) {
       'de': 'Fehler', 'am': 'ስህተት', 'ms': 'Ralat', 'pt': 'Erro',
       'tr': 'Hata', 'ru': 'Ошибка',
     },
-    'compass': {
-      'ar': 'بوصلة', 'ku': 'قیبلەنما', 'ckb': 'قیبلەنما', 'en': 'Compass',
-      'de': 'Kompass', 'am': 'ኮምፓስ', 'ms': 'Kompas', 'pt': 'Bússola',
-      'tr': 'Pusula', 'ru': 'Компас',
-    },
-    'map': {
-      'ar': 'خريطة', 'ku': 'نەخشە', 'ckb': 'نەخشە', 'en': 'Map',
-      'de': 'Karte', 'am': 'ካርታ', 'ms': 'Peta', 'pt': 'Mapa',
-      'tr': 'Harita', 'ru': 'Карта',
-    },
   };
 
   final map = dict[key];

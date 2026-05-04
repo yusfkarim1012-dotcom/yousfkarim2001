@@ -77,6 +77,7 @@ class _QuranPageViewState extends State<QuranPageView> {
   @override
   Widget build(BuildContext context) {
     return PageView.builder(
+      allowImplicitScrolling: true,
       scrollDirection: Axis.horizontal,
       onPageChanged: (a) {
         setState(() {

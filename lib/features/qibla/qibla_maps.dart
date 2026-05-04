@@ -1,156 +1,183 @@
-import 'dart:math' as math;
-import 'package:flutter/material.dart';
-import 'package:flutter_map/flutter_map.dart';
-import 'package:latlong2/latlong.dart';
-import 'package:geolocator/geolocator.dart';
-import 'package:flutter_qiblah/flutter_qiblah.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
+// import 'dart:async';
+// import 'dart:typed_data';
 
-class QiblahMaps extends StatefulWidget {
-  final bool isDark;
-  const QiblahMaps({super.key, required this.isDark});
+// import 'package:flutter/material.dart';
+// import 'package:flutter/services.dart';
+// import 'package:flutter_qiblah/flutter_qiblah.dart';
+// // import 'package:flutter_qiblah_example/loading_indicator.dart';
+// // import 'package:flutter_qiblah_example/location_error_widget.dart';
+// import 'package:geolocator/geolocator.dart';
+// import 'package:google_maps_flutter/google_maps_flutter.dart';
+// import 'package:khatmah/features/qibla/qibla_compass.dart';
+// import 'package:superellipse_shape/superellipse_shape.dart';
+// import 'package:flutter_screenutil/flutter_screenutil.dart';
+// import 'dart:ui' as ui;
 
-  @override
-  State<QiblahMaps> createState() => _QiblahMapsState();
-}
+// class QiblahMaps extends StatefulWidget {
+//   static const meccaLatLong = LatLng(21.422487, 39.826206);
 
-class _QiblahMapsState extends State<QiblahMaps> {
-  final MapController _mapController = MapController();
-  final LatLng _kaabaPos = const LatLng(21.422487, 39.826206);
-  
-  LatLng? _userPos;
-  bool _loading = true;
-  String _error = '';
+//   const QiblahMaps({super.key});
 
-  @override
-  void initState() {
-    super.initState();
-    _initLocation();
-  }
+//   @override
+//   _QiblahMapsState createState() => _QiblahMapsState();
+// }
 
-  Future<void> _initLocation() async {
-    try {
-      bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
-      if (!serviceEnabled) throw Exception('Location service disabled');
+// class _QiblahMapsState extends State<QiblahMaps> {
+//   final Completer<GoogleMapController> _controller = Completer();
+//   // LatLng position = const LatLng(36.800636, 10.180358);
+//   BitmapDescriptor markerIcon = BitmapDescriptor.defaultMarker;
+// late LatLng position ;
+//   late final _future = _checkLocationStatus();
+//   final _positionStream = StreamController<LatLng>.broadcast();
+//   late Marker meccaMarker ;
 
-      LocationPermission perm = await Geolocator.checkPermission();
-      if (perm == LocationPermission.denied) perm = await Geolocator.requestPermission();
-      if (perm == LocationPermission.denied || perm == LocationPermission.deniedForever) {
-        throw Exception('Location permission denied');
-      }
+//   @override
+//   void dispose() {
+//     _positionStream.close();
+//     super.dispose();
+//   }
 
-      final pos = await Geolocator.getCurrentPosition();
-      if (mounted) {
-        setState(() {
-          _userPos = LatLng(pos.latitude, pos.longitude);
-          _loading = false;
-        });
-      }
-    } catch (e) {
-      if (mounted) setState(() { _loading = false; _error = e.toString(); });
-    }
-  }
+//   Future<Uint8List> getBytesFromAsset(String path, int width) async {
+//     ByteData data = await rootBundle.load(path);
+//     ui.Codec codec = await ui.instantiateImageCodec(data.buffer.asUint8List(),
+//         targetWidth: width);
+//     ui.FrameInfo fi = await codec.getNextFrame();
+//     return (await fi.image.toByteData(format: ui.ImageByteFormat.png))!
+//         .buffer
+//         .asUint8List();
+//   }
 
-  @override
-  Widget build(BuildContext context) {
-    final gold = const Color(0xffC5A053);
-    
-    if (_loading) {
-      return Center(child: CircularProgressIndicator(color: gold));
-    }
-    if (_error.isNotEmpty || _userPos == null) {
-      return Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(Icons.location_off, size: 48.sp, color: Colors.grey),
-            SizedBox(height: 16.h),
-            Text('Could not load location', style: TextStyle(fontFamily: 'cairo')),
-            ElevatedButton(
-              onPressed: () {
-                setState(() { _loading = true; _error = ''; });
-                _initLocation();
-              },
-              child: const Text('Retry'),
-            )
-          ],
-        ),
-      );
-    }
+//   void addCustomIcon() async {
+//     final Uint8List markerIcon =
+//         await getBytesFromAsset('assets/images/Makkah.png', 100);
 
-    return StreamBuilder<QiblahDirection>(
-      stream: FlutterQiblah.qiblahStream,
-      builder: (context, snap) {
-        final heading = (snap.data?.direction ?? 0) * (math.pi / 180); // Convert to radians for rotation
+//     setState(() {
+//       meccaMarker = Marker(
+//         markerId: const MarkerId("mecca"),
+//         position: QiblahMaps.meccaLatLong,
+//         icon: BitmapDescriptor.fromBytes(markerIcon),
+//         draggable: false,
+//       );
+//     });
+//   }
 
-        return Stack(
-          children: [
-            FlutterMap(
-              mapController: _mapController,
-              options: MapOptions(
-                initialCenter: _userPos!,
-                initialZoom: 14.0,
-                maxZoom: 18.0,
-              ),
-              children: [
-                TileLayer(
-                  urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-                  userAgentPackageName: 'com.khatmah.quran.yusf',
-                ),
-                PolylineLayer(
-                  polylines: [
-                    Polyline(
-                      points: [_userPos!, _kaabaPos],
-                      color: gold,
-                      strokeWidth: 4.0,
-                      pattern: StrokePattern.dashed(segments: const [10, 10]),
-                    ),
-                  ],
-                ),
-                MarkerLayer(
-                  markers: [
-                    // Kaaba Marker
-                    Marker(
-                      point: _kaabaPos,
-                      width: 40.0,
-                      height: 40.0,
-                      child: Image.asset('assets/images/Makkah.png'),
-                    ),
-                    // User Marker
-                    Marker(
-                      point: _userPos!,
-                      width: 50.0,
-                      height: 50.0,
-                      child: Transform.rotate(
-                        angle: heading,
-                        child: Icon(
-                          Icons.navigation_rounded,
-                          color: Colors.blueAccent,
-                          size: 32.sp,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-            Positioned(
-              bottom: 24.h,
-              right: 16.w,
-              child: FloatingActionButton(
-                backgroundColor: gold,
-                onPressed: () {
-                  if (_userPos != null) {
-                    _mapController.move(_userPos!, 14.0);
-                  }
-                },
-                child: const Icon(Icons.my_location, color: Colors.white),
-              ),
-            ),
-          ],
-        );
-      },
-    );
-  }
-}
+//   @override
+//   void initState() {
+//     addCustomIcon(); // TODO: implement initState
+//     super.initState();
+//   }
 
+//   @override
+//   Widget build(BuildContext context) {
+//     return Padding(
+//       padding: const EdgeInsets.all(12.0),
+//       child: Material(
+//         color: Colors.transparent,
+//         shape: SuperellipseShape(),
+//         child: Container(
+//           decoration: BoxDecoration(
+//               color: Colors.transparent,
+//               borderRadius: BorderRadius.circular(19)),
+//           height: MediaQuery.of(context).size.height * .29,
+//           width: MediaQuery.of(context).size.width * .98,
+//           child: FutureBuilder(
+//             future: _future,
+//             builder: (_, AsyncSnapshot<Position?> snapshot) {
+//               if (snapshot.connectionState == ConnectionState.waiting) {
+//                 return const LoadingIndicator();
+//               }
+//               if (snapshot.hasError) {
+//                 return LocationErrorWidget(
+//                   error: snapshot.error.toString(),
+//                 );
+//               }
+
+//               if (snapshot.hasData) {
+//                 final loc =
+//                     LatLng(snapshot.data!.latitude, snapshot.data!.longitude);
+//                 position = loc;
+//               }
+
+//               return StreamBuilder(
+//                 stream: _positionStream.stream,
+//                 builder: (_, AsyncSnapshot<LatLng> snapshot) => Material(
+//                   color: Colors.transparent,
+//                   shape: SuperellipseShape(),
+//                   child: ClipRRect(
+//                     borderRadius: BorderRadius.circular(15),
+//                     child: GoogleMap(
+//                       mapType: MapType.normal,
+//                       zoomGesturesEnabled: true,
+//                       compassEnabled: true,
+//                       myLocationEnabled: true,
+//                       myLocationButtonEnabled: true,
+//                       initialCameraPosition: CameraPosition(
+//                         target:snapshot.hasData? position:const LatLng(26.8206, 30.8025),
+//                         zoom: 3,
+//                       ),
+//                       markers: <Marker>{
+//                   // ignore: unnecessary_null_comparison
+//                     meccaMarker,
+//                     if(snapshot.hasData)    Marker(
+//                           draggable: true,
+//                           markerId: const MarkerId('Marker'),
+//                           position: position,
+//                           icon: BitmapDescriptor.defaultMarker,
+//                           onTap: _updateCamera,
+//                           onDragEnd: (LatLng value) {
+//                             position = value;
+//                             _positionStream.sink.add(value);
+//                           },
+//                           zIndex: 5,
+//                         ),
+//                       },
+//                       circles: <Circle>{
+//                       if(snapshot.hasData)   Circle(
+//                           circleId: const CircleId("Circle"),
+//                           radius: 10,
+//                           center: position,
+//                           fillColor: Theme.of(context)
+//                               .primaryColorLight
+//                               .withAlpha(100),
+//                           strokeWidth: 1,
+//                           strokeColor:
+//                               Theme.of(context).primaryColorDark.withAlpha(100),
+//                           zIndex: 3,
+//                         )
+//                       },
+//                       polylines: <Polyline>{
+//                       if(snapshot.hasData)  Polyline(
+//                           polylineId: const PolylineId("Line"),
+//                           points: [position, QiblahMaps.meccaLatLong],
+//                           color: Theme.of(context).primaryColor,
+//                           width: 5,
+//                           zIndex: 4,
+//                         )
+//                       },
+//                       onMapCreated: (GoogleMapController controller) {
+//                         _controller.complete(controller);
+//                       },
+//                     ),
+//                   ),
+//                 ),
+//               );
+//             },
+//           ),
+//         ),
+//       ),
+//     );
+//   }
+
+//   Future<Position?> _checkLocationStatus() async {
+//     final locationStatus = await FlutterQiblah.checkLocationStatus();
+//     if (locationStatus.enabled) {
+//       return await Geolocator.getCurrentPosition();
+//     }
+//     return null;
+//   }
+
+//   void _updateCamera() async {
+//     final controller = await _controller.future;
+//     controller.animateCamera(CameraUpdate.newLatLngZoom(position, 20));
+//   }
+// }

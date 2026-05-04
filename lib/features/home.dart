@@ -65,6 +65,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:after_layout/after_layout.dart';
 import 'package:workmanager/workmanager.dart';
 import 'package:khatmah/features/widgets/animated_islamic_decorations.dart';
+import 'package:khatmah/GlobalHelpers/translations.dart';
 // import 'package:periodic_alarm/src/android_alarm.dart';
 
 final qurapPagePlayerBloc = QuranPagePlayerBloc();
@@ -1065,8 +1066,7 @@ class _HomeState extends State<Home>
                                                             .languageCode)));
                                               }),
                                           HomeGridItem(
-                                              text: rtlLanguages.contains(context.locale.languageCode)
-                                                  ? "القبلة" : "Qibla",
+                                              text: tGlobal('qibla', context.locale.languageCode),
                                               imagePath:
                                                   "assets/images/kabaa.png",
                                               onPressed: () {
@@ -1075,8 +1075,7 @@ class _HomeState extends State<Home>
                                               }),
 
                                           HomeGridItem(
-                                              text: rtlLanguages.contains(context.locale.languageCode)
-                                                  ? "مواقيت الصلاة" : "Prayer Times",
+                                              text: tGlobal('prayer_times', context.locale.languageCode),
                                               imagePath:
                                                   "assets/images/prayer_times_icon.png",
                                               onPressed: () {
@@ -1085,7 +1084,7 @@ class _HomeState extends State<Home>
                                               }),
 
                                           HomeGridItem(
-                                              text: "calender".tr(),
+                                              text: tGlobal('hijri_calendar', context.locale.languageCode),
                                               imagePath:
                                                   "assets/images/hijri_calendar_icon.png",
                                               iconSize: 55.h,

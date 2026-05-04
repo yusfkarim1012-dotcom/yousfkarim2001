@@ -7,6 +7,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:home_widget/home_widget.dart';
 import 'package:khatmah/GlobalHelpers/constants.dart';
 import 'package:khatmah/GlobalHelpers/hive_helper.dart';
+import 'package:khatmah/GlobalHelpers/translations.dart';
 import 'package:muslim_data_flutter/muslim_data_flutter.dart';
 
 class PrayerTimesPage extends StatefulWidget {
@@ -43,21 +44,13 @@ class _PrayerTimesPageState extends State<PrayerTimesPage>
     super.dispose();
   }
 
-  // --- Localization helper ---
-  String _t(String ar, String ku, String en) {
-    final l = context.locale.languageCode;
-    if (l == 'ar') return ar;
-    if (l == 'ckb' || l == 'ku') return ku;
-    return en;
-  }
-
   final List<Map<String, String>> _prayers = [
-    {'key': 'fajr', 'ar': 'الفجر', 'ku': 'بانگی بەیانی', 'en': 'Fajr', 'icon': 'assets/images/fajr_icon.png'},
-    {'key': 'sunrise', 'ar': 'الشروق', 'ku': 'خۆرهەڵاتن', 'en': 'Sunrise', 'icon': 'assets/images/sunrise_icon.png'},
-    {'key': 'dhuhr', 'ar': 'الظهر', 'ku': 'نیوەڕۆ', 'en': 'Dhuhr', 'icon': 'assets/images/dhuhr_icon.png'},
-    {'key': 'asr', 'ar': 'العصر', 'ku': 'ئێوارە', 'en': 'Asr', 'icon': 'assets/images/asr_icon.png'},
-    {'key': 'maghrib', 'ar': 'المغرب', 'ku': 'ئاوابوون', 'en': 'Maghrib', 'icon': 'assets/images/maghrib_icon.png'},
-    {'key': 'isha', 'ar': 'العشاء', 'ku': 'خەوتن', 'en': 'Isha', 'icon': 'assets/images/isha_icon.png'},
+    {'key': 'fajr', 'icon': 'assets/images/fajr_icon.png'},
+    {'key': 'sunrise', 'icon': 'assets/images/sunrise_icon.png'},
+    {'key': 'dhuhr', 'icon': 'assets/images/dhuhr_icon.png'},
+    {'key': 'asr', 'icon': 'assets/images/asr_icon.png'},
+    {'key': 'maghrib', 'icon': 'assets/images/maghrib_icon.png'},
+    {'key': 'isha', 'icon': 'assets/images/isha_icon.png'},
   ];
 
   DateTime? _getTime(String key) {
@@ -103,13 +96,24 @@ class _PrayerTimesPageState extends State<PrayerTimesPage>
     if (mounted) setState(() => _remaining = diff);
   }
 
+  String _fmtN(String val) {
+    if (context.locale.languageCode == 'ar') {
+      const en = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
+      const ar = ['٠', '١', '٢', '٣', '٤', '٥', '٦', '٧', '٨', '٩'];
+      for (int i = 0; i < 10; i++) {
+        val = val.replaceAll(en[i], ar[i]);
+      }
+    }
+    return val;
+  }
+
   String _fmt(DateTime dt) {
     final h = dt.hour, m = dt.minute.toString().padLeft(2, '0');
     final h12 = h % 12 == 0 ? 12 : h % 12;
     final suffix = context.locale.languageCode == 'en'
         ? (h < 12 ? ' AM' : ' PM')
         : (h < 12 ? ' ص' : ' م');
-    return '$h12:$m$suffix';
+    return _fmtN('$h12:$m$suffix');
   }
 
   // --- Load prayer times ---
@@ -127,7 +131,7 @@ class _PrayerTimesPageState extends State<PrayerTimesPage>
         LocationPermission perm = await Geolocator.checkPermission();
         if (perm == LocationPermission.denied) perm = await Geolocator.requestPermission();
         if (perm == LocationPermission.deniedForever) {
-          setState(() { _isLoading = false; _errorMessage = _t('يرجى تفعيل الموقع', 'تکایە شوێن چالاک بکە', 'Please enable location'); });
+          setState(() { _isLoading = false; _errorMessage = tGlobal('enable_location', context.locale.languageCode); });
           return;
         }
         final pos = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.medium);
@@ -143,7 +147,7 @@ class _PrayerTimesPageState extends State<PrayerTimesPage>
       final pt = await repo.getPrayerTimes(location: l, date: DateTime.now(), attribute: attr, useFixedPrayer: loc != null);
       if (mounted) { setState(() { _prayerTime = pt; _isLoading = false; }); _fadeCtrl.forward(from: 0); _startCountdown(); _updateWidget(); }
     } catch (e) {
-      if (mounted) setState(() { _isLoading = false; _errorMessage = _t('خطأ في التحميل', 'هەڵەیەک ڕوویدا', 'Error loading data'); });
+      if (mounted) setState(() { _isLoading = false; _errorMessage = tGlobal('error_loading', context.locale.languageCode); });
     }
   }
 
@@ -159,11 +163,11 @@ class _PrayerTimesPageState extends State<PrayerTimesPage>
       await HomeWidget.saveWidgetData('next_prayer', _nextPrayerKey);
       await HomeWidget.saveWidgetData('app_lang', context.locale.languageCode);
       // Localized labels
-      await HomeWidget.saveWidgetData('fajr_label', _t('الفجر', 'بانگی بەیانی', 'Fajr'));
-      await HomeWidget.saveWidgetData('dhuhr_label', _t('الظهر', 'نیوەڕۆ', 'Dhuhr'));
-      await HomeWidget.saveWidgetData('asr_label', _t('العصر', 'ئێوارە', 'Asr'));
-      await HomeWidget.saveWidgetData('maghrib_label', _t('المغرب', 'ئاوابوون', 'Maghrib'));
-      await HomeWidget.saveWidgetData('isha_label', _t('العشاء', 'خەوتن', 'Isha'));
+      await HomeWidget.saveWidgetData('fajr_label', tGlobal('fajr', context.locale.languageCode));
+      await HomeWidget.saveWidgetData('dhuhr_label', tGlobal('dhuhr', context.locale.languageCode));
+      await HomeWidget.saveWidgetData('asr_label', tGlobal('asr', context.locale.languageCode));
+      await HomeWidget.saveWidgetData('maghrib_label', tGlobal('maghrib', context.locale.languageCode));
+      await HomeWidget.saveWidgetData('isha_label', tGlobal('isha', context.locale.languageCode));
       await HomeWidget.updateWidget(androidName: 'PrayerWidgetProvider');
     } catch (_) {}
   }
@@ -179,7 +183,7 @@ class _PrayerTimesPageState extends State<PrayerTimesPage>
       final pt = await MuslimRepository().getPrayerTimes(location: loc, date: DateTime.now(), attribute: attr, useFixedPrayer: loc.hasFixedPrayerTime);
       if (mounted) { setState(() { _prayerTime = pt; _isLoading = false; }); _fadeCtrl.forward(from: 0); _startCountdown(); _updateWidget(); }
     } catch (e) {
-      if (mounted) setState(() { _isLoading = false; _errorMessage = _t('خطأ', 'هەڵە', 'Error'); });
+      if (mounted) setState(() { _isLoading = false; _errorMessage = tGlobal('error', context.locale.languageCode); });
     }
   }
 
@@ -197,7 +201,7 @@ class _PrayerTimesPageState extends State<PrayerTimesPage>
       appBar: AppBar(
         elevation: 0, centerTitle: true, backgroundColor: Colors.transparent,
         iconTheme: IconThemeData(color: isDark ? Colors.white : textColor),
-        title: Text(_t('مواقيت الصلاة', 'کاتی نوێژ', 'Prayer Times'),
+        title: Text(tGlobal('prayer_times', context.locale.languageCode),
           style: TextStyle(fontWeight: FontWeight.w700, fontSize: 18.sp, color: textColor, fontFamily: 'cairo')),
         actions: [
           IconButton(icon: Icon(Icons.search_rounded, color: isDark ? Colors.white : textColor), onPressed: () => _showSearch()),
@@ -232,7 +236,7 @@ class _PrayerTimesPageState extends State<PrayerTimesPage>
       SizedBox(height: 20.h),
       ElevatedButton.icon(
         style: ElevatedButton.styleFrom(backgroundColor: gold, foregroundColor: Colors.white, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14.r))),
-        icon: const Icon(Icons.refresh_rounded), label: Text(_t('إعادة المحاولة', 'هەوڵدانەوە', 'Retry'), style: TextStyle(fontFamily: 'cairo', fontSize: 14.sp)),
+        icon: const Icon(Icons.refresh_rounded), label: Text(tGlobal('retry', context.locale.languageCode), style: TextStyle(fontFamily: 'cairo', fontSize: 14.sp)),
         onPressed: _loadPrayerTimes),
     ]));
 
@@ -255,21 +259,21 @@ class _PrayerTimesPageState extends State<PrayerTimesPage>
             border: Border.all(color: gold.withOpacity(0.3)),
           ),
           child: Column(children: [
-            Text(_t('الصلاة التالية', 'نوێژی دواتر', 'Next Prayer'),
+            Text(tGlobal('next_prayer', context.locale.languageCode),
               style: TextStyle(color: Colors.white60, fontSize: 12.sp, fontFamily: 'cairo')),
             SizedBox(height: 4.h),
-            Text(_t(nextMeta['ar']!, nextMeta['ku']!, nextMeta['en']!),
+            Text(tGlobal(nextMeta['key']!, context.locale.languageCode),
               style: TextStyle(color: Colors.white, fontSize: 22.sp, fontWeight: FontWeight.bold, fontFamily: 'cairo')),
             SizedBox(height: 8.h),
             // Countdown digits
             Directionality(
               textDirection: ui.TextDirection.ltr,
               child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-                _digit(h.toString().padLeft(2, '0'), _t('ساعة', 'کاتژمێر', 'hr')),
+                _digit(_fmtN(h.toString().padLeft(2, '0')), tGlobal('hour', context.locale.languageCode)),
                 Text(' : ', style: TextStyle(color: const Color(0xff7DF7C0), fontSize: 24.sp, fontWeight: FontWeight.bold)),
-                _digit(m.toString().padLeft(2, '0'), _t('دقيقة', 'خولەک', 'min')),
+                _digit(_fmtN(m.toString().padLeft(2, '0')), tGlobal('minute', context.locale.languageCode)),
                 Text(' : ', style: TextStyle(color: const Color(0xff7DF7C0), fontSize: 24.sp, fontWeight: FontWeight.bold)),
-                _digit(s.toString().padLeft(2, '0'), _t('ثانية', 'چرکە', 'sec')),
+                _digit(_fmtN(s.toString().padLeft(2, '0')), tGlobal('second', context.locale.languageCode)),
               ]),
             ),
           ]),
@@ -288,7 +292,7 @@ class _PrayerTimesPageState extends State<PrayerTimesPage>
             Icon(Icons.location_on_rounded, color: gold, size: 20.sp),
             SizedBox(width: 8.w),
             Expanded(child: Text(_locationName, style: TextStyle(color: txt, fontSize: 13.sp, fontWeight: FontWeight.w600, fontFamily: 'cairo'), maxLines: 1, overflow: TextOverflow.ellipsis)),
-            Text(DateFormat('dd MMM', context.locale.languageCode).format(DateTime.now()),
+            Text(_fmtN(DateFormat('dd MMM', context.locale.languageCode).format(DateTime.now())),
               style: TextStyle(color: gold, fontSize: 11.sp, fontFamily: 'cairo', fontWeight: FontWeight.bold)),
           ]),
         ),
@@ -322,7 +326,7 @@ class _PrayerTimesPageState extends State<PrayerTimesPage>
   ]);
 
   Widget _prayerCard(Map<String, String> p, DateTime? time, bool isNext, bool isDark, Color cardBg, Color txt, Color sub, Color gold, int i) {
-    final name = _t(p['ar']!, p['ku']!, p['en']!);
+    final name = tGlobal(p['key']!, context.locale.languageCode);
     return Container(
       margin: EdgeInsets.only(bottom: 8.h),
       padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 13.h),
@@ -372,13 +376,13 @@ class _PrayerTimesPageState extends State<PrayerTimesPage>
         child: SizedBox(height: MediaQuery.of(ctx).size.height * 0.55, child: Column(children: [
           Container(width: 40.w, height: 4.h, decoration: BoxDecoration(color: isDark ? Colors.white24 : Colors.black12, borderRadius: BorderRadius.circular(2))),
           SizedBox(height: 14.h),
-          Text(_t('البحث عن مدينة', 'گەڕان بۆ شار', 'Search city'),
+          Text(tGlobal('search_city', context.locale.languageCode),
             style: TextStyle(color: txtC, fontSize: 15.sp, fontWeight: FontWeight.bold, fontFamily: 'cairo')),
           SizedBox(height: 10.h),
           TextField(
             controller: ctrl, style: TextStyle(color: txtC, fontFamily: 'cairo', fontSize: 14.sp),
             decoration: InputDecoration(
-              hintText: _t('اكتب اسم المدينة...', 'ناوی شار بنووسە...', 'Type city name...'),
+              hintText: tGlobal('type_city_name', context.locale.languageCode),
               hintStyle: TextStyle(color: isDark ? Colors.white38 : Colors.black38, fontFamily: 'cairo'),
               prefixIcon: Icon(Icons.search, color: const Color(0xffC5A053)),
               filled: true, fillColor: isDark ? Colors.white.withOpacity(0.08) : Colors.grey.withOpacity(0.1),
@@ -393,8 +397,8 @@ class _PrayerTimesPageState extends State<PrayerTimesPage>
           Expanded(child: loading
             ? Center(child: CircularProgressIndicator(color: const Color(0xffC5A053), strokeWidth: 2))
             : res.isEmpty
-              ? Center(child: Text(ctrl.text.length < 2 ? _t('اكتب حرفين على الأقل', 'لانیکەم ٢ پیت بنووسە', 'Type at least 2 chars')
-                : _t('لا توجد نتائج', 'ئەنجام نییە', 'No results'),
+              ? Center(child: Text(ctrl.text.length < 2 ? tGlobal('type_2_chars', context.locale.languageCode)
+                : tGlobal('no_results', context.locale.languageCode),
                 style: TextStyle(color: isDark ? Colors.white38 : Colors.black38, fontSize: 13.sp, fontFamily: 'cairo')))
               : ListView.builder(itemCount: res.length, itemBuilder: (_, i) {
                   final l = res[i];

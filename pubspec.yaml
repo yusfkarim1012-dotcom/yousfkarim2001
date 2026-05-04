@@ -126,6 +126,8 @@ dependencies:
   sqlite3: ^2.9.4
   sqlite3_flutter_libs: ^0.5.40
   home_widget: ^0.7.0
+  flutter_map: ^8.3.0
+  latlong2: ^0.9.1
 
 dev_dependencies:
   flutter_test:

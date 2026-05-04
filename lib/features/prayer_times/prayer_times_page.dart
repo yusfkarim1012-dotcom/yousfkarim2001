@@ -97,6 +97,7 @@ class _PrayerTimesPageState extends State<PrayerTimesPage>
     final diff = t.difference(DateTime.now());
     if (diff.isNegative) {
       _nextPrayerKey = _findNextPrayer();
+      _updateWidget();
       return;
     }
     if (mounted) setState(() => _remaining = diff);
@@ -112,19 +113,30 @@ class _PrayerTimesPageState extends State<PrayerTimesPage>
   }
 
   // --- Load prayer times ---
-  Future<void> _loadPrayerTimes() async {
+  Future<void> _loadPrayerTimes({bool forceRefresh = false}) async {
     setState(() { _isLoading = true; _errorMessage = ''; });
     try {
-      LocationPermission perm = await Geolocator.checkPermission();
-      if (perm == LocationPermission.denied) perm = await Geolocator.requestPermission();
-      if (perm == LocationPermission.deniedForever) {
-        setState(() { _isLoading = false; _errorMessage = _t('يرجى تفعيل الموقع', 'تکایە شوێن چالاک بکە', 'Please enable location'); });
-        return;
-      }
-      final pos = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.medium);
-      _lat = pos.latitude; _lng = pos.longitude;
       final repo = MuslimRepository();
-      final loc = await repo.reverseGeocoder(latitude: _lat!, longitude: _lng!);
+      Location? loc;
+
+      if (!forceRefresh && getValue("cached_lat") != null && getValue("cached_lng") != null) {
+        _lat = getValue("cached_lat");
+        _lng = getValue("cached_lng");
+        loc = await repo.reverseGeocoder(latitude: _lat!, longitude: _lng!);
+      } else {
+        LocationPermission perm = await Geolocator.checkPermission();
+        if (perm == LocationPermission.denied) perm = await Geolocator.requestPermission();
+        if (perm == LocationPermission.deniedForever) {
+          setState(() { _isLoading = false; _errorMessage = _t('يرجى تفعيل الموقع', 'تکایە شوێن چالاک بکە', 'Please enable location'); });
+          return;
+        }
+        final pos = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.medium);
+        _lat = pos.latitude; _lng = pos.longitude;
+        updateValue("cached_lat", _lat);
+        updateValue("cached_lng", _lng);
+        loc = await repo.reverseGeocoder(latitude: _lat!, longitude: _lng!);
+      }
+
       _locationName = loc?.name ?? '${_lat!.toStringAsFixed(2)}, ${_lng!.toStringAsFixed(2)}';
       final attr = PrayerAttribute(calculationMethod: CalculationMethod.mwl, asrMethod: AsrMethod.shafii, higherLatitudeMethod: HigherLatitudeMethod.angleBased);
       final l = loc ?? Location(id: 0, name: 'GPS', latitude: _lat!, longitude: _lng!, countryCode: 'XX', countryName: '', hasFixedPrayerTime: false);
@@ -145,6 +157,7 @@ class _PrayerTimesPageState extends State<PrayerTimesPage>
       await HomeWidget.saveWidgetData('maghrib', fmtW(_prayerTime!.maghrib));
       await HomeWidget.saveWidgetData('isha', fmtW(_prayerTime!.isha));
       await HomeWidget.saveWidgetData('next_prayer', _nextPrayerKey);
+      await HomeWidget.saveWidgetData('app_lang', context.locale.languageCode);
       // Localized labels
       await HomeWidget.saveWidgetData('fajr_label', _t('الفجر', 'بانگی بەیانی', 'Fajr'));
       await HomeWidget.saveWidgetData('dhuhr_label', _t('الظهر', 'نیوەڕۆ', 'Dhuhr'));
@@ -159,6 +172,8 @@ class _PrayerTimesPageState extends State<PrayerTimesPage>
     setState(() { _isLoading = true; _errorMessage = ''; _selectedLocation = loc; });
     try {
       _lat = loc.latitude; _lng = loc.longitude;
+      updateValue("cached_lat", _lat);
+      updateValue("cached_lng", _lng);
       _locationName = '${loc.name}, ${loc.countryName}';
       final attr = PrayerAttribute(calculationMethod: CalculationMethod.mwl, asrMethod: AsrMethod.shafii, higherLatitudeMethod: HigherLatitudeMethod.angleBased);
       final pt = await MuslimRepository().getPrayerTimes(location: loc, date: DateTime.now(), attribute: attr, useFixedPrayer: loc.hasFixedPrayerTime);
@@ -187,7 +202,7 @@ class _PrayerTimesPageState extends State<PrayerTimesPage>
         actions: [
           IconButton(icon: Icon(Icons.search_rounded, color: isDark ? Colors.white : textColor), onPressed: () => _showSearch()),
           IconButton(icon: Icon(Icons.my_location_rounded, color: isDark ? Colors.white : textColor),
-            onPressed: () { _selectedLocation = null; _loadPrayerTimes(); }),
+            onPressed: () { _selectedLocation = null; _loadPrayerTimes(forceRefresh: true); }),
         ],
       ),
       body: Container(

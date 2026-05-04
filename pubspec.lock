@@ -976,9 +976,10 @@ packages:
   muslim_data_flutter:
     dependency: "direct main"
     description:
-      path: "../muslim-data-flutter"
-      relative: true
-    source: path
+      name: muslim_data_flutter
+      sha256: "04c756267f0e8c6c990767c8220dc72e56f2ce2195e29ca9384490e3de7632dd"
+      url: "https://pub.dev"
+    source: hosted
     version: "1.5.0"
   nested:
     dependency: transitive

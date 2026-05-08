@@ -639,6 +639,143 @@ class _HomeState extends State<Home>
     setState(() {});
   }
 
+  void _showShareSheet(BuildContext ctx) {
+    final isDark = getValue("darkMode") ?? false;
+    final lang = ctx.locale.languageCode;
+    final shareText = tGlobal('share_app_text', lang);
+    final gold = const Color(0xffC5A053);
+
+    showModalBottomSheet(
+      context: ctx,
+      backgroundColor: Colors.transparent,
+      isScrollControlled: true,
+      builder: (context) {
+        return Container(
+          margin: EdgeInsets.all(12.w),
+          padding: EdgeInsets.all(20.w),
+          decoration: BoxDecoration(
+            color: isDark ? const Color(0xff1E1B18) : const Color(0xffFFFDF7),
+            borderRadius: BorderRadius.circular(28.r),
+            border: Border.all(color: gold.withOpacity(0.3), width: 1.5),
+            boxShadow: [
+              BoxShadow(color: Colors.black.withOpacity(0.2), blurRadius: 20, offset: const Offset(0, -4)),
+            ],
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              // Handle bar
+              Container(
+                width: 40.w, height: 4.h,
+                margin: EdgeInsets.only(bottom: 16.h),
+                decoration: BoxDecoration(
+                  color: isDark ? Colors.white24 : Colors.black12,
+                  borderRadius: BorderRadius.circular(2.r),
+                ),
+              ),
+              // Title
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(Icons.favorite_rounded, color: gold, size: 22.sp),
+                  SizedBox(width: 8.w),
+                  Text(
+                    tGlobal('share_app', lang),
+                    style: TextStyle(
+                      fontFamily: 'cairo', fontSize: 18.sp, fontWeight: FontWeight.w700,
+                      color: isDark ? const Color(0xffF0E0C0) : const Color(0xff2C1810),
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(height: 16.h),
+              // Share text preview
+              Container(
+                width: double.infinity,
+                constraints: BoxConstraints(maxHeight: 220.h),
+                padding: EdgeInsets.all(14.w),
+                decoration: BoxDecoration(
+                  color: isDark ? Colors.white.withOpacity(0.05) : gold.withOpacity(0.06),
+                  borderRadius: BorderRadius.circular(16.r),
+                  border: Border.all(color: gold.withOpacity(0.15)),
+                ),
+                child: SingleChildScrollView(
+                  child: Text(
+                    shareText,
+                    style: TextStyle(
+                      fontFamily: 'cairo', fontSize: 12.sp, height: 1.6,
+                      color: isDark ? Colors.white70 : const Color(0xff5C4A1E),
+                    ),
+                  ),
+                ),
+              ),
+              SizedBox(height: 20.h),
+              // Buttons row
+              Row(
+                children: [
+                  // Copy button
+                  Expanded(
+                    child: ElevatedButton.icon(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: isDark ? Colors.white.withOpacity(0.08) : gold.withOpacity(0.1),
+                        foregroundColor: gold,
+                        elevation: 0,
+                        padding: EdgeInsets.symmetric(vertical: 14.h),
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16.r)),
+                      ),
+                      icon: Icon(Icons.copy_rounded, size: 20.sp),
+                      label: Text(
+                        lang == 'ar' ? 'نسخ' : lang == 'ku' || lang == 'ckb' ? 'کۆپی' : lang == 'de' ? 'Kopieren' : lang == 'tr' ? 'Kopyala' : lang == 'ru' ? 'Копировать' : 'Copy',
+                        style: TextStyle(fontFamily: 'cairo', fontSize: 14.sp, fontWeight: FontWeight.w600),
+                      ),
+                      onPressed: () {
+                        Clipboard.setData(ClipboardData(text: shareText));
+                        Navigator.pop(context);
+                        ScaffoldMessenger.of(ctx).showSnackBar(SnackBar(
+                          content: Text(
+                            lang == 'ar' ? 'تم النسخ ✓' : lang == 'ku' || lang == 'ckb' ? 'کۆپی کرا ✓' : 'Copied ✓',
+                            style: const TextStyle(fontFamily: 'cairo'),
+                          ),
+                          backgroundColor: gold,
+                          behavior: SnackBarBehavior.floating,
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.r)),
+                          duration: const Duration(seconds: 2),
+                        ));
+                      },
+                    ),
+                  ),
+                  SizedBox(width: 12.w),
+                  // Share button
+                  Expanded(
+                    child: ElevatedButton.icon(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: gold,
+                        foregroundColor: Colors.white,
+                        elevation: 0,
+                        padding: EdgeInsets.symmetric(vertical: 14.h),
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16.r)),
+                      ),
+                      icon: Icon(Icons.share_rounded, size: 20.sp),
+                      label: Text(
+                        lang == 'ar' ? 'مشاركة' : lang == 'ku' || lang == 'ckb' ? 'بڵاوکردنەوە' : lang == 'de' ? 'Teilen' : lang == 'tr' ? 'Paylaş' : lang == 'ru' ? 'Поделиться' : 'Share',
+                        style: TextStyle(fontFamily: 'cairo', fontSize: 14.sp, fontWeight: FontWeight.w600),
+                      ),
+                      onPressed: () {
+                        Navigator.pop(context);
+                        SharePlus.instance.share(ShareParams(text: shareText));
+                      },
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(height: 8.h),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final screenSize = MediaQuery.of(context).size;
@@ -1116,6 +1253,13 @@ class _HomeState extends State<Home>
                                                   "assets/images/radio.png",
                                               onPressed: () {
                                                 _fastPush(const RadioPage());
+                                              }),
+                                          HomeGridItem(
+                                              text: tGlobal('share_app', context.locale.languageCode),
+                                              imagePath:
+                                                  "assets/images/muhammed.png",
+                                              onPressed: () {
+                                                _showShareSheet(context);
                                               }),
                                         ],
                                       ),

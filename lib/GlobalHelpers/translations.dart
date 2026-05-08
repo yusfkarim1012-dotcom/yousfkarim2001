@@ -107,6 +107,23 @@ String tGlobal(String key, String langCode) {
       'de': 'Fehler', 'am': 'ስህተት', 'ms': 'Ralat', 'pt': 'Erro',
       'tr': 'Hata', 'ru': 'Ошибка',
     },
+    'share_app': {
+      'ar': 'شارك التطبيق', 'ku': 'ئەپەکە بڵاوبکەرەوە', 'ckb': 'ئەپەکە بڵاوبکەرەوە', 'en': 'Share App',
+      'de': 'App teilen', 'am': 'መተግበሪያውን አጋራ', 'ms': 'Kongsi Aplikasi', 'pt': 'Compartilhar App',
+      'tr': 'Uygulamayı Paylaş', 'ru': 'Поделиться',
+    },
+    'share_app_text': {
+      'ar': '🕌 حمّل تطبيق ختمة\nرفيقك الروحي اليومي لحياة إسلامية.\n\n✅ أكثر من 240 قارئ للقرآن و 178 محطة إذاعية.\n✅ مواقيت صلاة دقيقة واتجاه القبلة.\n✅ أذكار يومية، أحاديث، ومسبحة إلكترونية.\n✅ بدون إعلانات ومجاني بالكامل.\n\nحمّله الآن:\nhttps://play.google.com/store/apps/details?id=com.khatmah.quran.yusf.app',
+      'ku': '🕌 ئەپی خەتمە دابەزێنە\nهاوڕێی ڕۆحانیت بۆ ژیانی ئیسلامی.\n\n✅ زیاتر لە 240 قاری قورئان و 178 وێستگەی ڕادیۆ.\n✅ کاتی نوێژ و قیبلەنما بە وردی.\n✅ ئەزکار، حەدیس، و تەسبیحی ئەلیکترۆنی.\n✅ بەبێ ڕیکلام و بەتەواوی بەخۆڕایی.\n\nئێستا دایبەزێنە:\nhttps://play.google.com/store/apps/details?id=com.khatmah.quran.yusf.app',
+      'ckb': '🕌 ئەپی خەتمە دابەزێنە\nهاوڕێی ڕۆحانیت بۆ ژیانی ئیسلامی.\n\n✅ زیاتر لە 240 قاری قورئان و 178 وێستگەی ڕادیۆ.\n✅ کاتی نوێژ و قیبلەنما بە وردی.\n✅ ئەزکار، حەدیس، و تەسبیحی ئەلیکترۆنی.\n✅ بەبێ ڕیکلام و بەتەواوی بەخۆڕایی.\n\nئێستا دایبەزێنە:\nhttps://play.google.com/store/apps/details?id=com.khatmah.quran.yusf.app',
+      'en': '🕌 Download Khatmah App\nYour ultimate spiritual companion for a daily Islamic life.\n\n✅ 240+ Quran Reciters & 178 Radio Stations.\n✅ Accurate Prayer Times & Qibla Finder.\n✅ Daily Adhkar, Hadith, and Tasbih Counter.\n✅ Ad-free and completely FREE.\n\nGet it now:\nhttps://play.google.com/store/apps/details?id=com.khatmah.quran.yusf.app',
+      'de': '🕌 Lade die Khatmah App herunter\nDein ultimativer spiritueller Begleiter für ein tägliches islamisches Leben.\n\n✅ Über 240 Koranrezitatoren & 178 Radiosender.\n✅ Genaue Gebetszeiten & Qibla-Finder.\n✅ Tägliche Adhkar, Hadith und Tasbih-Zähler.\n✅ Werbefrei und komplett KOSTENLOS.\n\nJetzt herunterladen:\nhttps://play.google.com/store/apps/details?id=com.khatmah.quran.yusf.app',
+      'am': '🕌 የከተማ መተግበሪያን ያውርዱ\nለዕለታዊ እስላማዊ ሕይወት የእርስዎ ከፍተኛ መንፈሳዊ አጋር።\n\n✅ 240+ የቁርአን አንባቢዎች እና 178 የሬዲዮ ጣቢያዎች።\n✅ ትክክለኛ የጸሎት ጊዜያት እና ቂብላ ፈላጊ።\n✅ ዕለታዊ አድካር፣ ሐዲስ እና ተስቢሕ ቆጣሪ።\n✅ ያለ ማስታወቂያ እና ሙሉ በሙሉ ነፃ።\n\nአሁን ያውርዱ:\nhttps://play.google.com/store/apps/details?id=com.khatmah.quran.yusf.app',
+      'ms': '🕌 Muat Turun Aplikasi Khatmah\nTeman rohani utama anda untuk kehidupan Islam harian.\n\n✅ 240+ Qari Al-Quran & 178 Stesen Radio.\n✅ Waktu Solat Tepat & Pencari Kiblat.\n✅ Zikir Harian, Hadis, dan Kaunter Tasbih.\n✅ Tanpa iklan dan sepenuhnya PERCUMA.\n\nDapatkan sekarang:\nhttps://play.google.com/store/apps/details?id=com.khatmah.quran.yusf.app',
+      'pt': '🕌 Baixe o App Khatmah\nSeu companheiro espiritual definitivo para uma vida islâmica diária.\n\n✅ 240+ Recitadores do Alcorão e 178 Estações de Rádio.\n✅ Horários de Oração Precisos e Localizador de Qibla.\n✅ Adhkar Diário, Hadith e Contador de Tasbih.\n✅ Sem anúncios e completamente GRATUITO.\n\nBaixe agora:\nhttps://play.google.com/store/apps/details?id=com.khatmah.quran.yusf.app',
+      'tr': '🕌 Khatmah Uygulamasını İndirin\nGünlük İslami yaşam için nihai ruhani arkadaşınız.\n\n✅ 240+ Kuran Hafızı ve 178 Radyo İstasyonu.\n✅ Doğru Namaz Vakitleri ve Kıble Bulucu.\n✅ Günlük Zikirler, Hadis ve Tesbih Sayacı.\n✅ Reklamsız ve tamamen ÜCRETSİZ.\n\nŞimdi indirin:\nhttps://play.google.com/store/apps/details?id=com.khatmah.quran.yusf.app',
+      'ru': '🕌 Скачайте приложение Khatmah\nВаш лучший духовный спутник для ежедневной исламской жизни.\n\n✅ 240+ чтецов Корана и 178 радиостанций.\n✅ Точное время молитв и поиск Киблы.\n✅ Ежедневные азкары, хадисы и счётчик тасбиха.\n✅ Без рекламы и полностью БЕСПЛАТНО.\n\nСкачайте сейчас:\nhttps://play.google.com/store/apps/details?id=com.khatmah.quran.yusf.app',
+    },
   };
 
   final map = dict[key];

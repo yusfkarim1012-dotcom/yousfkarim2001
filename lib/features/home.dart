@@ -41,7 +41,6 @@ import 'package:khatmah/features/hadith/views/hadithbookspage.dart';
 import 'package:khatmah/features/live_tv/live_tv_page.dart';
 import 'package:khatmah/features/notifications/data/40hadith.dart';
 import 'package:khatmah/features/notifications/views/all_notification_page.dart';
-import 'package:khatmah/features/prayer_times/prayer_widget_helper.dart';
 import 'package:khatmah/features/qibla/q_compass.dart';
 import 'package:khatmah/features/home_widgets.dart';
 import 'package:khatmah/features/prayer_times/prayer_times_page.dart';
@@ -265,11 +264,6 @@ class _HomeState extends State<Home>
     // AlertWindowHelper.requestPermission();
     loadJsonAsset();
     updateValue("timesOfAppOpen", getValue("timesOfAppOpen") + 1);
-    
-    // Update prayer widget on start
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      PrayerWidgetHelper.updateWidget(langCode: context.locale.languageCode);
-    });
 
     // subscription = Alarm.ringStream.stream.listen((event) {
     //   print(event.notificationBody);
@@ -1032,8 +1026,6 @@ class _HomeState extends State<Home>
                                 getAndStoreRadioData();
                                 downloadAndStoreHadithData();
                                 updateDateData();
-                                // Update widget when language changes
-                                PrayerWidgetHelper.updateWidget(langCode: val.languageCode);
                               },
                             ),
                             _buildShareBanner(context),

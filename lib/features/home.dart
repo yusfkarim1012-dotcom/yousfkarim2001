@@ -645,11 +645,11 @@ class _HomeState extends State<Home>
     final gold = const Color(0xffC5A053);
     
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 10.h),
+      padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 6.h),
       child: GestureDetector(
         onTap: () => _showShareSheet(context),
         child: Container(
-          height: 70.h,
+          height: 60.h,
           decoration: BoxDecoration(
             gradient: LinearGradient(
               colors: isDark 
@@ -1036,14 +1036,13 @@ class _HomeState extends State<Home>
                             ),
                             _buildShareBanner(context),
                             Expanded(
-                              child: SingleChildScrollView(
-                                child: Column(
-                                  children: [
+                              child: Column(
+                                children: [
                                     if (_today != null) ...[
                                       // Date Display
                                       Padding(
                                         padding: EdgeInsets.symmetric(
-                                            horizontal: 16.w, vertical: 10.h),
+                                            horizontal: 16.w, vertical: 4.h),
                                         child: Container(
                                           padding: EdgeInsets.symmetric(
                                               horizontal: 16.w, vertical: 8.h),
@@ -1273,7 +1272,7 @@ class _HomeState extends State<Home>
                                       }),
                                     ],
 
-                                    SizedBox(height: 20.h),
+                                    SizedBox(height: 10.h),
 
                                     // Feature Grid
                                     Padding(
@@ -1373,11 +1372,10 @@ class _HomeState extends State<Home>
                                         ],
                                       ),
                                     ),
-                                    SizedBox(height: 100.h),
+                                    SizedBox(height: 20.h),
                                   ],
                                 ),
                               ),
-                            ),
                           ],
                         ),
                       ),

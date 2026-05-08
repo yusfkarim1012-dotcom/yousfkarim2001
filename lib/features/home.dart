@@ -639,6 +639,121 @@ class _HomeState extends State<Home>
     setState(() {});
   }
 
+  Widget _buildShareBanner(BuildContext context) {
+    final isDark = getValue("darkMode") ?? false;
+    final lang = context.locale.languageCode;
+    final gold = const Color(0xffC5A053);
+    
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 10.h),
+      child: GestureDetector(
+        onTap: () => _showShareSheet(context),
+        child: Container(
+          height: 70.h,
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: isDark 
+                ? [const Color(0xff2A2520), const Color(0xff1E1B18)]
+                : [const Color(0xffFFFDF7), const Color(0xffFDF5E6)],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+            ),
+            borderRadius: BorderRadius.circular(20.r),
+            border: Border.all(color: gold.withOpacity(0.3), width: 1.5),
+            boxShadow: [
+              BoxShadow(
+                color: gold.withOpacity(0.1),
+                blurRadius: 10,
+                offset: const Offset(0, 4),
+              ),
+            ],
+          ),
+          child: Stack(
+            children: [
+              // Pattern overlay
+              Positioned.fill(
+                child: Opacity(
+                  opacity: 0.05,
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(18.r),
+                    child: Image.asset(
+                      "assets/images/islamic_pattern_bg.png",
+                      repeat: ImageRepeat.repeat,
+                      scale: 5,
+                    ),
+                  ),
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 16.w),
+                child: Row(
+                  children: [
+                    // Icon with background removal look (rounded container)
+                    Container(
+                      width: 45.h,
+                      height: 45.h,
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        shape: BoxShape.circle,
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.1),
+                            blurRadius: 5,
+                          ),
+                        ],
+                      ),
+                      child: ClipOval(
+                        child: Image.asset(
+                          "assets/images/share_icon.png",
+                          fit: BoxFit.contain,
+                        ),
+                      ),
+                    ),
+                    SizedBox(width: 12.w),
+                    Expanded(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            tGlobal('share_app', lang),
+                            style: TextStyle(
+                              fontFamily: 'cairo',
+                              fontSize: 15.sp,
+                              fontWeight: FontWeight.w800,
+                              color: isDark ? const Color(0xffF0E0C0) : const Color(0xff2C1810),
+                            ),
+                          ),
+                          Text(
+                            lang == 'ar' ? 'انشر الخير وشارك التطبيق مع أحبائك' 
+                            : lang == 'ku' || lang == 'ckb' ? 'ئەپەکە بڵاوبکەرەوە و لە خێرەکەدا بەشداربە'
+                            : 'Spread the goodness and share the app',
+                            style: TextStyle(
+                              fontFamily: 'cairo',
+                              fontSize: 10.sp,
+                              color: (isDark ? const Color(0xffF0E0C0) : const Color(0xff2C1810)).withOpacity(0.6),
+                            ),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ],
+                      ),
+                    ),
+                    Icon(
+                      Icons.arrow_forward_ios_rounded,
+                      color: gold,
+                      size: 16.sp,
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
   void _showShareSheet(BuildContext ctx) {
     final isDark = getValue("darkMode") ?? false;
     final lang = ctx.locale.languageCode;
@@ -919,6 +1034,7 @@ class _HomeState extends State<Home>
                                 updateDateData();
                               },
                             ),
+                            _buildShareBanner(context),
                             Expanded(
                               child: SingleChildScrollView(
                                 child: Column(
@@ -1253,13 +1369,6 @@ class _HomeState extends State<Home>
                                                   "assets/images/radio.png",
                                               onPressed: () {
                                                 _fastPush(const RadioPage());
-                                              }),
-                                          HomeGridItem(
-                                              text: tGlobal('share_app', context.locale.languageCode),
-                                              imagePath:
-                                                  "assets/images/muhammed.png",
-                                              onPressed: () {
-                                                _showShareSheet(context);
                                               }),
                                         ],
                                       ),

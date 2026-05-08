@@ -1,0 +1,120 @@
+import 'package:flutter/material.dart';
+
+String tGlobal(String key, String langCode) {
+  const Map<String, Map<String, String>> dict = {
+    'prayer_times': {
+      'ar': 'مواقيت الصلاة', 'ku': 'کاتەکانی نوێژ', 'ckb': 'کاتەکانی نوێژ', 'en': 'Prayer Times',
+      'de': 'Gebetszeiten', 'am': 'የጸሎት ጊዜያት', 'ms': 'Waktu Solat', 'pt': 'Horários de Oração',
+      'tr': 'Namaz Vakitleri', 'ru': 'Время молитв',
+    },
+    'qibla': {
+      'ar': 'القبلة', 'ku': 'قیبلە', 'ckb': 'قیبلە', 'en': 'Qibla',
+      'de': 'Qibla', 'am': 'ቂብላ', 'ms': 'Kiblat', 'pt': 'Qibla',
+      'tr': 'Kıble', 'ru': 'Кибла',
+    },
+    'hijri_calendar': {
+      'ar': 'التقويم الهجري', 'ku': 'ڕۆژمێری کۆچی', 'ckb': 'ڕۆژمێری کۆچی', 'en': 'Hijri Calendar',
+      'de': 'Hidschri-Kalender', 'am': 'የሂጅራ ካላንደር', 'ms': 'Kalendar Hijriah', 'pt': 'Calendário Islâmico',
+      'tr': 'Hicri Takvim', 'ru': 'Календарь Хиджры',
+    },
+    'fajr': {
+      'ar': 'الفجر', 'ku': 'بەیانی', 'ckb': 'بەیانی', 'en': 'Fajr',
+      'de': 'Fadschr', 'am': 'ፈጅር', 'ms': 'Subuh', 'pt': 'Fajr',
+      'tr': 'İmsak', 'ru': 'Фаджр',
+    },
+    'sunrise': {
+      'ar': 'الشروق', 'ku': 'خۆرهەڵاتن', 'ckb': 'خۆرهەڵاتن', 'en': 'Sunrise',
+      'de': 'Sonnenaufgang', 'am': 'ፀሐይ መውጣት', 'ms': 'Syuruk', 'pt': 'Nascer do sol',
+      'tr': 'Güneş', 'ru': 'Восход',
+    },
+    'dhuhr': {
+      'ar': 'الظهر', 'ku': 'نیوەڕۆ', 'ckb': 'نیوەڕۆ', 'en': 'Dhuhr',
+      'de': 'Dhuhr', 'am': 'ዙህር', 'ms': 'Zohor', 'pt': 'Dhuhr',
+      'tr': 'Öğle', 'ru': 'Зухр',
+    },
+    'asr': {
+      'ar': 'العصر', 'ku': 'ئێوارە', 'ckb': 'ئێوارە', 'en': 'Asr',
+      'de': 'Asr', 'am': 'አስር', 'ms': 'Asar', 'pt': 'Asr',
+      'tr': 'İkindi', 'ru': 'Аср',
+    },
+    'maghrib': {
+      'ar': 'المغرب', 'ku': 'مەغریب', 'ckb': 'مەغریب', 'en': 'Maghrib',
+      'de': 'Maghrib', 'am': 'መግሪብ', 'ms': 'Maghrib', 'pt': 'Maghrib',
+      'tr': 'Akşam', 'ru': 'Магриб',
+    },
+    'isha': {
+      'ar': 'العشاء', 'ku': 'عیشا', 'ckb': 'عیشا', 'en': 'Isha',
+      'de': 'Ischa', 'am': 'ኢሻ', 'ms': 'Isyak', 'pt': 'Isha',
+      'tr': 'Yatsı', 'ru': 'Иша',
+    },
+    'next_prayer': {
+      'ar': 'الصلاة التالية', 'ku': 'نوێژی دواتر', 'ckb': 'نوێژی دواتر', 'en': 'Next Prayer',
+      'de': 'Nächstes Gebet', 'am': 'ቀጣይ ጸሎት', 'ms': 'Solat Seterusnya', 'pt': 'Próxima Oração',
+      'tr': 'Sonraki Namaz', 'ru': 'Следующая молитва',
+    },
+    'hour': {
+      'ar': 'ساعة', 'ku': 'کاتژمێر', 'ckb': 'کاتژمێر', 'en': 'hr',
+      'de': 'Std', 'am': 'ሰዓት', 'ms': 'jam', 'pt': 'h',
+      'tr': 'saat', 'ru': 'час',
+    },
+    'minute': {
+      'ar': 'دقيقة', 'ku': 'خولەک', 'ckb': 'خولەک', 'en': 'min',
+      'de': 'Min', 'am': 'ደቂቃ', 'ms': 'min', 'pt': 'min',
+      'tr': 'dk', 'ru': 'мин',
+    },
+    'second': {
+      'ar': 'ثانية', 'ku': 'چرکە', 'ckb': 'چرکە', 'en': 'sec',
+      'de': 'Sek', 'am': 'ሰከንድ', 'ms': 'saat', 'pt': 'seg',
+      'tr': 'sn', 'ru': 'сек',
+    },
+    'retry': {
+      'ar': 'إعادة المحاولة', 'ku': 'هەوڵدانەوە', 'ckb': 'هەوڵدانەوە', 'en': 'Retry',
+      'de': 'Wiederholen', 'am': 'እንደገና ሞክር', 'ms': 'Cuba lagi', 'pt': 'Tentar novamente',
+      'tr': 'Tekrar dene', 'ru': 'Повторить',
+    },
+    'error_loading': {
+      'ar': 'خطأ في التحميل', 'ku': 'هەڵەیەک ڕوویدا', 'ckb': 'هەڵەیەک ڕوویدا', 'en': 'Error loading',
+      'de': 'Ladefehler', 'am': 'የመጫን ስህተት', 'ms': 'Ralat memuatkan', 'pt': 'Erro ao carregar',
+      'tr': 'Yükleme hatası', 'ru': 'Ошибка загрузки',
+    },
+    'type_city_name': {
+      'ar': 'اكتب اسم المدينة...', 'ku': 'ناوی شار بنووسە...', 'ckb': 'ناوی شار بنووسە...', 'en': 'Type city name...',
+      'de': 'Stadtname eingeben...', 'am': 'የከተማ ስም ይጻፉ...', 'ms': 'Taip nama bandar...', 'pt': 'Digite o nome da cidade...',
+      'tr': 'Şehir adını yazın...', 'ru': 'Введите название города...',
+    },
+    'type_2_chars': {
+      'ar': 'اكتب حرفين على الأقل', 'ku': 'لانیکەم ٢ پیت بنووسە', 'ckb': 'لانیکەم ٢ پیت بنووسە', 'en': 'Type at least 2 chars',
+      'de': 'Mindestens 2 Zeichen', 'am': 'ቢያንስ 2 ፊደላት ይጻፉ', 'ms': 'Taip sekurang-kurangnya 2 aksara', 'pt': 'Digite pelo menos 2 caracteres',
+      'tr': 'En az 2 karakter yazın', 'ru': 'Введите как минимум 2 символа',
+    },
+    'no_results': {
+      'ar': 'لا توجد نتائج', 'ku': 'ئەنجام نییە', 'ckb': 'ئەنجام نییە', 'en': 'No results',
+      'de': 'Keine Ergebnisse', 'am': 'ምንም ውጤት የለም', 'ms': 'Tiada hasil', 'pt': 'Nenhum resultado',
+      'tr': 'Sonuç bulunamadı', 'ru': 'Нет результатов',
+    },
+    'enable_location': {
+      'ar': 'يرجى تفعيل الموقع', 'ku': 'تکایە شوێن چالاک بکە', 'ckb': 'تکایە شوێن چالاک بکە', 'en': 'Please enable location',
+      'de': 'Bitte Standort aktivieren', 'am': 'እ�    'share_app_text': {
+      'ar': '📖 تطبيق ختمة (Khatmah) | رفيقك الشرعي لحياة إيمانية\n\nتطبيق شامل يلتزم بالمصادر الإسلامية الصحيحة، ويجمع لك كل ما تحتاجه في مكان واحد وفق السنة النبوية:\n\n✅ قراءة القرآن الكريم بتصميم أنيق وهادئ، مع توفر تفاسير دقيقة وموثوقة.\n✅ يقتصر على الأحاديث والأذكار الثابتة والصحيحة فقط وفق السنة.\n✅ شروحات للأحاديث النبوية لضمان الفهم الصحيح والمنضبط.\n✅ مكتبة صوتية تضم ٢٤٠ قارئاً و١٧٨ إذاعة إسلامية (قرآن وتفسير) على مدار الساعة.\n✅ أدوات المسلم: مواقيت الصلاة، اتجاه القبلة، والتقويم الهجري.\n✅ مجاني تماماً، سريع، وبدون أي إعلانات مزعجة.\n\nحمله الآن وساهم في نشره (الدال على الخير كفاعله):\nhttps://play.google.com/store/apps/details?id=com.khatmah.quran.yusf.app',
+      'ku': '📖 ئەپی خەتمە (Khatmah) | هاوڕێی شەرعیت بۆ ژیانێکی پڕ لە ئیمان\n\nئەپێکی گشتگیر کە پابەندە بە سەرچاوە ئیسلامییە ڕاستەکان، و هەموو ئەوانەی پێویستتن لە یەک شوێندا بۆت کۆدەکاتەوە بەپێی سوننەتی پێغەمبەر:\n\n✅ خوێندنەوەی قورئانی پیرۆز بە دیزاینێکی شیک و ئارام، لەگەڵ تەفسیرە ورد و جێی متمانەکان.\n✅ تەنها ئەحادیث و ئەزکارە جێگیر و ڕاستەکان لەخۆدەگرێت بەپێی سوننەت.\n✅ ڕوونکردنەوەی فەرموودە نەبەوییەکان بۆ دڵنیابوون لە تێگەیشتنی دروست.\n✅ کتێبخانەیەکی دەنگی کە ٢٤٠ قاری و ١٧٨ ڕادیۆی ئیسلامی تێدایە.\n✅ ئامرازەکانی موسڵمان: کاتەکانی بانگ، قیبلەنما، و ڕۆژمێری کۆچی.\n✅ بەتەواوی بەخۆڕاییە، خێرایە، و بەبێ هیچ ڕیکلامێکی بێزارکەر.\n\nئێستا دایبەزێنە و بەشداربە لە بڵاوکردنەوەی (الدال على الخير كفاعله):\nhttps://play.google.com/store/apps/details?id=com.khatmah.quran.yusf.app',
+      'ckb': '📖 ئەپی خەتمە (Khatmah) | هاوڕێی شەرعیت بۆ ژیانێکی پڕ لە ئیمان\n\nئەپێکی گشتگیر کە پابەندە بە سەرچاوە ئیسلامییە ڕاستەکان، و هەموو ئەوانەی پێویستتن لە یەک شوێندا بۆت کۆدەکاتەوە بەپێی سوننەتی پێغەمبەر:\n\n✅ خوێندنەوەی قورئانی پیرۆز بە دیزاینێکی شیک و ئارام، لەگەڵ تەفسیرە ورد و جێی متمانەکان.\n✅ تەنها ئەحادیث و ئەزکارە جێگیر و ڕاستەکان لەخۆدەگرێت بەپێی سوننەت.\n✅ ڕوونکردنەوەی فەرموودە نەبەوییەکان بۆ دڵنیابوون لە تێگەیشتنی دروست.\n✅ کتێبخانەیەکی دەنگی کە ٢٤٠ قاری و ١٧٨ ڕادیۆی ئیسلامی تێدایە.\n✅ ئامرازەکانی موسڵمان: کاتەکانی بانگ، قیبلەنما، و ڕۆژمێری کۆچی.\n✅ بەتەواوی بەخۆڕاییە، خێرایە، و بەبێ هیچ ڕیکلامێکی بێزارکەر.\n\nئێستا دایبەزێنە و بەشداربە لە بڵاوکردنەوەی (الدال على الخير كفاعله):\nhttps://play.google.com/store/apps/details?id=com.khatmah.quran.yusf.app',
+      'en': '📖 Khatmah App | Your Spiritual Companion for a Faithful Life\n\nA comprehensive app committed to authentic Islamic sources, bringing everything you need together in one place according to the Sunnah:\n\n✅ Read the Holy Quran with an elegant and calm design, with accurate and reliable interpretations.\n✅ Limited to authentic Hadiths and Adhkar only according to the Sunnah.\n✅ Explanations of Prophetic Hadiths to ensure correct and disciplined understanding.\n✅ An audio library including 240 reciters and 178 Islamic radio stations.\n✅ Muslim Tools: Prayer times, Qibla direction, and Hijri calendar.\n✅ Completely free, fast, and without any annoying ads.\n\nDownload it now and contribute to its spread (The one who guides to good is like the doer of it):\nhttps://play.google.com/store/apps/details?id=com.khatmah.quran.yusf.app',
+      'de': '📖 Khatmah App | Dein spiritueller Begleiter für ein gläubiges Leben\n\nEine umfassende App, die sich an authentischen islamischen Quellen orientiert und alles, was du brauchst, an einem Ort gemäß der Sunna vereint:\n\n✅ Lies den Heiligen Koran in einem eleganten und ruhigen Design mit präzisen Interpretationen.\n✅ Beschränkt auf authentische Hadithe und Adhkar gemäß der Sunna.\n✅ Erklärungen prophetischer Hadithe für ein korrektes Verständnis.\n✅ Eine Audio-Bibliothek mit 240 Rezitatoren und 178 islamischen Radiosendern.\n✅ Werkzeuge für Muslime: Gebetszeiten, Qibla-Richtung und Hidschri-Kalender.\n✅ Völlig kostenlos, schnell und ohne störende Werbung.\n\nJetzt herunterladen und verbreiten (Wer zum Guten leitet, ist wie der, der es tut):\nhttps://play.google.com/store/apps/details?id=com.khatmah.quran.yusf.app',
+      'am': '📖 የኸትማ መተግበሪያ | ለታማኝ ሕይወት የእርስዎ መንፈሳዊ ጓደኛ\n\nበትክክለኛ የእስልምና ምንጮች ላይ የተመሰረተ ሁሉን አቀፍ መተግበሪያ፣ የሚፈልጉትን ሁሉ በሱና መሰረት በአንድ ቦታ የሚያመጣ፡\n\n✅ ቅዱስ ቁርኣንን በቆንጆ እና በተረጋጋ ዲዛይን፣ ትክክለኛ እና አስተማማኝ ትርጓሜዎችን ያንብቡ።\n✅ በሱና መሰረት በትክክለኛ ሀዲሶች እና አዝካሮች ላይ ብቻ የተገደበ።\n✅ ትክክለኛ ግንዛቤን ለማረጋገጥ የነብዩ (ሶ.ዐ.ወ) ሀዲሶች ማብራሪያ።\n✅ 240 ቀሪዎችን እና 178 የእስልምና ሬዲዮ ጣቢያዎችን ያካተተ የድምጽ ቤተ መጻሕፍት።\n✅ የሙስሊም መሳሪያዎች፡ የጸሎት ጊዜያት፣ የቂብላ አቅጣጫ እና የሂጅሪ አቆጣጠር።\n✅ ሙሉ በሙሉ ነፃ ፣ ፈጣን እና ያለ ምንም የሚያበሳጩ ማስታወቂያዎች።\n\nአሁን ያውርዱት እና ለስርጭቱ አስተዋፅዖ ያድርጉ (ወደ መልካም የመራ እንደ ሰሪው ነው):\nhttps://play.google.com/store/apps/details?id=com.khatmah.quran.yusf.app',
+      'ms': '📖 Aplikasi Khatmah | Teman Rohani Anda untuk Kehidupan Beriman\n\nAplikasi komprehensif yang komited kepada sumber Islam yang sahih, menghimpunkan semua yang anda perlukan di satu tempat mengikut Sunnah:\n\n✅ Baca Al-Quran dengan reka bentuk yang elegan dan tenang, disertakan tafsir yang tepat.\n✅ Terhad kepada Hadis dan Azkar yang sahih sahaja mengikut Sunnah.\n✅ Penjelasan Hadis Nabawi untuk memastikan kefahaman yang betul.\n✅ Perpustakaan audio termasuk 240 qari dan 178 stesen radio Islam.\n✅ Alatan Muslim: Waktu solat, arah Kiblat, dan kalendar Hijriah.\n✅ Sepenuhnya percuma, pantas, dan tanpa sebarang iklan yang menjengkelkan.\n\nMuat turun sekarang dan sumbang kepada penyebarannya (Sesiapa yang menunjukkan kepada kebaikan, baginya pahala seperti orang yang melakukannya):\nhttps://play.google.com/store/apps/details?id=com.khatmah.quran.yusf.app',
+      'pt': '📖 App Khatmah | Seu Companheiro Espiritual para uma Vida de Fé\n\nUm aplicativo abrangente comprometido com fontes islâmicas autênticas, reunindo tudo o que você precisa em um só lugar de acordo com a Sunnah:\n\n✅ Leia o Alcorão Sagrado com um design elegante e calmo, com interpretações precisas.\n✅ Limitado a Hadiths e Adhkar autênticos de acordo com a Sunnah.\n✅ Explicações de Hadiths Proféticos para garantir a compreensão correta.\n✅ Uma biblioteca de áudio incluindo 240 recitadores e 178 estações de rádio islâmicas.\n✅ Ferramentas Muçulmanas: Horários de oração, direção de Qibla e calendário islâmico.\n✅ Completamente grátis, rápido e sem anúncios irritantes.\n\nBaixe agora e contribua para sua divulgação (Aquele que guia para o bem é como quem o faz):\nhttps://play.google.com/store/apps/details?id=com.khatmah.quran.yusf.app',
+      'tr': '📖 Khatmah Uygulaması | İnançlı Bir Yaşam İçin Manevi Arkadaşınız\n\nSahih İslami kaynaklara bağlı, ihtiyacınız olan her şeyi Sünnet üzere tek bir yerde toplayan kapsamlı bir uygulama:\n\n✅ Kuran-ı Kerim\'i zarif ve sakin bir tasarımla, doğru ve güvenilir tefsirlerle okuyun.\n✅ Sadece Sünnete uygun sahih Hadis ve Zikirlerle sınırlıdır.\n✅ Doğru anlayışı sağlamak için Nebevi Hadislerin açıklamaları.\n✅ 240 hafız ve 178 İslami radyo istasyonunu içeren ses kütüphanesi.\n✅ Müslüman Araçları: Namaz vakitleri, Kıble yönü ve Hicri takvim.\n✅ Tamamen ücretsiz, hızlı ve rahatsız edici reklamlar içermez.\n\nŞimdi indirin ve yayılmasına katkıda bulunun (Hayra vesile olan, hayrı yapan gibidir):\nhttps://play.google.com/store/apps/details?id=com.khatmah.quran.yusf.app',
+      'ru': '📖 Приложение Khatmah | Ваш духовный спутник для праведной жизни\n\nВсеобъемлющее приложение, основанное на достоверных исламских источниках, объединяющее все необходимое в одном месте согласно Сунне:\n\n✅ Читайте Священный Коран в элегантном и спокойном дизайне с точными толкованиями.\n✅ Только достоверные хадисы и азкары согласно Сунне.\n✅ Объяснения пророческих хадисов для правильного понимания.\n✅ Аудиотека, включающая 240 чтецов и 178 исламских радиостанций.\n✅ Инструменты мусульманина: время намаза, направление Киблы и календарь Хиджры.\n✅ Полностью бесплатно, быстро и без навязчивой рекламы.\n\nСкачайте сейчас и помогите в распространении (Указавшему на благое полагается такая же награда, как и совершившему его):\nhttps://play.google.com/store/apps/details?id=com.khatmah.quran.yusf.app',
+    },
+  };ወት የእርስዎ ከፍተኛ መንፈሳዊ አጋር።\n\n✅ 240+ የቁርአን አንባቢዎች እና 178 የሬዲዮ ጣቢያዎች።\n✅ ትክክለኛ የጸሎት ጊዜያት እና ቂብላ ፈላጊ።\n✅ ዕለታዊ አድካር፣ ሐዲስ እና ተስቢሕ ቆጣሪ።\n✅ ያለ ማስታወቂያ እና ሙሉ በሙሉ ነፃ።\n\nአሁን ያውርዱ:\nhttps://play.google.com/store/apps/details?id=com.khatmah.quran.yusf.app',
+      'ms': '🕌 Muat Turun Aplikasi Khatmah\nTeman rohani utama anda untuk kehidupan Islam harian.\n\n✅ 240+ Qari Al-Quran & 178 Stesen Radio.\n✅ Waktu Solat Tepat & Pencari Kiblat.\n✅ Zikir Harian, Hadis, dan Kaunter Tasbih.\n✅ Tanpa iklan dan sepenuhnya PERCUMA.\n\nDapatkan sekarang:\nhttps://play.google.com/store/apps/details?id=com.khatmah.quran.yusf.app',
+      'pt': '🕌 Baixe o App Khatmah\nSeu companheiro espiritual definitivo para uma vida islâmica diária.\n\n✅ 240+ Recitadores do Alcorão e 178 Estações de Rádio.\n✅ Horários de Oração Precisos e Localizador de Qibla.\n✅ Adhkar Diário, Hadith e Contador de Tasbih.\n✅ Sem anúncios e completamente GRATUITO.\n\nBaixe agora:\nhttps://play.google.com/store/apps/details?id=com.khatmah.quran.yusf.app',
+      'tr': '🕌 Khatmah Uygulamasını İndirin\nGünlük İslami yaşam için nihai ruhani arkadaşınız.\n\n✅ 240+ Kuran Hafızı ve 178 Radyo İstasyonu.\n✅ Doğru Namaz Vakitleri ve Kıble Bulucu.\n✅ Günlük Zikirler, Hadis ve Tesbih Sayacı.\n✅ Reklamsız ve tamamen ÜCRETSİZ.\n\nŞimdi indirin:\nhttps://play.google.com/store/apps/details?id=com.khatmah.quran.yusf.app',
+      'ru': '🕌 Скачайте приложение Khatmah\nВаш лучший духовный спутник для ежедневной исламской жизни.\n\n✅ 240+ чтецов Корана и 178 радиостанций.\n✅ Точное время молитв и поиск Киблы.\n✅ Ежедневные азкары, хадисы и счётчик тасбиха.\n✅ Без рекламы и полностью БЕСПЛАТНО.\n\nСкачайте сейчас:\nhttps://play.google.com/store/apps/details?id=com.khatmah.quran.yusf.app',
+    },
+  };
+
+  final map = dict[key];
+  if (map == null) return key;
+  return map[langCode] ?? map['en'] ?? key;
+}

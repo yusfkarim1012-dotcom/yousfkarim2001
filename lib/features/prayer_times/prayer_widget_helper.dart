@@ -14,7 +14,10 @@ class PrayerWidgetHelper {
       LocationPermission perm = await Geolocator.checkPermission();
       if (perm == LocationPermission.denied || perm == LocationPermission.deniedForever) return;
 
-      final pos = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.low);
+      // Use last known position for speed, or current position if none
+      Position? pos = await Geolocator.getLastKnownPosition();
+      pos ??= await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.low);
+      
       final repo = MuslimRepository();
       final loc = await repo.reverseGeocoder(latitude: pos.latitude, longitude: pos.longitude);
 

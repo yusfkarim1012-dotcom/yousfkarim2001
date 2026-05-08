@@ -34,7 +34,20 @@ class _PrayerTimesPageState extends State<PrayerTimesPage>
     super.initState();
     _fadeCtrl = AnimationController(
         duration: const Duration(milliseconds: 500), vsync: this);
-    _loadPrayerTimes();
+    
+    // Start loading after transition to avoid lag
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _precacheImages();
+      Future.delayed(const Duration(milliseconds: 300), () {
+        if (mounted) _loadPrayerTimes();
+      });
+    });
+  }
+
+  void _precacheImages() {
+    precacheImage(const AssetImage("assets/images/daytimetry2.png"), context);
+    precacheImage(const AssetImage("assets/images/prayerbackgroundnight.png"), context);
+    precacheImage(const AssetImage("assets/images/islamic_frame.png"), context);
   }
 
   @override

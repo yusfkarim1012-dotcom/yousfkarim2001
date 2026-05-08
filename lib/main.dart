@@ -389,21 +389,36 @@ class MyApp extends StatefulWidget {
   State<MyApp> createState() => _MyAppState();
 }
 
-class _MyAppState extends State<MyApp> {
+class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
   setup() async {
     // await    setupServiceLocator();
   }
+
   @override
   void initState() {
     // SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
-  
+    WidgetsBinding.instance.addObserver(this);
     // checkNotificationPermission();
     // TODO: implement initState
     super.initState();
   }
 
-  
-  
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    super.didChangeAppLifecycleState(state);
+    if (state == AppLifecycleState.resumed) {
+      SharedPreferences.getInstance().then((lang) {
+        final code = lang.getString('locale') ?? 'ar';
+        PrayerWidgetHelper.updateWidget(langCode: code);
+      });
+    }
+  }
   // BoxController boxController = BoxController();
   // This widget is the root of your application.
   @override

@@ -1,10 +1,14 @@
 import 'dart:math' as math;
+import 'dart:io';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_qiblah/flutter_qiblah.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:geolocator/geolocator.dart';
+
+enum CompassErrorType { none, permission, gps, internet, other }
+
 
 class CustomCompassBody extends StatefulWidget {
   final bool isDark;
@@ -16,7 +20,8 @@ class CustomCompassBody extends StatefulWidget {
 class _CustomCompassBodyState extends State<CustomCompassBody> {
   bool _locationReady = false;
   bool _loading = true;
-  String _error = '';
+  CompassErrorType _errorType = CompassErrorType.none;
+  String _errorMsg = '';
 
   // 8 languages: ar, en, de, am, ms, pt, tr, ru
   String _t(Map<String, String> texts) {
@@ -32,31 +37,76 @@ class _CustomCompassBodyState extends State<CustomCompassBody> {
 
   Future<void> _checkLocation() async {
     try {
-      setState(() { _loading = true; _error = ''; });
+      setState(() { _loading = true; _errorType = CompassErrorType.none; _errorMsg = ''; });
+      
+      LocationPermission perm = await Geolocator.checkPermission();
+      if (perm == LocationPermission.denied) {
+        perm = await Geolocator.requestPermission();
+      }
+      if (perm == LocationPermission.denied || perm == LocationPermission.deniedForever) {
+        if (mounted) setState(() { 
+          _loading = false; 
+          _errorType = CompassErrorType.permission;
+          _errorMsg = _t({
+            'ar': 'يرجى السماح بالوصول للموقع', 'en': 'Please allow location access',
+            'de': 'Bitte Standortzugriff erlauben', 'am': 'እባክዎ የአካባቢ ተደራሽነት ይፍቀዱ',
+            'ms': 'Sila benarkan akses lokasi', 'pt': 'Permita o acesso à localização',
+            'tr': 'Lütfen konum erişimine izin verin', 'ru': 'Разрешите доступ к геолокации',
+            'ku': 'تکایە ڕێگەبدە بە دیاریکردنی شوێنەکەت', 'ckb': 'تکایە ڕێگەبدە بە دیاریکردنی شوێنەکەت',
+          }); 
+        });
+        return;
+      }
+
       bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
       if (!serviceEnabled) {
-        if (mounted) setState(() { _loading = false; _error = _t({
-          'ar': 'يرجى تفعيل خدمة الموقع', 'en': 'Please enable location service',
-          'de': 'Bitte Standortdienst aktivieren', 'am': 'እባክዎ የአካባቢ አገልግሎት ያንቁ',
-          'ms': 'Sila aktifkan perkhidmatan lokasi', 'pt': 'Ative o serviço de localização',
-          'tr': 'Lütfen konum hizmetini etkinleştirin', 'ru': 'Включите службу геолокации',
-        }); });
+        if (mounted) setState(() { 
+          _loading = false; 
+          _errorType = CompassErrorType.gps;
+          _errorMsg = _t({
+            'ar': 'يرجى تفعيل خدمة الموقع', 'en': 'Please enable location service',
+            'de': 'Bitte Standortdienst aktivieren', 'am': 'እባክዎ የአካባቢ አገልግሎት ያንቁ',
+            'ms': 'Sila aktifkan perkhidmatan lokasi', 'pt': 'Ative o serviço de localização',
+            'tr': 'Lütfen konum hizmetini etkinleştirin', 'ru': 'Включите службу геолокации',
+            'ku': 'تکایە جی پی ئێس دابگیرسێنە', 'ckb': 'تکایە جی پی ئێس دابگیرسێنە',
+          }); 
+        });
         return;
       }
-      LocationPermission perm = await Geolocator.checkPermission();
-      if (perm == LocationPermission.denied) perm = await Geolocator.requestPermission();
-      if (perm == LocationPermission.denied || perm == LocationPermission.deniedForever) {
-        if (mounted) setState(() { _loading = false; _error = _t({
-          'ar': 'يرجى السماح بالوصول للموقع', 'en': 'Please allow location access',
-          'de': 'Bitte Standortzugriff erlauben', 'am': 'እባክዎ የአካባቢ ተደራሽነት ይፍቀዱ',
-          'ms': 'Sila benarkan akses lokasi', 'pt': 'Permita o acesso à localização',
-          'tr': 'Lütfen konum erişimine izin verin', 'ru': 'Разрешите доступ к геолокации',
-        }); });
+
+      bool hasInternet = true;
+      try {
+        final result = await InternetAddress.lookup('google.com');
+        if (result.isEmpty || result[0].rawAddress.isEmpty) {
+          hasInternet = false;
+        }
+      } on SocketException catch (_) {
+        hasInternet = false;
+      }
+
+      if (!hasInternet) {
+        if (mounted) setState(() {
+          _loading = false;
+          _errorType = CompassErrorType.internet;
+          _errorMsg = _t({
+            'ar': 'لا يمكن تحديد الموقع بدون إنترنت. يرجى الاتصال ثم المحاولة.',
+            'en': 'Cannot determine location without internet. Please connect and try again.',
+            'de': 'Standort kann ohne Internet nicht ermittelt werden. Bitte verbinden und erneut versuchen.',
+            'am': 'ያለ በይነመረብ አካባቢን መወሰን አልተቻለም። እባክዎ ይገናኙ እና እንደገና ይሞክሩ።',
+            'ms': 'Tidak dapat menentukan lokasi tanpa internet. Sila sambung dan cuba lagi.',
+            'pt': 'Não é possível determinar a localização sem internet. Por favor, conecte-se e tente novamente.',
+            'tr': 'İnternet olmadan konum belirlenemiyor. Lütfen bağlanın ve tekrar deneyin.',
+            'ru': 'Невозможно определить местоположение без интернета. Пожалуйста, подключитесь и попробуйте снова.',
+            'ku': 'ناتوانین شوێنەکەت دیاری بکەین بەبێ ئینتەرنێت تکایە پەیوەستبە بەئینتەرنێت پاشان هەوڵدەوە',
+            'ckb': 'ناتوانین شوێنەکەت دیاری بکەین بەبێ ئینتەرنێت تکایە پەیوەستبە بەئینتەرنێت پاشان هەوڵدەوە',
+          });
+        });
         return;
       }
+
       if (mounted) setState(() { _locationReady = true; _loading = false; });
     } catch (e) {
-      if (mounted) setState(() { _loading = false; _error = e.toString(); });
+      if (mounted) setState(() { _loading = false; _errorType = CompassErrorType.other; _errorMsg = e.toString(); });
     }
   }
 
@@ -69,23 +119,53 @@ class _CustomCompassBodyState extends State<CustomCompassBody> {
 
     if (_loading) return Center(child: CircularProgressIndicator(color: gold, strokeWidth: 2.5));
 
-    if (_error.isNotEmpty) return Center(child: Padding(
-      padding: EdgeInsets.all(32.w),
-      child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-        Icon(Icons.location_off_rounded, size: 56.sp, color: sub),
-        SizedBox(height: 16.h),
-        Text(_error, style: TextStyle(color: sub, fontSize: 14.sp, fontFamily: 'cairo'), textAlign: TextAlign.center),
-        SizedBox(height: 20.h),
-        ElevatedButton.icon(
-          style: ElevatedButton.styleFrom(backgroundColor: gold, foregroundColor: Colors.white,
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14.r))),
-          icon: const Icon(Icons.refresh_rounded),
-          label: Text(_t({'ar': 'إعادة المحاولة', 'en': 'Retry', 'de': 'Wiederholen',
+    if (_errorType != CompassErrorType.none) {
+      IconData iconData = Icons.error_outline;
+      String btnLabel = 'Retry';
+      VoidCallback onBtnPressed = _checkLocation;
+
+      if (_errorType == CompassErrorType.permission) {
+        iconData = Icons.security;
+        btnLabel = _t({'ar': 'فتح الإعدادات', 'en': 'Open Settings', 'ku': 'کردنەوەی ڕێکخستنەکان', 'ckb': 'کردنەوەی ڕێکخستنەکان', 'de': 'Einstellungen öffnen', 'tr': 'Ayarları Aç', 'ru': 'Открыть настройки'});
+        onBtnPressed = () async {
+          await Geolocator.openAppSettings();
+        };
+      } else if (_errorType == CompassErrorType.gps) {
+        iconData = Icons.location_off_rounded;
+        btnLabel = _t({'ar': 'تفعيل GPS', 'en': 'Turn on GPS', 'ku': 'داگیرساندنی GPS', 'ckb': 'داگیرساندنی GPS', 'de': 'GPS einschalten', 'tr': 'GPS\'i aç', 'ru': 'Включить GPS'});
+        onBtnPressed = () async {
+          await Geolocator.openLocationSettings();
+        };
+      } else if (_errorType == CompassErrorType.internet || _errorType == CompassErrorType.other) {
+        iconData = Icons.wifi_off_rounded;
+        btnLabel = _t({'ar': 'إعادة المحاولة', 'en': 'Retry', 'de': 'Wiederholen',
             'am': 'እንደገና ሞክር', 'ms': 'Cuba lagi', 'pt': 'Tentar novamente',
-            'tr': 'Tekrar dene', 'ru': 'Повторить'}),
-            style: TextStyle(fontFamily: 'cairo', fontSize: 14.sp)),
-          onPressed: _checkLocation),
-      ])));
+            'tr': 'Tekrar dene', 'ru': 'Повторить', 'ku': 'هەوڵدانەوە', 'ckb': 'هەوڵدانەوە'});
+      }
+
+      return Center(child: Padding(
+        padding: EdgeInsets.all(32.w),
+        child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+          Icon(iconData, size: 56.sp, color: sub),
+          SizedBox(height: 16.h),
+          Text(_errorMsg, style: TextStyle(color: sub, fontSize: 14.sp, fontFamily: 'cairo'), textAlign: TextAlign.center),
+          SizedBox(height: 20.h),
+          ElevatedButton.icon(
+            style: ElevatedButton.styleFrom(backgroundColor: gold, foregroundColor: Colors.white,
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14.r))),
+            icon: const Icon(Icons.touch_app_rounded),
+            label: Text(btnLabel, style: TextStyle(fontFamily: 'cairo', fontSize: 14.sp)),
+            onPressed: onBtnPressed,
+          ),
+          if (_errorType == CompassErrorType.permission || _errorType == CompassErrorType.gps) ...[
+            SizedBox(height: 10.h),
+            TextButton(
+              onPressed: _checkLocation,
+              child: Text(_t({'ar': 'تحقَّق مرة أخرى', 'en': 'Check Again', 'ku': 'پشکنینەوە', 'ckb': 'پشکنینەوە'}), style: TextStyle(color: gold, fontFamily: 'cairo')),
+            )
+          ]
+        ])));
+    }
 
     if (!_locationReady) return const SizedBox();
 

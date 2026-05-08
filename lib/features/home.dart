@@ -692,15 +692,9 @@ class _HomeState extends State<Home>
                     Container(
                       width: 45.h,
                       height: 45.h,
-                      decoration: BoxDecoration(
-                        color: Colors.white,
+                      decoration: const BoxDecoration(
+                        color: Colors.transparent,
                         shape: BoxShape.circle,
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withOpacity(0.1),
-                            blurRadius: 5,
-                          ),
-                        ],
                       ),
                       child: ClipOval(
                         child: Image.asset(

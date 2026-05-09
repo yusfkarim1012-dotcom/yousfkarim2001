@@ -1,5 +1,7 @@
 import 'package:geolocator/geolocator.dart';
+import 'package:hijri/hijri_calendar.dart';
 import 'package:home_widget/home_widget.dart';
+import 'package:intl/intl.dart';
 import 'package:muslim_data_flutter/muslim_data_flutter.dart';
 
 /// Updates the Android home screen prayer widget with current prayer times.
@@ -71,7 +73,42 @@ class PrayerWidgetHelper {
       await HomeWidget.saveWidgetData('maghrib_label', t('المغرب', 'ئاوابوون', 'Maghrib'));
       await HomeWidget.saveWidgetData('isha_label', t('العشاء', 'خەوتن', 'Isha'));
 
+      // --- Date Header Data (Fully Localized) ---
+      final dayOfWeek = _getDayOfWeek(now.weekday, langCode);
+      await HomeWidget.saveWidgetData('day_of_week', dayOfWeek);
+
+      // Hijri Date
+      final isRtl = langCode == 'ar' || langCode == 'ku' || langCode == 'ckb';
+      HijriCalendar.setLocal(isRtl ? 'ar' : 'en');
+      final hijri = HijriCalendar.now();
+      await HomeWidget.saveWidgetData('hijri_date', hijri.toFormat('dd MMMM yyyy'));
+
+      // Gregorian Date
+      final gregorian = DateFormat('d MMM yyyy', isRtl ? 'ar' : 'en').format(now);
+      await HomeWidget.saveWidgetData('gregorian_date', gregorian);
+
+      await HomeWidget.saveWidgetData('app_lang', langCode);
+
       await HomeWidget.updateWidget(androidName: 'PrayerWidgetProvider');
     } catch (_) {}
+  }
+
+  static String _getDayOfWeek(int weekday, String langCode) {
+    final Map<String, List<String>> dayTranslations = {
+      'ar': ['الإثنين', 'الثلاثاء', 'الأربعاء', 'الخميس', 'الجمعة', 'السبت', 'الأحد'],
+      'ku': ['دووشەممە', 'سێشەممە', 'چوارشەممە', 'پێنجشەممە', 'هەینی', 'شەممە', 'یەکشەممە'],
+      'ckb': ['دووشەممە', 'سێشەممە', 'چوارشەممە', 'پێنجشەممە', 'هەینی', 'شەممە', 'یەکشەممە'],
+      'de': ['Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag', 'Samstag', 'Sonntag'],
+      'tr': ['Pazartesi', 'Salı', 'Çarşamba', 'Perşembe', 'Cuma', 'Cumartesi', 'Pazar'],
+      'ru': ['Понедельник', 'Вторник', 'Среда', 'Четверг', 'Пятница', 'Суббота', 'Воскресенье'],
+      'ms': ['Isnin', 'Selasa', 'Rabu', 'Khamis', 'Jumaat', 'Sabtu', 'Ahad'],
+      'pt': ['Segunda-feira', 'Terça-feira', 'Quarta-feira', 'Quinta-feira', 'Sexta-feira', 'Sábado', 'Domingo'],
+      'am': ['ሰኞ', 'ማክሰኞ', 'ረቡዕ', 'ሐሙስ', 'አርብ', 'ቅዳሜ', 'እሁድ'],
+      'en': ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'],
+    };
+
+    final idx = weekday - 1; 
+    final days = dayTranslations[langCode] ?? dayTranslations['en']!;
+    return days[idx];
   }
 }

@@ -4,7 +4,9 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:hijri/hijri_calendar.dart';
 import 'package:home_widget/home_widget.dart';
+import 'package:intl/intl.dart';
 import 'package:khatmah/GlobalHelpers/constants.dart';
 import 'package:khatmah/GlobalHelpers/hive_helper.dart';
 import 'package:khatmah/GlobalHelpers/translations.dart';
@@ -186,6 +188,38 @@ class _PrayerTimesPageState extends State<PrayerTimesPage>
       await HomeWidget.saveWidgetData('asr_label', tGlobal('asr', context.locale.languageCode));
       await HomeWidget.saveWidgetData('maghrib_label', tGlobal('maghrib', context.locale.languageCode));
       await HomeWidget.saveWidgetData('isha_label', tGlobal('isha', context.locale.languageCode));
+
+      // --- Date Header Data (Fully Localized) ---
+      final lang = context.locale.languageCode;
+      final now = DateTime.now();
+
+      // Day of Week
+      final Map<String, List<String>> dayTranslations = {
+        'ar': ['الإثنين', 'الثلاثاء', 'الأربعاء', 'الخميس', 'الجمعة', 'السبت', 'الأحد'],
+        'ku': ['دووشەممە', 'سێشەممە', 'چوارشەممە', 'پێنجشەممە', 'هەینی', 'شەممە', 'یەکشەممە'],
+        'ckb': ['دووشەممە', 'سێشەممە', 'چوارشەممە', 'پێنجشەممە', 'هەینی', 'شەممە', 'یەکشەممە'],
+        'de': ['Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag', 'Samstag', 'Sonntag'],
+        'tr': ['Pazartesi', 'Salı', 'Çarşamba', 'Perşembe', 'Cuma', 'Cumartesi', 'Pazar'],
+        'ru': ['Понедельник', 'Вторник', 'Среда', 'Четверг', 'Пятница', 'Суббота', 'Воскресенье'],
+        'ms': ['Isnin', 'Selasa', 'Rabu', 'Khamis', 'Jumaat', 'Sabtu', 'Ahad'],
+        'pt': ['Segunda-feira', 'Terça-feira', 'Quarta-feira', 'Quinta-feira', 'Sexta-feira', 'Sábado', 'Domingo'],
+        'am': ['ሰኞ', 'ማክሰኞ', 'ረቡዕ', 'ሐሙስ', 'አርብ', 'ቅዳሜ', 'እሁድ'],
+        'en': ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'],
+      };
+      final dayIdx = now.weekday - 1;
+      final dayOfWeek = (dayTranslations[lang] ?? dayTranslations['en']!)[dayIdx];
+      await HomeWidget.saveWidgetData('day_of_week', dayOfWeek);
+
+      // Hijri Date
+      final isRtl = lang == 'ar' || lang == 'ku' || lang == 'ckb';
+      HijriCalendar.setLocal(isRtl ? 'ar' : 'en');
+      final hijri = HijriCalendar.now();
+      await HomeWidget.saveWidgetData('hijri_date', hijri.toFormat('dd MMMM yyyy'));
+
+      // Gregorian Date
+      final gregorian = DateFormat('d MMM yyyy', isRtl ? 'ar' : 'en').format(now);
+      await HomeWidget.saveWidgetData('gregorian_date', gregorian);
+
       await HomeWidget.updateWidget(androidName: 'PrayerWidgetProvider');
     } catch (_) {}
   }

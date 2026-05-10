@@ -4,7 +4,9 @@ import android.appwidget.AppWidgetManager
 import android.content.Context
 import android.content.SharedPreferences
 import android.widget.RemoteViews
+import android.net.Uri
 import es.antonborri.home_widget.HomeWidgetProvider
+import es.antonborri.home_widget.HomeWidgetLaunchIntent
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -98,6 +100,13 @@ class PrayerWidgetProvider : HomeWidgetProvider() {
             views.setInt(R.id.asr_container, "setBackgroundResource", if (nextPrayer == "asr") R.drawable.widget_next_bg else R.drawable.transparent_bg)
             views.setInt(R.id.maghrib_container, "setBackgroundResource", if (nextPrayer == "maghrib") R.drawable.widget_next_bg else R.drawable.transparent_bg)
             views.setInt(R.id.isha_container, "setBackgroundResource", if (nextPrayer == "isha") R.drawable.widget_next_bg else R.drawable.transparent_bg)
+
+            val pendingIntent = HomeWidgetLaunchIntent.getActivity(
+                context,
+                MainActivity::class.java,
+                Uri.parse("homeWidget://prayer_times")
+            )
+            views.setOnClickPendingIntent(R.id.widget_root, pendingIntent)
 
             appWidgetManager.updateAppWidget(widgetId, views)
         }

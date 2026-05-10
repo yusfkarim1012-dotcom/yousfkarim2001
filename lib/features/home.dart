@@ -66,6 +66,7 @@ import 'package:after_layout/after_layout.dart';
 import 'package:workmanager/workmanager.dart';
 import 'package:khatmah/features/widgets/animated_islamic_decorations.dart';
 import 'package:khatmah/GlobalHelpers/translations.dart';
+import 'package:home_widget/home_widget.dart';
 // import 'package:periodic_alarm/src/android_alarm.dart';
 
 final qurapPagePlayerBloc = QuranPagePlayerBloc();
@@ -84,7 +85,8 @@ class _HomeState extends State<Home>
     with
         AfterLayoutMixin,
         TickerProviderStateMixin,
-        AutomaticKeepAliveClientMixin {
+        AutomaticKeepAliveClientMixin,
+        WidgetsBindingObserver {
   var widgejsonData;
   var quarterjsonData;
   // BoxController boxController = BoxController();
@@ -249,6 +251,13 @@ class _HomeState extends State<Home>
   }
   @override
   void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+    
+    // Check for Widget Launch
+    HomeWidget.initiallyLaunchedFromHomeWidget().then(_checkForWidgetLaunch);
+    HomeWidget.widgetClicked.listen(_checkForWidgetLaunch);
+    
     showDialogForRate();
     checkInAppUpdate();
     //checkAzanRinging() ;
@@ -259,7 +268,6 @@ class _HomeState extends State<Home>
     getAndStoreRadioData();
     //boxController.hideBox();
     initHiveValues(); // TODO: implement initState
-    super.initState();
     // boxController.hideBox();
     // AlertWindowHelper.requestPermission();
     loadJsonAsset();
@@ -286,6 +294,7 @@ class _HomeState extends State<Home>
 
   @override
   void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
     // AndroidAlarm.audioPlayer.dispose();
 
     // subscription!.cancel();
@@ -294,6 +303,25 @@ class _HomeState extends State<Home>
     // _timer.cancel(); // Cancel the timer
 
     super.dispose();
+  }
+
+  void _checkForWidgetLaunch(Uri? uri) {
+    if (uri != null && uri.scheme.toLowerCase() == 'homewidget' && uri.host == 'prayer_times') {
+      Future.delayed(const Duration(milliseconds: 500), () {
+        if (mounted) {
+          _fastPush(const PrayerTimesPage());
+        }
+      });
+    }
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) {
+      reload = true;
+      getPrayerTimesData();
+      updateDateData();
+    }
   }
 
   String getNativeLanguageName(String languageCode) {

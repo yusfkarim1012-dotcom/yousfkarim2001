@@ -6,7 +6,7 @@ import 'package:image_gallery_saver_plus/image_gallery_saver_plus.dart';
 
 Future<File> saveImageToTempDirectory(Uint8List imageBytes) async {
   final tempDir = await getTemporaryDirectory();
-  final tempFilePath = '${tempDir.path}/temp_image.png';
+  final tempFilePath = '${tempDir.path}/temp_image_${DateTime.now().millisecondsSinceEpoch}.png';
 
   final file = File(tempFilePath);
   await file.writeAsBytes(imageBytes);

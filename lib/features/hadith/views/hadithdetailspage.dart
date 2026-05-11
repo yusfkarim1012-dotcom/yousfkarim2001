@@ -511,6 +511,8 @@ class _HadithDetailsPageState extends State<HadithDetailsPage> {
                             ),
                           ),
                         ),
+                      // Bottom padding so buttons are not hidden behind system navigation bar
+                      SizedBox(height: MediaQuery.of(context).viewPadding.bottom + 24),
                     ],
                   )),
           ),

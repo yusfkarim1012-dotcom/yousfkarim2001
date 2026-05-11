@@ -11,8 +11,12 @@ import 'package:easy_container/easy_container.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:muslim_data_flutter/muslim_data_flutter.dart';
 import 'package:flutter/material.dart' as m;
 import 'package:flutter/services.dart';
+import 'package:screenshot/screenshot.dart';
+import 'package:khatmah/features/QuranPages/helpers/share_image.dart';
+import 'package:khatmah/features/QuranPages/helpers/save_image.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -57,7 +61,7 @@ import 'package:khatmah/features/support/support_page.dart';
 import 'package:quran/quran.dart' as quran;
 import 'package:share_plus/share_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:geocoding/geocoding.dart';
+import 'package:geocoding/geocoding.dart' hide Location;
 import 'package:string_validator/string_validator.dart';
 
 import 'package:superellipse_shape/superellipse_shape.dart';
@@ -280,6 +284,7 @@ class _HomeState extends State<Home>
     //   print(data.notificationTitle);
     // });
     // getPrayerTimesData();
+    _loadHomePrayerTimes();
 
     // _timeLeftController = StreamController<Duration>();
     // _timeLeftStream = _timeLeftController.stream.asBroadcastStream();
@@ -295,8 +300,7 @@ class _HomeState extends State<Home>
   @override
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
-    // AndroidAlarm.audioPlayer.dispose();
-
+    // AndroidAlarm.audioPlayer.dispose();\r\n
     // subscription!.cancel();
     // alarmStream.close();
     // _timeLeftController.close();
@@ -321,6 +325,7 @@ class _HomeState extends State<Home>
       reload = true;
       getPrayerTimesData();
       updateDateData();
+      _loadHomePrayerTimes();
     }
   }
 
@@ -459,6 +464,94 @@ class _HomeState extends State<Home>
 
   var prayerTimes;
   bool isLoading = true;
+
+  // Refresh the Android home screen prayer times widget
+  Future<void> _loadHomePrayerTimes() async {
+    try {
+      final repo = MuslimRepository();
+      Location? loc;
+      double? lat, lng;
+
+      if (getValue("cached_lat") != null && getValue("cached_lng") != null) {
+        lat = getValue("cached_lat");
+        lng = getValue("cached_lng");
+        loc = await repo.reverseGeocoder(latitude: lat!, longitude: lng!);
+      } else {
+        LocationPermission perm = await Geolocator.checkPermission();
+        if (perm == LocationPermission.denied) perm = await Geolocator.requestPermission();
+        if (perm == LocationPermission.deniedForever) return;
+        final pos = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.medium);
+        lat = pos.latitude; lng = pos.longitude;
+        updateValue("cached_lat", lat);
+        updateValue("cached_lng", lng);
+        loc = await repo.reverseGeocoder(latitude: lat, longitude: lng);
+      }
+
+      final attr = PrayerAttribute(calculationMethod: CalculationMethod.mwl, asrMethod: AsrMethod.shafii, higherLatitudeMethod: HigherLatitudeMethod.angleBased);
+      final l = loc ?? Location(id: 0, name: 'GPS', latitude: lat!, longitude: lng!, countryCode: 'XX', countryName: '', hasFixedPrayerTime: false);
+      final pt = await repo.getPrayerTimes(location: l, date: DateTime.now(), attribute: attr, useFixedPrayer: loc != null);
+      if (pt == null) return;
+
+      // Find next prayer
+      String nextPrayerKey = 'fajr';
+      final now = DateTime.now();
+      for (final k in ['fajr', 'dhuhr', 'asr', 'maghrib', 'isha']) {
+        DateTime? t;
+        switch (k) {
+          case 'fajr': t = pt.fajr; break;
+          case 'dhuhr': t = pt.dhuhr; break;
+          case 'asr': t = pt.asr; break;
+          case 'maghrib': t = pt.maghrib; break;
+          case 'isha': t = pt.isha; break;
+        }
+        if (t != null && t.isAfter(now)) { nextPrayerKey = k; break; }
+      }
+
+      // Update Android home screen widget data
+      final fmtW = (DateTime dt) { final h = dt.hour % 12 == 0 ? 12 : dt.hour % 12; return '$h:${dt.minute.toString().padLeft(2, '0')}'; };
+      await HomeWidget.saveWidgetData('fajr', fmtW(pt.fajr));
+      await HomeWidget.saveWidgetData('dhuhr', fmtW(pt.dhuhr));
+      await HomeWidget.saveWidgetData('asr', fmtW(pt.asr));
+      await HomeWidget.saveWidgetData('maghrib', fmtW(pt.maghrib));
+      await HomeWidget.saveWidgetData('isha', fmtW(pt.isha));
+      await HomeWidget.saveWidgetData('next_prayer', nextPrayerKey);
+
+      final lang = context.locale.languageCode;
+      await HomeWidget.saveWidgetData('app_lang', lang);
+      await HomeWidget.saveWidgetData('fajr_label', tGlobal('fajr', lang));
+      await HomeWidget.saveWidgetData('dhuhr_label', tGlobal('dhuhr', lang));
+      await HomeWidget.saveWidgetData('asr_label', tGlobal('asr', lang));
+      await HomeWidget.saveWidgetData('maghrib_label', tGlobal('maghrib', lang));
+      await HomeWidget.saveWidgetData('isha_label', tGlobal('isha', lang));
+
+      // Date data
+      final nowDate = DateTime.now();
+      final Map<String, List<String>> dayTranslations = {
+        'ar': ['الإثنين', 'الثلاثاء', 'الأربعاء', 'الخميس', 'الجمعة', 'السبت', 'الأحد'],
+        'ku': ['دووشەممە', 'سێشەممە', 'چوارشەممە', 'پێنجشەممە', 'هەینی', 'شەممە', 'یەکشەممە'],
+        'ckb': ['دووشەممە', 'سێشەممە', 'چوارشەممە', 'پێنجشەممە', 'هەینی', 'شەممە', 'یەکشەممە'],
+        'de': ['Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag', 'Samstag', 'Sonntag'],
+        'tr': ['Pazartesi', 'Salı', 'Çarşamba', 'Perşembe', 'Cuma', 'Cumartesi', 'Pazar'],
+        'ru': ['Понедельник', 'Вторник', 'Среда', 'Четверг', 'Пятница', 'Суббота', 'Воскресенье'],
+        'ms': ['Isnin', 'Selasa', 'Rabu', 'Khamis', 'Jumaat', 'Sabtu', 'Ahad'],
+        'pt': ['Segunda-feira', 'Terça-feira', 'Quarta-feira', 'Quinta-feira', 'Sexta-feira', 'Sábado', 'Domingo'],
+        'am': ['ሰኞ', 'ማክሰኞ', 'ረቡዕ', 'ሐሙስ', 'አርብ', 'ቅዳሜ', 'እሁድ'],
+        'en': ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'],
+      };
+      final dayIdx = nowDate.weekday - 1;
+      final dayOfWeek = (dayTranslations[lang] ?? dayTranslations['en']!)[dayIdx];
+      await HomeWidget.saveWidgetData('day_of_week', dayOfWeek);
+
+      final isRtl = lang == 'ar' || lang == 'ku' || lang == 'ckb';
+      HijriCalendar.setLocal(isRtl ? 'ar' : 'en');
+      final hijri = HijriCalendar.now();
+      await HomeWidget.saveWidgetData('hijri_date', hijri.toFormat('dd MMMM yyyy'));
+      final gregorian = DateFormat('d MMM yyyy', isRtl ? 'ar' : 'en').format(nowDate);
+      await HomeWidget.saveWidgetData('gregorian_date', gregorian);
+
+      await HomeWidget.updateWidget(androidName: 'PrayerWidgetProvider');
+    } catch (_) {}
+  }
   bool reload = false;
   getPrayerTimesData() async {
     DateTime dateTime = DateTime.now();
@@ -847,7 +940,7 @@ class _HomeState extends State<Home>
                 ),
               ),
               SizedBox(height: 20.h),
-              // Buttons row
+              // Buttons row - 3 buttons
               Row(
                 children: [
                   // Copy button
@@ -860,10 +953,10 @@ class _HomeState extends State<Home>
                         padding: EdgeInsets.symmetric(vertical: 14.h),
                         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16.r)),
                       ),
-                      icon: Icon(Icons.copy_rounded, size: 20.sp),
+                      icon: Icon(Icons.copy_rounded, size: 18.sp),
                       label: Text(
                         lang == 'ar' ? 'نسخ' : lang == 'ku' || lang == 'ckb' ? 'کۆپی' : lang == 'de' ? 'Kopieren' : lang == 'tr' ? 'Kopyala' : lang == 'ru' ? 'Копировать' : 'Copy',
-                        style: TextStyle(fontFamily: 'cairo', fontSize: 14.sp, fontWeight: FontWeight.w600),
+                        style: TextStyle(fontFamily: 'cairo', fontSize: 12.sp, fontWeight: FontWeight.w600),
                       ),
                       onPressed: () {
                         Clipboard.setData(ClipboardData(text: shareText));
@@ -881,8 +974,8 @@ class _HomeState extends State<Home>
                       },
                     ),
                   ),
-                  SizedBox(width: 12.w),
-                  // Share button
+                  SizedBox(width: 8.w),
+                  // Share text button
                   Expanded(
                     child: ElevatedButton.icon(
                       style: ElevatedButton.styleFrom(
@@ -892,14 +985,36 @@ class _HomeState extends State<Home>
                         padding: EdgeInsets.symmetric(vertical: 14.h),
                         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16.r)),
                       ),
-                      icon: Icon(Icons.share_rounded, size: 20.sp),
+                      icon: Icon(Icons.share_rounded, size: 18.sp),
                       label: Text(
                         lang == 'ar' ? 'مشاركة' : lang == 'ku' || lang == 'ckb' ? 'بڵاوکردنەوە' : lang == 'de' ? 'Teilen' : lang == 'tr' ? 'Paylaş' : lang == 'ru' ? 'Поделиться' : 'Share',
-                        style: TextStyle(fontFamily: 'cairo', fontSize: 14.sp, fontWeight: FontWeight.w600),
+                        style: TextStyle(fontFamily: 'cairo', fontSize: 12.sp, fontWeight: FontWeight.w600),
                       ),
                       onPressed: () {
                         Navigator.pop(context);
                         SharePlus.instance.share(ShareParams(text: shareText));
+                      },
+                    ),
+                  ),
+                  SizedBox(width: 8.w),
+                  // Share as image button
+                  Expanded(
+                    child: ElevatedButton.icon(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: isDark ? const Color(0xff2A6048) : const Color(0xff1B5E3B),
+                        foregroundColor: Colors.white,
+                        elevation: 0,
+                        padding: EdgeInsets.symmetric(vertical: 14.h),
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16.r)),
+                      ),
+                      icon: Icon(Icons.image_rounded, size: 18.sp),
+                      label: Text(
+                        lang == 'ar' ? 'كصورة' : lang == 'ku' || lang == 'ckb' ? 'وێنە' : lang == 'de' ? 'Als Bild' : lang == 'tr' ? 'Resim' : lang == 'ru' ? 'Картинка' : 'Image',
+                        style: TextStyle(fontFamily: 'cairo', fontSize: 12.sp, fontWeight: FontWeight.w600),
+                      ),
+                      onPressed: () {
+                        Navigator.pop(context);
+                        _shareAppTextAsImage(ctx, shareText, lang, isDark);
                       },
                     ),
                   ),
@@ -911,6 +1026,18 @@ class _HomeState extends State<Home>
         );
       },
     );
+  }
+
+  void _shareAppTextAsImage(BuildContext ctx, String shareText, String lang, bool isDark) {
+    final isRtl = rtlLanguages.contains(lang);
+    Navigator.push(ctx, CupertinoPageRoute(
+      builder: (_) => _AppShareImagePreviewPage(
+        shareText: shareText,
+        lang: lang,
+        isDark: isDark,
+        isRtl: isRtl,
+      ),
+    ));
   }
 
   @override
@@ -1057,6 +1184,7 @@ class _HomeState extends State<Home>
                               },
                             ),
                             _buildShareBanner(context),
+
                             Expanded(
                               child: Column(
                                 children: [
@@ -1511,6 +1639,192 @@ class _AlarmScreenState extends State<AlarmScreen> {
                       ],
                     ),
                   )),
+      ),
+    );
+  }
+}
+
+class _AppShareImagePreviewPage extends StatefulWidget {
+  final String shareText;
+  final String lang;
+  final bool isDark;
+  final bool isRtl;
+
+  const _AppShareImagePreviewPage({
+    Key? key,
+    required this.shareText,
+    required this.lang,
+    required this.isDark,
+    required this.isRtl,
+  }) : super(key: key);
+
+  @override
+  State<_AppShareImagePreviewPage> createState() => _AppShareImagePreviewPageState();
+}
+
+class _AppShareImagePreviewPageState extends State<_AppShareImagePreviewPage> {
+  final ScreenshotController screenshotController = ScreenshotController();
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: quranPagesColorDark,
+        elevation: 0,
+        title: Text("preview".tr()),
+      ),
+      backgroundColor: Colors.white,
+      body: Center(
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: EdgeInsets.all(20.w),
+            child: Container(
+              decoration: BoxDecoration(
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.1),
+                    blurRadius: 10,
+                    spreadRadius: 2,
+                    offset: const Offset(0, 4),
+                  )
+                ]
+              ),
+              child: Screenshot(
+                controller: screenshotController,
+                child: ['en', 'de', 'am', 'ms', 'tr', 'ar', 'ru'].contains(widget.lang)
+                    ? Image.asset(
+                        'assets/images/share_app/${widget.lang}.png',
+                        width: 540,
+                        fit: BoxFit.contain,
+                      )
+                    : Directionality(
+                  textDirection: widget.isRtl ? m.TextDirection.rtl : m.TextDirection.ltr,
+                  child: Container(
+                    width: 540,
+                    padding: const EdgeInsets.all(32),
+                    decoration: BoxDecoration(
+                      gradient: const LinearGradient(
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                        colors: [Color(0xffFFFDF7), Color(0xffFFF8E8)],
+                      ),
+                      borderRadius: BorderRadius.circular(24),
+                      border: Border.all(color: const Color(0xffC5A053).withOpacity(0.3), width: 2),
+                    ),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        // App header
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Image.asset('assets/images/app_icon_new.png', width: 40, height: 40),
+                            const SizedBox(width: 12),
+                            Text(
+                              widget.isRtl ? 'تطبيق ختمة' : 'Khatmah App',
+                              style: const TextStyle(
+                                fontFamily: 'cairo', fontSize: 22, fontWeight: FontWeight.w700,
+                                color: Color(0xff2C1810), decoration: TextDecoration.none,
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 12),
+                        Container(height: 1.5, color: const Color(0xffC5A053).withOpacity(0.3)),
+                        const SizedBox(height: 18),
+                        // Share text
+                        Text(
+                          widget.shareText,
+                          textAlign: widget.isRtl ? TextAlign.right : TextAlign.left,
+                          style: const TextStyle(
+                            fontFamily: 'cairo', fontSize: 15, height: 1.6,
+                            color: Color(0xff3A2A10), decoration: TextDecoration.none,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                        const SizedBox(height: 18),
+                        Container(height: 1.5, color: const Color(0xffC5A053).withOpacity(0.3)),
+                        const SizedBox(height: 12),
+                        // Footer
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            const Icon(Icons.favorite, color: Color(0xffC5A053), size: 16),
+                            const SizedBox(width: 6),
+                            Text(
+                              widget.isRtl ? 'شارك الخير مع أحبابك' : 'Share goodness with your loved ones',
+                              style: TextStyle(
+                                fontFamily: 'cairo', fontSize: 13,
+                                color: const Color(0xffC5A053).withOpacity(0.8),
+                                decoration: TextDecoration.none, fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+      bottomNavigationBar: SafeArea(
+        child: Container(
+          decoration: BoxDecoration(color: Colors.white, boxShadow: [
+            BoxShadow(
+              color: quranPagesColorDark.withOpacity(.4),
+              blurRadius: 1,
+              spreadRadius: 1,
+              offset: const Offset(1, 0),
+            )
+          ]),
+          child: Padding(
+            padding: const EdgeInsets.only(left: 25.0, right: 25, bottom: 10, top: 10),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(left: 0),
+                  child: EasyContainer(
+                      height: 50,
+                      width: MediaQuery.of(context).size.width * .3,
+                      onTap: () async {
+                        await screenshotController
+                            .capture()
+                            .then((capturedImage) => shareImage(capturedImage!));
+                      },
+                      color: quranPagesColorDark,
+                      child: Text(
+                        "shareexternal".tr(),
+                        style: const TextStyle(color: Colors.white),
+                      )),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(left: 0),
+                  child: EasyContainer(
+                      height: 50,
+                      width: MediaQuery.of(context).size.width * .3,
+                      onTap: () async {
+                        await screenshotController.capture().then(
+                            (capturedImage) =>
+                                saveImageToGallery(capturedImage!));
+                      },
+                      color:  quranPagesColorDark,
+                      child: Text(
+                        "savetogallery".tr(),
+                        style: TextStyle(
+                            fontSize: rtlLanguages.contains(context.locale.languageCode)
+                                ? 12.sp
+                                : 15.sp,
+                            color: Colors.white),
+                      )),
+                ),
+              ],
+            ),
+          ),
+        ),
       ),
     );
   }

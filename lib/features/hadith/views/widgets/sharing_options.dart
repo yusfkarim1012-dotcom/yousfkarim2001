@@ -24,12 +24,15 @@ class _SharingOptionsState extends State<SharingOptions> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return SafeArea(
+      child: Container(
       decoration: const BoxDecoration(
           borderRadius: BorderRadius.only(
               topLeft: Radius.circular(12), topRight: Radius.circular(12)),
           color: Colors.white),
-      child: Column(
+      child: Padding(
+        padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewPadding.bottom > 0 ? 0 : 8),
+        child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
           Padding(
@@ -113,6 +116,8 @@ class _SharingOptionsState extends State<SharingOptions> {
           )
         ],
       ),
+      ),
+    ),
     );
   }
 }

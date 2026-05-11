@@ -330,7 +330,8 @@ class _ScreenShotPreviewPageState extends State<HadithScreenShotPreviewPage> {
         ),
       ),
       backgroundColor: Colors.white,
-      bottomNavigationBar: Container(
+      bottomNavigationBar: SafeArea(
+        child: Container(
         decoration: BoxDecoration(color: Colors.white, boxShadow: [
           BoxShadow(
             color:
@@ -352,16 +353,9 @@ class _ScreenShotPreviewPageState extends State<HadithScreenShotPreviewPage> {
                     height: 50,
                     width: MediaQuery.of(context).size.width * .3,
                     onTap: () async {
-                      // setState(() {
-                      //   isShooting = true;
-                      // });
                       await screenshotController
                           .capture()
                           .then((capturedImage) => shareImage(capturedImage!));
-
-                      // setState(() {
-                      //   isShooting = false;
-                      // });
                     },
                     color: quranPagesColorDark,
                     child: Text(
@@ -375,16 +369,9 @@ class _ScreenShotPreviewPageState extends State<HadithScreenShotPreviewPage> {
                     height: 50,
                     width: MediaQuery.of(context).size.width * .3,
                     onTap: () async {
-                      // setState(() {
-                      //   isShooting = true;
-                      // });
-
                       await screenshotController.capture().then(
                           (capturedImage) =>
                               saveImageToGallery(capturedImage!));
-                      // setState(() {
-                      //   isShooting = false;
-                      // });
                     },
                     color:  quranPagesColorDark,
                     child: Text(
@@ -399,6 +386,7 @@ class _ScreenShotPreviewPageState extends State<HadithScreenShotPreviewPage> {
             ],
           ),
         ),
+      ),
       ),
     );
   }

@@ -275,7 +275,58 @@ class _QuranPageViewState extends State<QuranPageView> {
               label: _navText('back', ctx),
               onTap: () => widget.onBack(),
             ),
-            // Previous
+            // Vertical buttons (swipe up / down)
+            Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                GestureDetector(
+                  onTap: () {
+                    if (widget.pageController.hasClients && (widget.pageController.page ?? 0) > 0) {
+                      widget.pageController.previousPage(duration: const Duration(milliseconds: 200), curve: Curves.easeOut);
+                    }
+                  },
+                  child: Container(
+                    padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
+                    decoration: BoxDecoration(
+                      color: _txtColor.withOpacity(0.15),
+                      borderRadius: BorderRadius.circular(8.r),
+                    ),
+                    child: Icon(Icons.keyboard_arrow_up, color: _txtColor, size: 20.sp),
+                  ),
+                ),
+                SizedBox(height: 2.h),
+                Container(
+                  padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 4.h),
+                  decoration: BoxDecoration(
+                    color: _txtColor.withOpacity(0.1),
+                    borderRadius: BorderRadius.circular(12.r),
+                    border: Border.all(color: _txtColor.withOpacity(0.2), width: 1),
+                  ),
+                  child: Text(
+                    "${widget.index} / ${quran.totalPagesCount}",
+                    style: TextStyle(color: _txtColor, fontSize: 10.sp, fontWeight: FontWeight.w600),
+                  ),
+                ),
+                SizedBox(height: 2.h),
+                GestureDetector(
+                  onTap: () {
+                    if (widget.pageController.hasClients &&
+                        (widget.pageController.page ?? 0) < quran.totalPagesCount) {
+                      widget.pageController.nextPage(duration: const Duration(milliseconds: 200), curve: Curves.easeOut);
+                    }
+                  },
+                  child: Container(
+                    padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
+                    decoration: BoxDecoration(
+                      color: _txtColor.withOpacity(0.15),
+                      borderRadius: BorderRadius.circular(8.r),
+                    ),
+                    child: Icon(Icons.keyboard_arrow_down, color: _txtColor, size: 20.sp),
+                  ),
+                ),
+              ],
+            ),
+            // Horizontal buttons (prev / next)
             _navBtn(
               icon: Icons.chevron_right,
               label: _navText('prev', ctx),
@@ -285,20 +336,6 @@ class _QuranPageViewState extends State<QuranPageView> {
                 }
               },
             ),
-            // Page number
-            Container(
-              padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 6.h),
-              decoration: BoxDecoration(
-                color: _txtColor.withOpacity(0.1),
-                borderRadius: BorderRadius.circular(20.r),
-                border: Border.all(color: _txtColor.withOpacity(0.2), width: 1),
-              ),
-              child: Text(
-                "${widget.index} / ${quran.totalPagesCount}",
-                style: TextStyle(color: _txtColor, fontSize: 12.sp, fontWeight: FontWeight.w600),
-              ),
-            ),
-            // Next
             _navBtn(
               icon: Icons.chevron_left,
               label: _navText('next', ctx),

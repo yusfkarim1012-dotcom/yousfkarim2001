@@ -73,15 +73,7 @@ class QuranPageHeader extends StatelessWidget {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
-                IconButton(
-                    onPressed: onSettings,
-                    icon: Icon(
-                      Icons.settings,
-                      size: 24.sp,
-                      color: !getValue("darkMode") 
-                          ? const Color(0xff4A4039)
-                          : secondaryColors[getValue("quranPageolorsIndex")],
-                    ))
+                SizedBox(width: 24.sp),
               ],
             ),
           )

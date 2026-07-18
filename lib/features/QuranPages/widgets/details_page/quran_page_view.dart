@@ -2,6 +2,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/material.dart' as m;
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:khatmah/features/home.dart';
@@ -79,11 +80,13 @@ class _QuranPageViewState extends State<QuranPageView> {
   String selectedSpan = "";
   List<GlobalKey> richTextKeys = List.generate(604, (_) => GlobalKey());
   bool _showNav = true;
+  final FocusNode _volumeFocusNode = FocusNode();
 
   @override
   void initState() {
     super.initState();
     widget.pageController.addListener(_onScroll);
+    _volumeFocusNode.requestFocus();
   }
 
   void _onScroll() {
@@ -92,9 +95,34 @@ class _QuranPageViewState extends State<QuranPageView> {
     }
   }
 
+  void _handleVolumeKey(RawKeyEvent event) {
+    if (event is RawKeyDownEvent) {
+      // Volume Up = Previous Page
+      if (event.logicalKey == LogicalKeyboardKey.audioVolumeUp) {
+        if (widget.pageController.hasClients && (widget.pageController.page ?? 0) > 0) {
+          widget.pageController.previousPage(
+            duration: const Duration(milliseconds: 200),
+            curve: Curves.easeOut,
+          );
+        }
+      }
+      // Volume Down = Next Page
+      if (event.logicalKey == LogicalKeyboardKey.audioVolumeDown) {
+        if (widget.pageController.hasClients &&
+            (widget.pageController.page ?? 0) < quran.totalPagesCount) {
+          widget.pageController.nextPage(
+            duration: const Duration(milliseconds: 200),
+            curve: Curves.easeOut,
+          );
+        }
+      }
+    }
+  }
+
   @override
   void dispose() {
     widget.pageController.removeListener(_onScroll);
+    _volumeFocusNode.dispose();
     super.dispose();
   }
 
@@ -103,49 +131,53 @@ class _QuranPageViewState extends State<QuranPageView> {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () => setState(() => _showNav = !_showNav),
-      child: Scaffold(
-        backgroundColor: _bgColor,
-        body: Column(
-          children: [
-            // Header
-            SafeArea(
-              bottom: false,
-              child: QuranPageHeader(
-                index: widget.index,
-                jsonData: widget.jsonData,
-                quarterJsonData: widget.quarterJsonData,
-                onBack: widget.onBack,
-                onSettings: widget.onSettings,
+    return RawKeyboardListener(
+      focusNode: _volumeFocusNode,
+      onKey: _handleVolumeKey,
+      child: GestureDetector(
+        onTap: () => setState(() => _showNav = !_showNav),
+        child: Scaffold(
+          backgroundColor: _bgColor,
+          body: Column(
+            children: [
+              // Header
+              SafeArea(
+                bottom: false,
+                child: QuranPageHeader(
+                  index: widget.index,
+                  jsonData: widget.jsonData,
+                  quarterJsonData: widget.quarterJsonData,
+                  onBack: widget.onBack,
+                  onSettings: widget.onSettings,
+                ),
               ),
-            ),
-            // Quran content - full page, no scroll
-            Expanded(
-              child: PageView.builder(
-                allowImplicitScrolling: true,
-                scrollDirection: Axis.horizontal,
-                onPageChanged: (a) {
-                  setState(() => selectedSpan = "");
-                  widget.onPageChanged(a);
-                },
-                controller: widget.pageController,
-                reverse: !rtlLanguages.contains(context.locale.languageCode),
-                itemCount: quran.totalPagesCount + 1,
-                itemBuilder: (context, index) {
-                  if (index == 0) {
-                    return Container(
-                      color: const Color(0xffFFFCE7),
-                      child: Image.asset("assets/images/quran.jpg", fit: BoxFit.fill),
-                    );
-                  }
-                  return _buildPage(index);
-                },
+              // Quran content - full page, no scroll
+              Expanded(
+                child: PageView.builder(
+                  allowImplicitScrolling: true,
+                  scrollDirection: Axis.horizontal,
+                  onPageChanged: (a) {
+                    setState(() => selectedSpan = "");
+                    widget.onPageChanged(a);
+                  },
+                  controller: widget.pageController,
+                  reverse: !rtlLanguages.contains(context.locale.languageCode),
+                  itemCount: quran.totalPagesCount + 1,
+                  itemBuilder: (context, index) {
+                    if (index == 0) {
+                      return Container(
+                        color: const Color(0xffFFFCE7),
+                        child: Image.asset("assets/images/quran.jpg", fit: BoxFit.fill),
+                      );
+                    }
+                    return _buildPage(index);
+                  },
+                ),
               ),
-            ),
-            // Bottom navigation bar
-            if (_showNav) _buildBottomBar(context),
-          ],
+              // Bottom navigation bar
+              if (_showNav) _buildBottomBar(context),
+            ],
+          ),
         ),
       ),
     );
@@ -269,64 +301,11 @@ class _QuranPageViewState extends State<QuranPageView> {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            // Back button
             _navBtn(
               icon: Icons.arrow_forward_ios,
               label: _navText('back', ctx),
               onTap: () => widget.onBack(),
             ),
-            // Vertical buttons (swipe up / down)
-            Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                GestureDetector(
-                  onTap: () {
-                    if (widget.pageController.hasClients && (widget.pageController.page ?? 0) > 0) {
-                      widget.pageController.previousPage(duration: const Duration(milliseconds: 200), curve: Curves.easeOut);
-                    }
-                  },
-                  child: Container(
-                    padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
-                    decoration: BoxDecoration(
-                      color: _txtColor.withOpacity(0.15),
-                      borderRadius: BorderRadius.circular(8.r),
-                    ),
-                    child: Icon(Icons.keyboard_arrow_up, color: _txtColor, size: 20.sp),
-                  ),
-                ),
-                SizedBox(height: 2.h),
-                Container(
-                  padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 4.h),
-                  decoration: BoxDecoration(
-                    color: _txtColor.withOpacity(0.1),
-                    borderRadius: BorderRadius.circular(12.r),
-                    border: Border.all(color: _txtColor.withOpacity(0.2), width: 1),
-                  ),
-                  child: Text(
-                    "${widget.index} / ${quran.totalPagesCount}",
-                    style: TextStyle(color: _txtColor, fontSize: 10.sp, fontWeight: FontWeight.w600),
-                  ),
-                ),
-                SizedBox(height: 2.h),
-                GestureDetector(
-                  onTap: () {
-                    if (widget.pageController.hasClients &&
-                        (widget.pageController.page ?? 0) < quran.totalPagesCount) {
-                      widget.pageController.nextPage(duration: const Duration(milliseconds: 200), curve: Curves.easeOut);
-                    }
-                  },
-                  child: Container(
-                    padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
-                    decoration: BoxDecoration(
-                      color: _txtColor.withOpacity(0.15),
-                      borderRadius: BorderRadius.circular(8.r),
-                    ),
-                    child: Icon(Icons.keyboard_arrow_down, color: _txtColor, size: 20.sp),
-                  ),
-                ),
-              ],
-            ),
-            // Horizontal buttons (prev / next)
             _navBtn(
               icon: Icons.chevron_right,
               label: _navText('prev', ctx),
@@ -335,6 +314,18 @@ class _QuranPageViewState extends State<QuranPageView> {
                   widget.pageController.previousPage(duration: const Duration(milliseconds: 200), curve: Curves.easeOut);
                 }
               },
+            ),
+            Container(
+              padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 6.h),
+              decoration: BoxDecoration(
+                color: _txtColor.withOpacity(0.1),
+                borderRadius: BorderRadius.circular(20.r),
+                border: Border.all(color: _txtColor.withOpacity(0.2), width: 1),
+              ),
+              child: Text(
+                "${widget.index} / ${quran.totalPagesCount}",
+                style: TextStyle(color: _txtColor, fontSize: 12.sp, fontWeight: FontWeight.w600),
+              ),
             ),
             _navBtn(
               icon: Icons.chevron_left,
@@ -346,7 +337,6 @@ class _QuranPageViewState extends State<QuranPageView> {
                 }
               },
             ),
-            // Settings
             _navBtn(
               icon: Icons.settings,
               label: '',
